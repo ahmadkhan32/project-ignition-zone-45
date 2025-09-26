@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Menu, X } from "lucide-react";
+import { Menu, X, Phone } from "lucide-react";
 
 export const NavigationBar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -51,11 +51,20 @@ const navItems = [
             ))}
           </div>
 
-          {/* CTA Button */}
-          <div className="hidden md:flex items-center">
-            <Button className="glow-button">
-              Pre-Order Now
-            </Button>
+          {/* Contact & CTA */}
+          <div className="hidden md:flex items-center space-x-4">
+            <a
+              href="https://wa.me/923100004068"
+              className="flex items-center space-x-2 text-primary hover:text-primary-glow transition-colors duration-300"
+            >
+              <Phone className="w-4 h-4" />
+              <span className="font-semibold">+92 310 000 4068</span>
+            </a>
+            <Link to="/pre-order">
+              <Button className="glow-button">
+                Pre-Order Now
+              </Button>
+            </Link>
           </div>
 
           {/* Mobile Menu Button */}
@@ -81,11 +90,20 @@ const navItems = [
                   {item.name}
                 </Link>
               ))}
-               <div className="px-3 py-2">
-                <Button className="glow-button w-full">
-                  Pre-Order Now
-                </Button>
-              </div>
+               <div className="px-3 py-2 space-y-2">
+                <a
+                  href="https://wa.me/923100004068"
+                  className="flex items-center justify-center space-x-2 text-primary hover:text-primary-glow transition-colors duration-300 py-2"
+                >
+                  <Phone className="w-4 h-4" />
+                  <span className="font-semibold">+92 310 000 4068</span>
+                </a>
+                <Link to="/pre-order">
+                  <Button className="glow-button w-full">
+                    Pre-Order Now
+                  </Button>
+                </Link>
+               </div>
             </div>
           </div>
         )}

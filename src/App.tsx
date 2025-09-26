@@ -10,6 +10,13 @@ import TechnologyPage from "./pages/TechnologyPage";
 import GalleryPage from "./pages/GalleryPage";
 import AboutPage from "./pages/AboutPage";
 import ContactPage from "./pages/ContactPage";
+import PreOrderPage from "./pages/PreOrderPage";
+import TestRidePage from "./pages/TestRidePage";
+import ContactSalesPage from "./pages/ContactSalesPage";
+import SpecSheetPage from "./pages/SpecSheetPage";
+import ShowroomPage from "./pages/ShowroomPage";
+import LiveChatPage from "./pages/LiveChatPage";
+import CallNowPage from "./pages/CallNowPage";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -28,6 +35,13 @@ const App = () => (
           <Route path="/gallery" element={<GalleryPage />} />
           <Route path="/about" element={<AboutPage />} />
           <Route path="/contact" element={<ContactPage />} />
+          <Route path="/pre-order" element={<PreOrderPage />} />
+          <Route path="/test-ride" element={<TestRidePage />} />
+          <Route path="/contact-sales" element={<ContactSalesPage />} />
+          <Route path="/spec-sheet" element={<SpecSheetPage />} />
+          <Route path="/showroom" element={<ShowroomPage />} />
+          <Route path="/live-chat" element={<LiveChatPage />} />
+          <Route path="/call-now" element={<CallNowPage />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>

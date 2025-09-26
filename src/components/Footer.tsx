@@ -60,10 +60,13 @@ export const Footer = () => {
                 <MapPin className="w-4 h-4 text-primary" />
                 <span>123 Electric Avenue, Future City, FC 12345</span>
               </div>
-              <div className="flex items-center space-x-3 text-muted-foreground">
+              <a 
+                href="https://wa.me/923100004068"
+                className="flex items-center space-x-3 text-muted-foreground hover:text-primary transition-colors duration-300"
+              >
                 <Phone className="w-4 h-4 text-primary" />
-                <span>+1 (800) EVO-LUTION</span>
-              </div>
+                <span>+92 310 000 4068 (WhatsApp)</span>
+              </a>
               <div className="flex items-center space-x-3 text-muted-foreground">
                 <Mail className="w-4 h-4 text-primary" />
                 <span>info@evolutionev.com</span>
