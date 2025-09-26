@@ -7,8 +7,38 @@ import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Calendar, Clock, MapPin, Phone, CheckCircle, Zap, Shield } from "lucide-react";
+import { useState } from "react";
+import { useToast } from "@/hooks/use-toast";
+import { z } from "zod";
+
+// Form validation schema
+const testRideSchema = z.object({
+  firstName: z.string().trim().min(1, "First name is required").max(50, "First name must be less than 50 characters"),
+  lastName: z.string().trim().min(1, "Last name is required").max(50, "Last name must be less than 50 characters"),
+  email: z.string().trim().email("Invalid email address").max(255, "Email must be less than 255 characters"),
+  phone: z.string().trim().min(10, "Phone number must be at least 10 digits").max(20, "Phone number must be less than 20 characters"),
+  model: z.string().min(1, "Please select a model"),
+  date: z.string().min(1, "Please select a date"),
+  time: z.string().min(1, "Please select a time"),
+  experience: z.string().min(1, "Please select your experience level"),
+  message: z.string().trim().max(1000, "Message must be less than 1000 characters").optional(),
+});
 
 const TestRidePage = () => {
+  const [formData, setFormData] = useState({
+    firstName: "",
+    lastName: "",
+    email: "",
+    phone: "",
+    model: "",
+    date: "",
+    time: "",
+    experience: "",
+    message: "",
+  });
+  const [errors, setErrors] = useState<Record<string, string>>({});
+  const { toast } = useToast();
+
   const benefits = [
     { icon: Zap, title: "Experience Performance", description: "Feel the power and acceleration firsthand" },
     { icon: Shield, title: "Safety First", description: "All safety gear and instruction provided" },
@@ -23,6 +53,73 @@ const TestRidePage = () => {
     "3:30 PM - 4:30 PM",
     "5:00 PM - 6:00 PM"
   ];
+
+  const handleInputChange = (field: string, value: string) => {
+    setFormData(prev => ({ ...prev, [field]: value }));
+    // Clear error when user starts typing
+    if (errors[field]) {
+      setErrors(prev => ({ ...prev, [field]: "" }));
+    }
+  };
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    try {
+      // Validate form data
+      const validatedData = testRideSchema.parse(formData);
+      
+      // Format WhatsApp message
+      const message = `🏍️ *EvolutionEV Test Ride Booking*
+
+📝 *Customer Details:*
+• Name: ${validatedData.firstName} ${validatedData.lastName}
+• Email: ${validatedData.email}
+• Phone: ${validatedData.phone}
+• Experience Level: ${validatedData.experience}
+
+🛴 *Test Ride Details:*
+• Model: ${validatedData.model}
+• Preferred Date: ${validatedData.date}
+• Preferred Time: ${validatedData.time}
+
+${validatedData.message ? `💬 *Special Requirements:*\n${validatedData.message}\n\n` : ''}⚡ Please confirm my test ride appointment and let me know what I need to bring.
+
+Thank you!`;
+
+      // Open WhatsApp with formatted message
+      window.open(`https://wa.me/923100004068?text=${encodeURIComponent(message)}`, '_blank');
+      
+      toast({
+        title: "Test ride request sent!",
+        description: "You'll be redirected to WhatsApp to complete your booking.",
+      });
+
+      // Reset form
+      setFormData({
+        firstName: "",
+        lastName: "",
+        email: "",
+        phone: "",
+        model: "",
+        date: "",
+        time: "",
+        experience: "",
+        message: "",
+      });
+
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        const newErrors: Record<string, string> = {};
+        error.errors.forEach((err) => {
+          if (err.path[0]) {
+            newErrors[err.path[0] as string] = err.message;
+          }
+        });
+        setErrors(newErrors);
+      }
+    }
+  };
 
   const handleWhatsApp = () => {
     const message = "Hi! I'd like to schedule a test ride for an EvolutionEV scooter. What dates are available?";
@@ -96,97 +193,145 @@ const TestRidePage = () => {
                   </CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-6">
-                  <div className="grid md:grid-cols-2 gap-4">
-                    <div>
-                      <Label htmlFor="firstName">First Name</Label>
-                      <Input id="firstName" placeholder="Enter your first name" />
+                  <form onSubmit={handleSubmit}>
+                    <div className="space-y-6">
+                      <div className="grid md:grid-cols-2 gap-4">
+                        <div>
+                          <Label htmlFor="firstName">First Name</Label>
+                          <Input 
+                            id="firstName" 
+                            placeholder="Enter your first name"
+                            value={formData.firstName}
+                            onChange={(e) => handleInputChange('firstName', e.target.value)}
+                            className={errors.firstName ? 'border-destructive' : ''}
+                          />
+                          {errors.firstName && <p className="text-sm text-destructive mt-1">{errors.firstName}</p>}
+                        </div>
+                        <div>
+                          <Label htmlFor="lastName">Last Name</Label>
+                          <Input 
+                            id="lastName" 
+                            placeholder="Enter your last name"
+                            value={formData.lastName}
+                            onChange={(e) => handleInputChange('lastName', e.target.value)}
+                            className={errors.lastName ? 'border-destructive' : ''}
+                          />
+                          {errors.lastName && <p className="text-sm text-destructive mt-1">{errors.lastName}</p>}
+                        </div>
+                      </div>
+                      
+                      <div>
+                        <Label htmlFor="email">Email</Label>
+                        <Input 
+                          id="email" 
+                          type="email" 
+                          placeholder="Enter your email"
+                          value={formData.email}
+                          onChange={(e) => handleInputChange('email', e.target.value)}
+                          className={errors.email ? 'border-destructive' : ''}
+                        />
+                        {errors.email && <p className="text-sm text-destructive mt-1">{errors.email}</p>}
+                      </div>
+                      
+                      <div>
+                        <Label htmlFor="phone">Phone Number</Label>
+                        <Input 
+                          id="phone" 
+                          placeholder="Enter your phone number"
+                          value={formData.phone}
+                          onChange={(e) => handleInputChange('phone', e.target.value)}
+                          className={errors.phone ? 'border-destructive' : ''}
+                        />
+                        {errors.phone && <p className="text-sm text-destructive mt-1">{errors.phone}</p>}
+                      </div>
+                      
+                      <div>
+                        <Label htmlFor="model">Preferred Model</Label>
+                        <Select value={formData.model} onValueChange={(value) => handleInputChange('model', value)}>
+                          <SelectTrigger className={errors.model ? 'border-destructive' : ''}>
+                            <SelectValue placeholder="Select a model to test" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="evolution-x">Evolution X</SelectItem>
+                            <SelectItem value="evolution-pro">Evolution Pro</SelectItem>
+                            <SelectItem value="evolution-max">Evolution Max</SelectItem>
+                            <SelectItem value="any">Any Available Model</SelectItem>
+                          </SelectContent>
+                        </Select>
+                        {errors.model && <p className="text-sm text-destructive mt-1">{errors.model}</p>}
+                      </div>
+                      
+                      <div>
+                        <Label htmlFor="date">Preferred Date</Label>
+                        <Input 
+                          id="date" 
+                          type="date"
+                          value={formData.date}
+                          onChange={(e) => handleInputChange('date', e.target.value)}
+                          className={errors.date ? 'border-destructive' : ''}
+                        />
+                        {errors.date && <p className="text-sm text-destructive mt-1">{errors.date}</p>}
+                      </div>
+                      
+                      <div>
+                        <Label htmlFor="time">Preferred Time</Label>
+                        <Select value={formData.time} onValueChange={(value) => handleInputChange('time', value)}>
+                          <SelectTrigger className={errors.time ? 'border-destructive' : ''}>
+                            <SelectValue placeholder="Select preferred time" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            {timeSlots.map((slot) => (
+                              <SelectItem key={slot} value={slot}>{slot}</SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                        {errors.time && <p className="text-sm text-destructive mt-1">{errors.time}</p>}
+                      </div>
+                      
+                      <div>
+                        <Label htmlFor="experience">Riding Experience</Label>
+                        <Select value={formData.experience} onValueChange={(value) => handleInputChange('experience', value)}>
+                          <SelectTrigger className={errors.experience ? 'border-destructive' : ''}>
+                            <SelectValue placeholder="Select your experience level" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="beginner">Beginner</SelectItem>
+                            <SelectItem value="intermediate">Intermediate</SelectItem>
+                            <SelectItem value="advanced">Advanced</SelectItem>
+                          </SelectContent>
+                        </Select>
+                        {errors.experience && <p className="text-sm text-destructive mt-1">{errors.experience}</p>}
+                      </div>
+                      
+                      <div>
+                        <Label htmlFor="message">Special Requirements</Label>
+                        <Textarea 
+                          id="message" 
+                          placeholder="Any special requirements or questions?"
+                          rows={3}
+                          value={formData.message}
+                          onChange={(e) => handleInputChange('message', e.target.value)}
+                          className={errors.message ? 'border-destructive' : ''}
+                        />
+                        {errors.message && <p className="text-sm text-destructive mt-1">{errors.message}</p>}
+                      </div>
+                      
+                      <div className="flex flex-col gap-4">
+                        <Button type="submit" className="glow-button w-full py-6">
+                          Book Test Ride
+                        </Button>
+                        <Button 
+                          type="button"
+                          variant="outline" 
+                          onClick={handleWhatsApp}
+                          className="w-full py-6"
+                        >
+                          <Phone className="w-5 h-5 mr-2" />
+                          Book via WhatsApp: +92 310 000 4068
+                        </Button>
+                      </div>
                     </div>
-                    <div>
-                      <Label htmlFor="lastName">Last Name</Label>
-                      <Input id="lastName" placeholder="Enter your last name" />
-                    </div>
-                  </div>
-                  
-                  <div>
-                    <Label htmlFor="email">Email</Label>
-                    <Input id="email" type="email" placeholder="Enter your email" />
-                  </div>
-                  
-                  <div>
-                    <Label htmlFor="phone">Phone Number</Label>
-                    <Input id="phone" placeholder="Enter your phone number" />
-                  </div>
-                  
-                  <div>
-                    <Label htmlFor="model">Preferred Model</Label>
-                    <Select>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select a model to test" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="evolution-x">Evolution X</SelectItem>
-                        <SelectItem value="evolution-pro">Evolution Pro</SelectItem>
-                        <SelectItem value="evolution-max">Evolution Max</SelectItem>
-                        <SelectItem value="any">Any Available Model</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-                  
-                  <div>
-                    <Label htmlFor="date">Preferred Date</Label>
-                    <Input id="date" type="date" />
-                  </div>
-                  
-                  <div>
-                    <Label htmlFor="time">Preferred Time</Label>
-                    <Select>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select preferred time" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {timeSlots.map((slot) => (
-                          <SelectItem key={slot} value={slot}>{slot}</SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  </div>
-                  
-                  <div>
-                    <Label htmlFor="experience">Riding Experience</Label>
-                    <Select>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select your experience level" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="beginner">Beginner</SelectItem>
-                        <SelectItem value="intermediate">Intermediate</SelectItem>
-                        <SelectItem value="advanced">Advanced</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-                  
-                  <div>
-                    <Label htmlFor="message">Special Requirements</Label>
-                    <Textarea 
-                      id="message" 
-                      placeholder="Any special requirements or questions?"
-                      rows={3}
-                    />
-                  </div>
-                  
-                  <div className="flex flex-col gap-4">
-                    <Button className="glow-button w-full py-6">
-                      Book Test Ride
-                    </Button>
-                    <Button 
-                      variant="outline" 
-                      onClick={handleWhatsApp}
-                      className="w-full py-6"
-                    >
-                      <Phone className="w-5 h-5 mr-2" />
-                      Book via WhatsApp: +92 310 000 4068
-                    </Button>
-                  </div>
+                  </form>
                 </CardContent>
               </Card>
             </div>

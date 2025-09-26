@@ -1,93 +1,161 @@
-import { useState } from "react";
 import { NavigationBar } from "@/components/NavigationBar";
 import { Footer } from "@/components/Footer";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { 
-  MapPin, 
+  Calendar, 
+  MessageCircle, 
   Phone, 
   Mail, 
-  Clock,
-  MessageCircle,
-  Calendar,
-  Users,
-  Wrench,
-  HelpCircle,
-  Send
+  MapPin, 
+  Clock, 
+  Users, 
+  Headphones,
+  CheckCircle,
+  Zap
 } from "lucide-react";
-import { toast } from "sonner";
+import { useState } from "react";
+import { useToast } from "@/hooks/use-toast";
+import { z } from "zod";
 
-const contactReasons = [
-  { value: "test-ride", label: "Schedule Test Ride", icon: Calendar },
-  { value: "sales", label: "Sales Inquiry", icon: Users },
-  { value: "support", label: "Customer Support", icon: HelpCircle },
-  { value: "service", label: "Service & Maintenance", icon: Wrench },
-  { value: "partnership", label: "Partnership Opportunities", icon: MessageCircle },
-  { value: "other", label: "Other", icon: Mail }
-];
+// Form validation schema
+const contactSchema = z.object({
+  firstName: z.string().trim().min(1, "First name is required").max(50, "First name must be less than 50 characters"),
+  lastName: z.string().trim().min(1, "Last name is required").max(50, "Last name must be less than 50 characters"),
+  email: z.string().trim().email("Invalid email address").max(255, "Email must be less than 255 characters"),
+  phone: z.string().trim().min(10, "Phone number must be at least 10 digits").max(20, "Phone number must be less than 20 characters"),
+  reason: z.string().min(1, "Please select a reason"),
+  subject: z.string().trim().min(1, "Subject is required").max(100, "Subject must be less than 100 characters"),
+  message: z.string().trim().min(1, "Message is required").max(1000, "Message must be less than 1000 characters"),
+  preferredContact: z.string().min(1, "Please select preferred contact method"),
+});
 
-const locations = [
-  {
-    city: "San Francisco",
-    type: "Headquarters",
-    address: "1234 Electric Avenue, San Francisco, CA 94102",
-    phone: "+1 (555) 123-4567",
-    email: "sf@evolutionev.com",
-    hours: "Mon-Fri: 9AM-6PM, Sat: 10AM-4PM"
-  },
-  {
-    city: "Los Angeles",
-    type: "Showroom",
-    address: "5678 Future Blvd, Los Angeles, CA 90210",
-    phone: "+1 (555) 234-5678",
-    email: "la@evolutionev.com",
-    hours: "Mon-Sat: 10AM-7PM, Sun: 12PM-5PM"
-  },
-  {
-    city: "New York",
-    type: "Service Center",
-    address: "9012 Innovation Street, New York, NY 10001",
-    phone: "+1 (555) 345-6789",
-    email: "ny@evolutionev.com",
-    hours: "Mon-Fri: 8AM-6PM, Sat: 9AM-3PM"
-  }
-];
-
-export default function ContactPage() {
+const ContactPage = () => {
   const [formData, setFormData] = useState({
-    name: "",
+    firstName: "",
+    lastName: "",
     email: "",
     phone: "",
     reason: "",
     subject: "",
     message: "",
-    preferredContact: "email"
+    preferredContact: "whatsapp"
   });
+  const [errors, setErrors] = useState<Record<string, string>>({});
+  const { toast } = useToast();
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    // Handle form submission here
-    toast.success("Message sent successfully! We'll get back to you within 24 hours.");
-    
-    // Reset form
-    setFormData({
-      name: "",
-      email: "",
-      phone: "",
-      reason: "",
-      subject: "",
-      message: "",
-      preferredContact: "email"
-    });
-  };
+  const contactReasons = [
+    "General Inquiry",
+    "Product Information",
+    "Technical Support",
+    "Sales Question",
+    "Test Ride Request",
+    "Partnership Inquiry",
+    "Media/Press",
+    "Other"
+  ];
+
+  const quickActions = [
+    {
+      title: "Schedule Test Ride",
+      description: "Book a free test ride",
+      icon: Calendar,
+      action: "Schedule Now",
+      link: "/test-ride",
+      color: "primary"
+    },
+    {
+      title: "Live Chat",
+      description: "Get instant help",
+      icon: MessageCircle,
+      action: "Start Chat",
+      link: "/live-chat",
+      color: "secondary"
+    },
+    {
+      title: "Call Now",
+      description: "Speak with an expert",
+      icon: Phone,
+      action: "Call +92 310 000 4068",
+      link: "/call-now",
+      color: "accent"
+    }
+  ];
 
   const handleInputChange = (field: string, value: string) => {
     setFormData(prev => ({ ...prev, [field]: value }));
+    // Clear error when user starts typing
+    if (errors[field]) {
+      setErrors(prev => ({ ...prev, [field]: "" }));
+    }
+  };
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    try {
+      // Validate form data
+      const validatedData = contactSchema.parse(formData);
+      
+      // Format WhatsApp message
+      const message = `📞 *EvolutionEV Contact Form*
+
+📝 *Customer Details:*
+• Name: ${validatedData.firstName} ${validatedData.lastName}
+• Email: ${validatedData.email}
+• Phone: ${validatedData.phone}
+• Preferred Contact: ${validatedData.preferredContact}
+
+📋 *Inquiry Details:*
+• Reason: ${validatedData.reason}
+• Subject: ${validatedData.subject}
+
+💬 *Message:*
+${validatedData.message}
+
+⚡ Please respond via my preferred contact method. Thank you!`;
+
+      // Open WhatsApp with formatted message
+      window.open(`https://wa.me/923100004068?text=${encodeURIComponent(message)}`, '_blank');
+      
+      toast({
+        title: "Message sent!",
+        description: "You'll be redirected to WhatsApp to complete sending your message.",
+      });
+
+      // Reset form
+      setFormData({
+        firstName: "",
+        lastName: "",
+        email: "",
+        phone: "",
+        reason: "",
+        subject: "",
+        message: "",
+        preferredContact: "whatsapp"
+      });
+
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        const newErrors: Record<string, string> = {};
+        error.errors.forEach((err) => {
+          if (err.path[0]) {
+            newErrors[err.path[0] as string] = err.message;
+          }
+        });
+        setErrors(newErrors);
+      }
+    }
+  };
+
+  const handleWhatsApp = () => {
+    const message = "Hi! I have a question about EvolutionEV scooters and would like to get in touch with your team.";
+    window.open(`https://wa.me/923100004068?text=${encodeURIComponent(message)}`, '_blank');
   };
 
   return (
@@ -149,208 +217,240 @@ export default function ContactPage() {
                   </CardHeader>
                   <CardContent>
                     <form onSubmit={handleSubmit} className="space-y-6">
-                      {/* Personal Info */}
-                      <div className="grid md:grid-cols-2 gap-4">
-                        <div className="space-y-2">
-                          <Label htmlFor="name">Full Name *</Label>
-                          <Input
-                            id="name"
-                            value={formData.name}
-                            onChange={(e) => handleInputChange("name", e.target.value)}
-                            placeholder="Your full name"
-                            required
+                      <div className="grid grid-cols-2 gap-4">
+                        <div>
+                          <Label htmlFor="firstName">First Name</Label>
+                          <Input 
+                            id="firstName" 
+                            placeholder="Enter your first name"
+                            value={formData.firstName}
+                            onChange={(e) => handleInputChange('firstName', e.target.value)}
+                            className={errors.firstName ? 'border-destructive' : ''}
                           />
+                          {errors.firstName && <p className="text-sm text-destructive mt-1">{errors.firstName}</p>}
                         </div>
-                        <div className="space-y-2">
-                          <Label htmlFor="email">Email Address *</Label>
-                          <Input
-                            id="email"
-                            type="email"
-                            value={formData.email}
-                            onChange={(e) => handleInputChange("email", e.target.value)}
-                            placeholder="your.email@example.com"
-                            required
+                        <div>
+                          <Label htmlFor="lastName">Last Name</Label>
+                          <Input 
+                            id="lastName" 
+                            placeholder="Enter your last name"
+                            value={formData.lastName}
+                            onChange={(e) => handleInputChange('lastName', e.target.value)}
+                            className={errors.lastName ? 'border-destructive' : ''}
                           />
+                          {errors.lastName && <p className="text-sm text-destructive mt-1">{errors.lastName}</p>}
                         </div>
                       </div>
 
-                      <div className="grid md:grid-cols-2 gap-4">
-                        <div className="space-y-2">
-                          <Label htmlFor="phone">Phone Number</Label>
-                          <Input
-                            id="phone"
-                            type="tel"
-                            value={formData.phone}
-                            onChange={(e) => handleInputChange("phone", e.target.value)}
-                            placeholder="+1 (555) 123-4567"
-                          />
-                        </div>
-                        <div className="space-y-2">
-                          <Label htmlFor="reason">Reason for Contact *</Label>
-                          <Select value={formData.reason} onValueChange={(value) => handleInputChange("reason", value)}>
-                            <SelectTrigger>
-                              <SelectValue placeholder="Select a reason" />
-                            </SelectTrigger>
-                            <SelectContent>
-                              {contactReasons.map((reason) => (
-                                <SelectItem key={reason.value} value={reason.value}>
-                                  {reason.label}
-                                </SelectItem>
-                              ))}
-                            </SelectContent>
-                          </Select>
-                        </div>
+                      <div>
+                        <Label htmlFor="email">Email</Label>
+                        <Input 
+                          id="email" 
+                          type="email" 
+                          placeholder="Enter your email"
+                          value={formData.email}
+                          onChange={(e) => handleInputChange('email', e.target.value)}
+                          className={errors.email ? 'border-destructive' : ''}
+                        />
+                        {errors.email && <p className="text-sm text-destructive mt-1">{errors.email}</p>}
                       </div>
 
-                      <div className="space-y-2">
-                        <Label htmlFor="subject">Subject *</Label>
-                        <Input
-                          id="subject"
-                          value={formData.subject}
-                          onChange={(e) => handleInputChange("subject", e.target.value)}
+                      <div>
+                        <Label htmlFor="phone">Phone Number</Label>
+                        <Input 
+                          id="phone" 
+                          placeholder="Enter your phone number"
+                          value={formData.phone}
+                          onChange={(e) => handleInputChange('phone', e.target.value)}
+                          className={errors.phone ? 'border-destructive' : ''}
+                        />
+                        {errors.phone && <p className="text-sm text-destructive mt-1">{errors.phone}</p>}
+                      </div>
+
+                      <div>
+                        <Label htmlFor="reason">Reason for Contact</Label>
+                        <Select value={formData.reason} onValueChange={(value) => handleInputChange('reason', value)}>
+                          <SelectTrigger className={errors.reason ? 'border-destructive' : ''}>
+                            <SelectValue placeholder="Select a reason" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            {contactReasons.map((reason) => (
+                              <SelectItem key={reason} value={reason.toLowerCase().replace(/\s+/g, '-')}>
+                                {reason}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                        {errors.reason && <p className="text-sm text-destructive mt-1">{errors.reason}</p>}
+                      </div>
+
+                      <div>
+                        <Label htmlFor="subject">Subject</Label>
+                        <Input 
+                          id="subject" 
                           placeholder="Brief description of your inquiry"
-                          required
+                          value={formData.subject}
+                          onChange={(e) => handleInputChange('subject', e.target.value)}
+                          className={errors.subject ? 'border-destructive' : ''}
                         />
+                        {errors.subject && <p className="text-sm text-destructive mt-1">{errors.subject}</p>}
                       </div>
 
-                      <div className="space-y-2">
-                        <Label htmlFor="message">Message *</Label>
-                        <Textarea
-                          id="message"
-                          value={formData.message}
-                          onChange={(e) => handleInputChange("message", e.target.value)}
+                      <div>
+                        <Label htmlFor="message">Message</Label>
+                        <Textarea 
+                          id="message" 
                           placeholder="Please provide details about your inquiry..."
-                          rows={5}
-                          required
+                          rows={4}
+                          value={formData.message}
+                          onChange={(e) => handleInputChange('message', e.target.value)}
+                          className={errors.message ? 'border-destructive' : ''}
                         />
+                        {errors.message && <p className="text-sm text-destructive mt-1">{errors.message}</p>}
                       </div>
 
-                      <div className="space-y-2">
+                      <div>
                         <Label>Preferred Contact Method</Label>
-                        <div className="flex gap-4">
-                          <Button
-                            type="button"
-                            variant={formData.preferredContact === "email" ? "default" : "outline"}
-                            size="sm"
-                            onClick={() => handleInputChange("preferredContact", "email")}
-                          >
-                            <Mail className="w-4 h-4 mr-2" />
-                            Email
-                          </Button>
-                          <Button
-                            type="button"
-                            variant={formData.preferredContact === "phone" ? "default" : "outline"}
-                            size="sm"
-                            onClick={() => handleInputChange("preferredContact", "phone")}
-                          >
-                            <Phone className="w-4 h-4 mr-2" />
-                            Phone
-                          </Button>
-                        </div>
+                        <RadioGroup 
+                          value={formData.preferredContact} 
+                          onValueChange={(value) => handleInputChange('preferredContact', value)}
+                          className="mt-2"
+                        >
+                          <div className="flex items-center space-x-2">
+                            <RadioGroupItem value="whatsapp" id="whatsapp" />
+                            <Label htmlFor="whatsapp">WhatsApp</Label>
+                          </div>
+                          <div className="flex items-center space-x-2">
+                            <RadioGroupItem value="email" id="email" />
+                            <Label htmlFor="email">Email</Label>
+                          </div>
+                          <div className="flex items-center space-x-2">
+                            <RadioGroupItem value="phone" id="phone" />
+                            <Label htmlFor="phone">Phone Call</Label>
+                          </div>
+                        </RadioGroup>
+                        {errors.preferredContact && <p className="text-sm text-destructive mt-1">{errors.preferredContact}</p>}
                       </div>
 
-                      <Button type="submit" className="w-full glow-button" size="lg">
-                        <Send className="w-5 h-5 mr-2" />
-                        Send Message
-                      </Button>
+                      <div className="space-y-4">
+                        <Button type="submit" className="glow-button w-full">
+                          Send Message
+                        </Button>
+                        <Button 
+                          type="button"
+                          variant="outline" 
+                          onClick={handleWhatsApp}
+                          className="w-full"
+                        >
+                          <MessageCircle className="w-4 h-4 mr-2" />
+                          Quick WhatsApp Message
+                        </Button>
+                      </div>
                     </form>
                   </CardContent>
                 </Card>
               </div>
 
               {/* Contact Information */}
-              <div className="space-y-8">
-                {/* Quick Contact Cards */}
+              <div className="space-y-6">
+                {/* Quick Actions */}
                 <div className="grid gap-4">
-                  <Card className="border-border bg-card/50 backdrop-blur-sm">
-                    <CardContent className="p-6">
-                      <div className="flex items-center space-x-4">
-                        <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center">
-                          <Phone className="w-6 h-6 text-primary" />
+                  {quickActions.map((action, index) => (
+                    <Card key={index} className="hover:shadow-lg transition-shadow duration-300">
+                      <CardContent className="p-6">
+                        <div className="flex items-start space-x-4">
+                          <div className="bg-primary/10 p-3 rounded-lg">
+                            <action.icon className="w-6 h-6 text-primary" />
+                          </div>
+                          <div className="flex-1">
+                            <h3 className="font-semibold mb-1">{action.title}</h3>
+                            <p className="text-muted-foreground text-sm mb-3">{action.description}</p>
+                            <Button asChild variant="outline" size="sm">
+                              <a href={action.link}>{action.action}</a>
+                            </Button>
+                          </div>
                         </div>
-                        <div>
-                          <h3 className="font-semibold">Call Us</h3>
-                          <p className="text-muted-foreground">+1 (555) 123-4567</p>
-                          <p className="text-sm text-muted-foreground">Mon-Fri: 9AM-6PM PST</p>
-                        </div>
-                      </div>
-                    </CardContent>
-                  </Card>
-
-                  <Card className="border-border bg-card/50 backdrop-blur-sm">
-                    <CardContent className="p-6">
-                      <div className="flex items-center space-x-4">
-                        <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center">
-                          <Mail className="w-6 h-6 text-primary" />
-                        </div>
-                        <div>
-                          <h3 className="font-semibold">Email Us</h3>
-                          <p className="text-muted-foreground">contact@evolutionev.com</p>
-                          <p className="text-sm text-muted-foreground">Response within 24 hours</p>
-                        </div>
-                      </div>
-                    </CardContent>
-                  </Card>
-
-                  <Card className="border-border bg-card/50 backdrop-blur-sm">
-                    <CardContent className="p-6">
-                      <div className="flex items-center space-x-4">
-                        <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center">
-                          <MessageCircle className="w-6 h-6 text-primary" />
-                        </div>
-                        <div>
-                          <h3 className="font-semibold">Live Chat</h3>
-                          <p className="text-muted-foreground">Chat with our team</p>
-                          <Badge variant="secondary" className="mt-1">
-                            Online Now
-                          </Badge>
-                        </div>
-                      </div>
-                    </CardContent>
-                  </Card>
+                      </CardContent>
+                    </Card>
+                  ))}
                 </div>
 
-                {/* Office Locations */}
-                <div>
-                  <h3 className="text-2xl font-bold mb-6">Our Locations</h3>
-                  <div className="space-y-4">
-                    {locations.map((location, index) => (
-                      <Card 
-                        key={location.city} 
-                        className="border-border bg-card/50 backdrop-blur-sm animate-fade-in"
-                        style={{ animationDelay: `${index * 150}ms` }}
-                      >
-                        <CardContent className="p-6">
-                          <div className="flex items-start justify-between mb-3">
-                            <div>
-                              <h4 className="font-semibold text-lg">{location.city}</h4>
-                              <Badge variant="outline" className="mt-1">
-                                {location.type}
-                              </Badge>
-                            </div>
-                            <MapPin className="w-5 h-5 text-primary" />
-                          </div>
-                          
-                          <div className="space-y-2 text-sm">
-                            <p className="text-muted-foreground">{location.address}</p>
-                            <div className="flex items-center space-x-2">
-                              <Phone className="w-4 h-4 text-primary" />
-                              <span>{location.phone}</span>
-                            </div>
-                            <div className="flex items-center space-x-2">
-                              <Mail className="w-4 h-4 text-primary" />
-                              <span>{location.email}</span>
-                            </div>
-                            <div className="flex items-center space-x-2">
-                              <Clock className="w-4 h-4 text-primary" />
-                              <span>{location.hours}</span>
-                            </div>
-                          </div>
-                        </CardContent>
-                      </Card>
-                    ))}
-                  </div>
-                </div>
+                {/* Contact Details */}
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="flex items-center">
+                      <Phone className="w-5 h-5 mr-2 text-primary" />
+                      Contact Information
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-4">
+                    <div className="flex items-start space-x-3">
+                      <MessageCircle className="w-5 h-5 text-primary mt-0.5" />
+                      <div>
+                        <p className="font-medium">WhatsApp</p>
+                        <a 
+                          href="https://wa.me/923100004068" 
+                          className="text-primary hover:text-primary-glow transition-colors"
+                        >
+                          +92 310 000 4068
+                        </a>
+                      </div>
+                    </div>
+                    
+                    <div className="flex items-start space-x-3">
+                      <Mail className="w-5 h-5 text-primary mt-0.5" />
+                      <div>
+                        <p className="font-medium">Email</p>
+                        <a 
+                          href="mailto:zroxweb@gmail.com" 
+                          className="text-primary hover:text-primary-glow transition-colors"
+                        >
+                          zroxweb@gmail.com
+                        </a>
+                      </div>
+                    </div>
+                    
+                    <div className="flex items-start space-x-3">
+                      <MapPin className="w-5 h-5 text-primary mt-0.5" />
+                      <div>
+                        <p className="font-medium">Address</p>
+                        <p className="text-muted-foreground">
+                          123 Electric Avenue<br />
+                          Future City, FC 12345
+                        </p>
+                      </div>
+                    </div>
+                    
+                    <div className="flex items-start space-x-3">
+                      <Clock className="w-5 h-5 text-primary mt-0.5" />
+                      <div>
+                        <p className="font-medium">Business Hours</p>
+                        <p className="text-muted-foreground text-sm">
+                          Monday - Friday: 9:00 AM - 6:00 PM<br />
+                          Saturday: 10:00 AM - 4:00 PM<br />
+                          Sunday: Closed
+                        </p>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+
+                {/* Response Time */}
+                <Card className="border-primary/20 bg-primary/5">
+                  <CardContent className="p-6">
+                    <div className="flex items-center space-x-3">
+                      <div className="bg-primary/20 p-2 rounded-full">
+                        <Zap className="w-5 h-5 text-primary" />
+                      </div>
+                      <div>
+                        <h3 className="font-semibold">Quick Response</h3>
+                        <p className="text-sm text-muted-foreground">
+                          We typically respond within 1-2 hours during business hours
+                        </p>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
               </div>
             </div>
           </div>
@@ -359,79 +459,66 @@ export default function ContactPage() {
         {/* FAQ Section */}
         <section className="py-16 bg-muted/30">
           <div className="container mx-auto px-4">
-            <div className="text-center mb-12">
-              <h2 className="text-3xl font-bold mb-4">
-                Frequently Asked Questions
-              </h2>
-              <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-                Quick answers to common questions. Can't find what you're looking for? Contact us directly.
-              </p>
-            </div>
-
-            <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
-              <div className="space-y-6">
-                <div className="bg-card/50 backdrop-blur-sm border border-border rounded-xl p-6">
-                  <h3 className="font-semibold mb-2">How do I schedule a test ride?</h3>
-                  <p className="text-sm text-muted-foreground">
-                    You can schedule a test ride through our contact form, by calling us directly, 
-                    or by visiting one of our showrooms.
-                  </p>
-                </div>
-                
-                <div className="bg-card/50 backdrop-blur-sm border border-border rounded-xl p-6">
-                  <h3 className="font-semibold mb-2">What's included in the warranty?</h3>
-                  <p className="text-sm text-muted-foreground">
-                    All our scooters come with a 2-year comprehensive warranty covering battery, 
-                    motor, and all electrical components.
-                  </p>
-                </div>
-              </div>
+            <div className="max-w-4xl mx-auto">
+              <h2 className="text-3xl font-bold text-center mb-12">Frequently Asked Questions</h2>
               
-              <div className="space-y-6">
-                <div className="bg-card/50 backdrop-blur-sm border border-border rounded-xl p-6">
-                  <h3 className="font-semibold mb-2">Do you offer financing options?</h3>
-                  <p className="text-sm text-muted-foreground">
-                    Yes, we offer flexible financing options with 0% APR for qualified buyers. 
-                    Contact our sales team for more details.
-                  </p>
-                </div>
-                
-                <div className="bg-card/50 backdrop-blur-sm border border-border rounded-xl p-6">
-                  <h3 className="font-semibold mb-2">Where can I get my scooter serviced?</h3>
-                  <p className="text-sm text-muted-foreground">
-                    We have authorized service centers in major cities, plus mobile service 
-                    options for routine maintenance.
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
+              <div className="grid md:grid-cols-2 gap-8">
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="text-lg">How can I schedule a test ride?</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <p className="text-muted-foreground">
+                      You can schedule a test ride through our online booking system, WhatsApp, or by calling us directly. 
+                      Test rides are free and include safety equipment.
+                    </p>
+                  </CardContent>
+                </Card>
 
-        {/* Emergency Contact */}
-        <section className="py-16 bg-gradient-to-r from-primary/10 via-primary/5 to-primary/10">
-          <div className="container mx-auto px-4 text-center">
-            <h2 className="text-3xl font-bold mb-6">
-              Need Immediate Assistance?
-            </h2>
-            <p className="text-xl text-muted-foreground mb-8 max-w-2xl mx-auto">
-              For urgent support or roadside assistance, contact our 24/7 emergency hotline.
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button size="lg" className="glow-button">
-                <Phone className="w-5 h-5 mr-2" />
-                Emergency: +1 (555) 911-HELP
-              </Button>
-              <Button size="lg" variant="outline" className="border-primary text-primary hover:bg-primary/10">
-                <MessageCircle className="w-5 h-5 mr-2" />
-                Live Chat Support
-              </Button>
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="text-lg">What's your response time?</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <p className="text-muted-foreground">
+                      We respond to all inquiries within 1-2 hours during business hours. For urgent matters, 
+                      WhatsApp is the fastest way to reach us.
+                    </p>
+                  </CardContent>
+                </Card>
+
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="text-lg">Do you offer financing options?</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <p className="text-muted-foreground">
+                      Yes, we offer various financing options including monthly payment plans and lease options. 
+                      Contact our sales team for personalized financing solutions.
+                    </p>
+                  </CardContent>
+                </Card>
+
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="text-lg">What warranty do you provide?</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <p className="text-muted-foreground">
+                      All our scooters come with a comprehensive 2-year warranty covering manufacturing defects, 
+                      battery, and major components with free service during the warranty period.
+                    </p>
+                  </CardContent>
+                </Card>
+              </div>
             </div>
           </div>
         </section>
       </main>
-
+      
       <Footer />
     </div>
   );
-}
+};
+
+export default ContactPage;
