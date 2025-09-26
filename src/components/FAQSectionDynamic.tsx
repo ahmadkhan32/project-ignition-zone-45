@@ -38,7 +38,7 @@ export const FAQSectionDynamic = () => {
 
   const fetchFAQs = async () => {
     try {
-      const { data, error } = await supabase
+      const { data, error } = await (supabase as any)
         .from('faqs')
         .select('*')
         .eq('is_active', true)

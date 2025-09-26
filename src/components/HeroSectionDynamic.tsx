@@ -82,7 +82,7 @@ export const HeroSectionDynamic = () => {
 
   const fetchScooters = async () => {
     try {
-      const { data, error } = await supabase
+      const { data, error } = await (supabase as any)
         .from('scooters')
         .select('*')
         .eq('is_active', true)

@@ -40,7 +40,7 @@ export const GallerySectionDynamic = () => {
 
   const fetchGalleryItems = async () => {
     try {
-      const { data, error } = await supabase
+      const { data, error } = await (supabase as any)
         .from('gallery_items')
         .select('*')
         .eq('is_active', true)
