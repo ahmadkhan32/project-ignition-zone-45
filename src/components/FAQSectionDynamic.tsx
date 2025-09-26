@@ -7,8 +7,11 @@ interface FAQ {
   id: string;
   question: string;
   answer: string;
-  display_order: number;
+  category: string;
+  sort_order: number;
   is_active: boolean;
+  created_at: string;
+  updated_at: string;
 }
 
 export const FAQSectionDynamic = () => {
@@ -39,7 +42,7 @@ export const FAQSectionDynamic = () => {
         .from('faqs')
         .select('*')
         .eq('is_active', true)
-        .order('display_order', { ascending: true });
+        .order('sort_order', { ascending: true });
 
       if (error) throw error;
       setFaqs(data || []);

@@ -53,7 +53,7 @@ export const TechnologySectionDynamic = () => {
       const { data, error } = await supabase
         .from('technology_features')
         .select('*')
-        .order('display_order', { ascending: true });
+        .order('sort_order', { ascending: true });
 
       if (error) throw error;
       setFeatures(data || []);

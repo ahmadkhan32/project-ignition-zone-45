@@ -20,6 +20,8 @@ interface ProductHighlight {
   title: string;
   icon_type: string;
   display_order: number;
+  created_at: string;
+  updated_at: string;
 }
 
 const CountUpNumber = ({ value, duration = 2000 }: { value: number; duration?: number }) => {

@@ -5,13 +5,18 @@ import { useToast } from "@/hooks/use-toast";
 
 interface Testimonial {
   id: string;
-  customer_name: string;
-  customer_title: string;
-  customer_location: string;
+  name: string;
+  role: string;
+  company: string;
+  location: string;
+  text: string;
   rating: number;
-  testimonial_text: string;
-  display_order: number;
+  avatar_url: string;
+  is_featured: boolean;
+  is_active: boolean;
+  sort_order: number;
   created_at: string;
+  updated_at: string;
 }
 
 const StarRating = ({ rating }: { rating: number }) => {
@@ -74,7 +79,7 @@ export const TestimonialsSectionDynamic = () => {
       const { data, error } = await supabase
         .from('testimonials')
         .select('*')
-        .order('display_order', { ascending: true });
+        .order('sort_order', { ascending: true });
 
       if (error) throw error;
       setTestimonials(data || []);
@@ -169,7 +174,7 @@ export const TestimonialsSectionDynamic = () => {
 
               {/* Testimonial Text */}
               <p className="text-muted-foreground leading-relaxed mb-6 relative z-10">
-                "{testimonial.testimonial_text}"
+                "{testimonial.text}"
               </p>
 
               {/* Rating */}
@@ -180,12 +185,12 @@ export const TestimonialsSectionDynamic = () => {
               {/* User Info */}
               <div className="flex items-center space-x-4">
                 <div className="w-12 h-12 bg-gradient-to-br from-primary to-primary-glow rounded-full flex items-center justify-center text-primary-foreground font-bold">
-                  {getInitials(testimonial.customer_name)}
+                  {getInitials(testimonial.name)}
                 </div>
                 <div>
-                  <h4 className="font-bold text-foreground">{testimonial.customer_name}</h4>
-                  <p className="text-sm text-muted-foreground">{testimonial.customer_title}</p>
-                  <p className="text-xs text-muted-foreground/70">{testimonial.customer_location}</p>
+                  <h4 className="font-bold text-foreground">{testimonial.name}</h4>
+                  <p className="text-sm text-muted-foreground">{testimonial.role}</p>
+                  <p className="text-xs text-muted-foreground/70">{testimonial.location}</p>
                 </div>
               </div>
 
