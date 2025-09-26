@@ -14,6 +14,30 @@ export type Database = {
   }
   public: {
     Tables: {
+      admin_login_attempts: {
+        Row: {
+          attempted_at: string
+          id: string
+          ip_address: string
+          success: boolean
+          username: string
+        }
+        Insert: {
+          attempted_at?: string
+          id?: string
+          ip_address: string
+          success?: boolean
+          username: string
+        }
+        Update: {
+          attempted_at?: string
+          id?: string
+          ip_address?: string
+          success?: boolean
+          username?: string
+        }
+        Relationships: []
+      }
       admin_users: {
         Row: {
           created_at: string
@@ -365,6 +389,98 @@ export type Database = {
         }
         Relationships: []
       }
+      navigation_items: {
+        Row: {
+          created_at: string | null
+          icon_name: string | null
+          id: string
+          is_active: boolean | null
+          is_external: boolean | null
+          label: string
+          parent_id: string | null
+          sort_order: number | null
+          updated_at: string | null
+          url: string
+        }
+        Insert: {
+          created_at?: string | null
+          icon_name?: string | null
+          id?: string
+          is_active?: boolean | null
+          is_external?: boolean | null
+          label: string
+          parent_id?: string | null
+          sort_order?: number | null
+          updated_at?: string | null
+          url: string
+        }
+        Update: {
+          created_at?: string | null
+          icon_name?: string | null
+          id?: string
+          is_active?: boolean | null
+          is_external?: boolean | null
+          label?: string
+          parent_id?: string | null
+          sort_order?: number | null
+          updated_at?: string | null
+          url?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "navigation_items_parent_id_fkey"
+            columns: ["parent_id"]
+            isOneToOne: false
+            referencedRelation: "navigation_items"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      page_seo: {
+        Row: {
+          canonical_url: string | null
+          created_at: string | null
+          id: string
+          is_active: boolean | null
+          keywords: string[] | null
+          meta_description: string | null
+          meta_title: string | null
+          og_description: string | null
+          og_image: string | null
+          og_title: string | null
+          page_slug: string
+          updated_at: string | null
+        }
+        Insert: {
+          canonical_url?: string | null
+          created_at?: string | null
+          id?: string
+          is_active?: boolean | null
+          keywords?: string[] | null
+          meta_description?: string | null
+          meta_title?: string | null
+          og_description?: string | null
+          og_image?: string | null
+          og_title?: string | null
+          page_slug: string
+          updated_at?: string | null
+        }
+        Update: {
+          canonical_url?: string | null
+          created_at?: string | null
+          id?: string
+          is_active?: boolean | null
+          keywords?: string[] | null
+          meta_description?: string | null
+          meta_title?: string | null
+          og_description?: string | null
+          og_image?: string | null
+          og_title?: string | null
+          page_slug?: string
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
       plans: {
         Row: {
           created_at: string | null
@@ -646,6 +762,42 @@ export type Database = {
           price?: string
           thumbnail_url?: string | null
           updated_at?: string
+        }
+        Relationships: []
+      }
+      site_content: {
+        Row: {
+          content_type: string
+          content_value: string | null
+          created_at: string | null
+          id: string
+          is_active: boolean | null
+          meta_data: Json | null
+          page_slug: string
+          section_key: string
+          updated_at: string | null
+        }
+        Insert: {
+          content_type?: string
+          content_value?: string | null
+          created_at?: string | null
+          id?: string
+          is_active?: boolean | null
+          meta_data?: Json | null
+          page_slug: string
+          section_key: string
+          updated_at?: string | null
+        }
+        Update: {
+          content_type?: string
+          content_value?: string | null
+          created_at?: string | null
+          id?: string
+          is_active?: boolean | null
+          meta_data?: Json | null
+          page_slug?: string
+          section_key?: string
+          updated_at?: string | null
         }
         Relationships: []
       }
@@ -973,6 +1125,10 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      check_login_attempts: {
+        Args: { ip_addr: string; username_input: string }
+        Returns: boolean
+      }
       get_current_user_role: {
         Args: Record<PropertyKey, never>
         Returns: Database["public"]["Enums"]["user_role"]
@@ -998,6 +1154,17 @@ export type Database = {
           _user_id: string
         }
         Returns: boolean
+      }
+      log_login_attempt: {
+        Args: { ip_addr: string; success_flag: boolean; username_input: string }
+        Returns: undefined
+      }
+      verify_admin_password: {
+        Args: { password_input: string; username_input: string }
+        Returns: {
+          id: string
+          username: string
+        }[]
       }
     }
     Enums: {
