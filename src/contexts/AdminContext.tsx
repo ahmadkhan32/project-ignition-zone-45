@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
+import { setupAdminUser } from '@/lib/setupAdmin';
 
 interface AdminContextType {
   isAdminLoggedIn: boolean;
@@ -25,18 +26,25 @@ export const AdminProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Check if admin is already logged in (from localStorage)
-    const savedAdmin = localStorage.getItem('evolutionev_admin');
-    if (savedAdmin) {
-      try {
-        const adminData = JSON.parse(savedAdmin);
-        setAdminUser(adminData);
-        setIsAdminLoggedIn(true);
-      } catch (error) {
-        localStorage.removeItem('evolutionev_admin');
+    const initializeAdmin = async () => {
+      // Setup admin user if needed
+      await setupAdminUser();
+      
+      // Check if admin is already logged in (from localStorage)
+      const savedAdmin = localStorage.getItem('evolutionev_admin');
+      if (savedAdmin) {
+        try {
+          const adminData = JSON.parse(savedAdmin);
+          setAdminUser(adminData);
+          setIsAdminLoggedIn(true);
+        } catch (error) {
+          localStorage.removeItem('evolutionev_admin');
+        }
       }
-    }
-    setLoading(false);
+      setLoading(false);
+    };
+
+    initializeAdmin();
   }, []);
 
   const login = async (username: string, password: string): Promise<boolean> => {
