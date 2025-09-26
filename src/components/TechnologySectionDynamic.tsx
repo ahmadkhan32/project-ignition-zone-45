@@ -7,8 +7,9 @@ interface TechnologyFeature {
   id: string;
   title: string;
   description: string;
-  icon_type: string;
-  display_order: number;
+  icon_name: string;
+  sort_order: number;
+  is_active: boolean;
 }
 
 export const TechnologySectionDynamic = () => {

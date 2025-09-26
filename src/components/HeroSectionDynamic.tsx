@@ -83,8 +83,9 @@ export const HeroSectionDynamic = () => {
   const fetchScooters = async () => {
     try {
       const { data, error } = await supabase
-        .from('products')
+        .from('scooters')
         .select('*')
+        .eq('is_active', true)
         .order('display_order', { ascending: true });
 
       if (error) throw error;
