@@ -76,9 +76,10 @@ export const TestimonialsSectionDynamic = () => {
 
   const fetchTestimonials = async () => {
     try {
-      const { data, error } = await supabase
+      const { data, error } = await (supabase as any)
         .from('testimonials')
         .select('*')
+        .eq('is_active', true)
         .order('sort_order', { ascending: true });
 
       if (error) throw error;

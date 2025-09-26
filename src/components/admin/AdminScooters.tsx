@@ -75,16 +75,13 @@ const AdminScooters = () => {
 
   const fetchScooters = async () => {
     try {
-      const { data, error } = await supabase
+      const { data, error } = await (supabase as any)
         .from('scooters')
         .select('*')
-        .order('sort_order', { ascending: true });
+        .order('display_order', { ascending: true });
 
       if (error) throw error;
-      setScooters(data?.map(item => ({
-        ...item,
-        features: Array.isArray(item.features) ? item.features : []
-      })) || []);
+      setScooters(data || []);
     } catch (error) {
       console.error('Error fetching scooters:', error);
       toast({
@@ -101,9 +98,9 @@ const AdminScooters = () => {
     try {
       if (editingScooter?.id) {
         // Update existing scooter
-        const { error } = await supabase
+        const { error } = await (supabase as any)
           .from('scooters')
-          .update(scooterData)
+          .update(scooterData as any)
           .eq('id', editingScooter.id);
 
         if (error) throw error;
@@ -114,7 +111,7 @@ const AdminScooters = () => {
         });
       } else {
         // Create new scooter
-        const { error } = await supabase
+        const { error } = await (supabase as any)
           .from('scooters')
           .insert(scooterData as any);
 
@@ -142,7 +139,7 @@ const AdminScooters = () => {
     if (!confirm('Are you sure you want to delete this scooter?')) return;
 
     try {
-      const { error } = await supabase
+      const { error } = await (supabase as any)
         .from('scooters')
         .delete()
         .eq('id', id);
@@ -165,7 +162,7 @@ const AdminScooters = () => {
 
   const toggleActive = async (id: string, isActive: boolean) => {
     try {
-      const { error } = await supabase
+      const { error } = await (supabase as any)
         .from('scooters')
         .update({ is_active: !isActive })
         .eq('id', id);

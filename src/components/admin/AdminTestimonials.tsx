@@ -63,7 +63,7 @@ const AdminTestimonials = () => {
 
   const fetchTestimonials = async () => {
     try {
-      const { data, error } = await supabase
+      const { data, error } = await (supabase as any)
         .from('testimonials')
         .select('*')
         .order('sort_order', { ascending: true });
@@ -86,7 +86,7 @@ const AdminTestimonials = () => {
     try {
       if (editingTestimonial?.id) {
         // Update existing testimonial
-        const { error } = await supabase
+        const { error } = await (supabase as any)
           .from('testimonials')
           .update(testimonialData)
           .eq('id', editingTestimonial.id);
@@ -99,7 +99,7 @@ const AdminTestimonials = () => {
         });
       } else {
         // Create new testimonial
-        const { error } = await supabase
+        const { error } = await (supabase as any)
           .from('testimonials')
           .insert(testimonialData as any);
 
@@ -127,7 +127,7 @@ const AdminTestimonials = () => {
     if (!confirm('Are you sure you want to delete this testimonial?')) return;
 
     try {
-      const { error } = await supabase
+      const { error } = await (supabase as any)
         .from('testimonials')
         .delete()
         .eq('id', id);

@@ -14,6 +14,30 @@ export type Database = {
   }
   public: {
     Tables: {
+      admin_users: {
+        Row: {
+          created_at: string
+          id: string
+          password_hash: string
+          updated_at: string
+          username: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          password_hash: string
+          updated_at?: string
+          username: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          password_hash?: string
+          updated_at?: string
+          username?: string
+        }
+        Relationships: []
+      }
       audit_log: {
         Row: {
           action: string
@@ -228,6 +252,39 @@ export type Database = {
         }
         Relationships: []
       }
+      faqs: {
+        Row: {
+          answer: string
+          category: string
+          created_at: string
+          id: string
+          is_active: boolean
+          question: string
+          sort_order: number
+          updated_at: string
+        }
+        Insert: {
+          answer: string
+          category?: string
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          question: string
+          sort_order?: number
+          updated_at?: string
+        }
+        Update: {
+          answer?: string
+          category?: string
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          question?: string
+          sort_order?: number
+          updated_at?: string
+        }
+        Relationships: []
+      }
       files: {
         Row: {
           created_at: string | null
@@ -268,6 +325,45 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      gallery_items: {
+        Row: {
+          created_at: string
+          description: string
+          display_order: number
+          id: string
+          image_url: string
+          is_active: boolean
+          item_type: string
+          thumbnail_url: string | null
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          description: string
+          display_order?: number
+          id?: string
+          image_url: string
+          is_active?: boolean
+          item_type?: string
+          thumbnail_url?: string | null
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          description?: string
+          display_order?: number
+          id?: string
+          image_url?: string
+          is_active?: boolean
+          item_type?: string
+          thumbnail_url?: string | null
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
       }
       plans: {
         Row: {
@@ -496,6 +592,141 @@ export type Database = {
           status?: Database["public"]["Enums"]["request_status"]
           updated_at?: string | null
           user_id?: string
+        }
+        Relationships: []
+      }
+      scooters: {
+        Row: {
+          charge_time: string
+          created_at: string
+          description: string | null
+          display_order: number
+          id: string
+          image_1_url: string | null
+          image_2_url: string | null
+          is_active: boolean
+          is_featured: boolean
+          max_range: string
+          max_speed: string
+          name: string
+          price: string
+          thumbnail_url: string | null
+          updated_at: string
+        }
+        Insert: {
+          charge_time?: string
+          created_at?: string
+          description?: string | null
+          display_order?: number
+          id?: string
+          image_1_url?: string | null
+          image_2_url?: string | null
+          is_active?: boolean
+          is_featured?: boolean
+          max_range?: string
+          max_speed?: string
+          name: string
+          price?: string
+          thumbnail_url?: string | null
+          updated_at?: string
+        }
+        Update: {
+          charge_time?: string
+          created_at?: string
+          description?: string | null
+          display_order?: number
+          id?: string
+          image_1_url?: string | null
+          image_2_url?: string | null
+          is_active?: boolean
+          is_featured?: boolean
+          max_range?: string
+          max_speed?: string
+          name?: string
+          price?: string
+          thumbnail_url?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      technology_features: {
+        Row: {
+          created_at: string
+          description: string
+          icon_name: string
+          id: string
+          is_active: boolean
+          sort_order: number
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          description: string
+          icon_name?: string
+          id?: string
+          is_active?: boolean
+          sort_order?: number
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          description?: string
+          icon_name?: string
+          id?: string
+          is_active?: boolean
+          sort_order?: number
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      testimonials: {
+        Row: {
+          avatar_url: string | null
+          company: string | null
+          created_at: string
+          id: string
+          is_active: boolean
+          is_featured: boolean
+          location: string
+          name: string
+          rating: number
+          role: string
+          sort_order: number
+          text: string
+          updated_at: string
+        }
+        Insert: {
+          avatar_url?: string | null
+          company?: string | null
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          is_featured?: boolean
+          location: string
+          name: string
+          rating?: number
+          role: string
+          sort_order?: number
+          text: string
+          updated_at?: string
+        }
+        Update: {
+          avatar_url?: string | null
+          company?: string | null
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          is_featured?: boolean
+          location?: string
+          name?: string
+          rating?: number
+          role?: string
+          sort_order?: number
+          text?: string
+          updated_at?: string
         }
         Relationships: []
       }

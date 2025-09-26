@@ -51,9 +51,10 @@ export const TechnologySectionDynamic = () => {
 
   const fetchFeatures = async () => {
     try {
-      const { data, error } = await supabase
+      const { data, error } = await (supabase as any)
         .from('technology_features')
         .select('*')
+        .eq('is_active', true)
         .order('sort_order', { ascending: true });
 
       if (error) throw error;
@@ -122,7 +123,7 @@ export const TechnologySectionDynamic = () => {
 
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
           {features.map((feature, index) => {
-            const IconComponent = getIconComponent(feature.icon_type);
+            const IconComponent = getIconComponent(feature.icon_name);
             return (
               <div
                 key={feature.id}

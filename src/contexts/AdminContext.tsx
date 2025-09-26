@@ -41,7 +41,7 @@ export const AdminProvider: React.FC<{ children: React.ReactNode }> = ({ childre
 
   const login = async (username: string, password: string): Promise<boolean> => {
     try {
-      const { data, error } = await supabase
+      const { data, error } = await (supabase as any)
         .from('admin_users')
         .select('id, username')
         .eq('username', username)

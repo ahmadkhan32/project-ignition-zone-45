@@ -53,7 +53,7 @@ const AdminFAQs = () => {
 
   const fetchFAQs = async () => {
     try {
-      const { data, error } = await supabase
+      const { data, error } = await (supabase as any)
         .from('faqs')
         .select('*')
         .order('sort_order', { ascending: true });
@@ -76,7 +76,7 @@ const AdminFAQs = () => {
     try {
       if (editingFAQ?.id) {
         // Update existing FAQ
-        const { error } = await supabase
+        const { error } = await (supabase as any)
           .from('faqs')
           .update(faqData)
           .eq('id', editingFAQ.id);
@@ -89,7 +89,7 @@ const AdminFAQs = () => {
         });
       } else {
         // Create new FAQ
-        const { error } = await supabase
+        const { error } = await (supabase as any)
           .from('faqs')
           .insert(faqData as any);
 
@@ -117,7 +117,7 @@ const AdminFAQs = () => {
     if (!confirm('Are you sure you want to delete this FAQ?')) return;
 
     try {
-      const { error } = await supabase
+      const { error } = await (supabase as any)
         .from('faqs')
         .delete()
         .eq('id', id);

@@ -24,10 +24,10 @@ const AdminOverview = () => {
     const fetchStats = async () => {
       try {
         const [scootersRes, testimonialsRes, faqsRes, techRes] = await Promise.all([
-          supabase.from('scooters').select('id', { count: 'exact' }),
-          supabase.from('testimonials').select('id', { count: 'exact' }),
-          supabase.from('faqs').select('id', { count: 'exact' }),
-          supabase.from('technology_features').select('id', { count: 'exact' }),
+          (supabase as any).from('scooters').select('id', { count: 'exact' }),
+          (supabase as any).from('testimonials').select('id', { count: 'exact' }),
+          (supabase as any).from('faqs').select('id', { count: 'exact' }),
+          (supabase as any).from('technology_features').select('id', { count: 'exact' }),
         ]);
 
         setStats({

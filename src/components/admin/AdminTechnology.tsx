@@ -58,7 +58,7 @@ const AdminTechnology = () => {
 
   const fetchFeatures = async () => {
     try {
-      const { data, error } = await supabase
+      const { data, error } = await (supabase as any)
         .from('technology_features')
         .select('*')
         .order('sort_order', { ascending: true });
@@ -81,7 +81,7 @@ const AdminTechnology = () => {
     try {
       if (editingFeature?.id) {
         // Update existing feature
-        const { error } = await supabase
+        const { error } = await (supabase as any)
           .from('technology_features')
           .update(featureData)
           .eq('id', editingFeature.id);
@@ -94,7 +94,7 @@ const AdminTechnology = () => {
         });
       } else {
         // Create new feature
-        const { error } = await supabase
+        const { error } = await (supabase as any)
           .from('technology_features')
           .insert(featureData as any);
 
@@ -122,7 +122,7 @@ const AdminTechnology = () => {
     if (!confirm('Are you sure you want to delete this technology feature?')) return;
 
     try {
-      const { error } = await supabase
+      const { error } = await (supabase as any)
         .from('technology_features')
         .delete()
         .eq('id', id);

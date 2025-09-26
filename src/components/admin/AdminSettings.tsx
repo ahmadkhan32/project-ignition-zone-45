@@ -39,7 +39,7 @@ const AdminSettings = () => {
 
   const fetchSettings = async () => {
     try {
-      const { data, error } = await supabase
+      const { data, error } = await (supabase as any)
         .from('site_settings')
         .select('*');
 
@@ -73,8 +73,8 @@ const AdminSettings = () => {
       }));
 
       for (const update of updates) {
-        const { error } = await supabase
-          .from('site_settings')
+      const { error } = await (supabase as any)
+        .from('site_settings')
           .upsert(update, { onConflict: 'setting_key' });
         
         if (error) throw error;
