@@ -10,394 +10,730 @@ export type Database = {
   // Allows to automatically instantiate createClient with right options
   // instead of createClient<Database, { PostgrestVersion: 'XX' }>(URL, KEY)
   __InternalSupabase: {
-    PostgrestVersion: "13.0.5"
+    PostgrestVersion: "13.0.4"
   }
   public: {
     Tables: {
-      admin_users: {
+      audit_log: {
         Row: {
+          action: string
           created_at: string
           id: string
-          password_hash: string
-          updated_at: string
-          username: string
+          record_id: string | null
+          table_name: string
+          timestamp: string
+          user_id: string
         }
         Insert: {
+          action: string
           created_at?: string
           id?: string
-          password_hash: string
-          updated_at?: string
-          username: string
+          record_id?: string | null
+          table_name: string
+          timestamp?: string
+          user_id: string
         }
         Update: {
+          action?: string
           created_at?: string
           id?: string
-          password_hash?: string
-          updated_at?: string
-          username?: string
+          record_id?: string | null
+          table_name?: string
+          timestamp?: string
+          user_id?: string
         }
         Relationships: []
       }
-      company_milestones: {
+      challenge_templates: {
         Row: {
-          created_at: string
-          description: string
+          category: string
+          created_at: string | null
+          difficulty_level: string
+          estimated_time: number | null
           id: string
-          is_active: boolean | null
-          sort_order: number | null
-          title: string
-          updated_at: string
-          year: number
+          max_points: number | null
+          min_points: number | null
+          template_prompt: string
+          updated_at: string | null
         }
         Insert: {
-          created_at?: string
-          description: string
+          category: string
+          created_at?: string | null
+          difficulty_level: string
+          estimated_time?: number | null
           id?: string
-          is_active?: boolean | null
-          sort_order?: number | null
-          title: string
-          updated_at?: string
-          year: number
+          max_points?: number | null
+          min_points?: number | null
+          template_prompt: string
+          updated_at?: string | null
         }
         Update: {
+          category?: string
+          created_at?: string | null
+          difficulty_level?: string
+          estimated_time?: number | null
+          id?: string
+          max_points?: number | null
+          min_points?: number | null
+          template_prompt?: string
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
+      challenges: {
+        Row: {
+          category: string
+          created_at: string
+          description: string
+          difficulty_level: string
+          estimated_time: number | null
+          generation_date: string | null
+          id: string
+          instructions: string | null
+          is_active: boolean | null
+          is_ai_generated: boolean | null
+          points_reward: number | null
+          template_id: string | null
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          category: string
+          created_at?: string
+          description: string
+          difficulty_level: string
+          estimated_time?: number | null
+          generation_date?: string | null
+          id?: string
+          instructions?: string | null
+          is_active?: boolean | null
+          is_ai_generated?: boolean | null
+          points_reward?: number | null
+          template_id?: string | null
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          category?: string
           created_at?: string
           description?: string
+          difficulty_level?: string
+          estimated_time?: number | null
+          generation_date?: string | null
           id?: string
+          instructions?: string | null
           is_active?: boolean | null
-          sort_order?: number | null
+          is_ai_generated?: boolean | null
+          points_reward?: number | null
+          template_id?: string | null
           title?: string
           updated_at?: string
-          year?: number
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "challenges_template_id_fkey"
+            columns: ["template_id"]
+            isOneToOne: false
+            referencedRelation: "challenge_templates"
+            referencedColumns: ["id"]
+          },
+        ]
       }
-      contact_info: {
+      coach_conversations: {
         Row: {
-          additional_data: Json | null
           created_at: string
           id: string
-          info_type: string
-          is_active: boolean | null
-          sort_order: number | null
           title: string
           updated_at: string
-          value: string
+          user_id: string
         }
         Insert: {
-          additional_data?: Json | null
           created_at?: string
           id?: string
-          info_type: string
-          is_active?: boolean | null
-          sort_order?: number | null
-          title: string
-          updated_at?: string
-          value: string
-        }
-        Update: {
-          additional_data?: Json | null
-          created_at?: string
-          id?: string
-          info_type?: string
-          is_active?: boolean | null
-          sort_order?: number | null
           title?: string
           updated_at?: string
-          value?: string
-        }
-        Relationships: []
-      }
-      faqs: {
-        Row: {
-          answer: string
-          category: string | null
-          created_at: string
-          id: string
-          is_active: boolean | null
-          question: string
-          sort_order: number | null
-          updated_at: string
-        }
-        Insert: {
-          answer: string
-          category?: string | null
-          created_at?: string
-          id?: string
-          is_active?: boolean | null
-          question: string
-          sort_order?: number | null
-          updated_at?: string
+          user_id: string
         }
         Update: {
-          answer?: string
-          category?: string | null
           created_at?: string
           id?: string
-          is_active?: boolean | null
-          question?: string
-          sort_order?: number | null
+          title?: string
           updated_at?: string
+          user_id?: string
         }
         Relationships: []
       }
-      hero_content: {
+      coach_interactions: {
         Row: {
-          background_image: string | null
+          coach_response: string
+          context_used: Json | null
+          conversation_id: string | null
           created_at: string
-          cta_link: string | null
-          cta_text: string | null
+          id: string
+          user_id: string
+          user_message: string
+        }
+        Insert: {
+          coach_response: string
+          context_used?: Json | null
+          conversation_id?: string | null
+          created_at?: string
+          id?: string
+          user_id: string
+          user_message: string
+        }
+        Update: {
+          coach_response?: string
+          context_used?: Json | null
+          conversation_id?: string | null
+          created_at?: string
+          id?: string
+          user_id?: string
+          user_message?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "coach_interactions_conversation_id_fkey"
+            columns: ["conversation_id"]
+            isOneToOne: false
+            referencedRelation: "coach_conversations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      comfort_zones: {
+        Row: {
+          category: string
+          created_at: string
+          enabled: boolean
+          id: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          category: string
+          created_at?: string
+          enabled?: boolean
+          id?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          category?: string
+          created_at?: string
+          enabled?: boolean
+          id?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      files: {
+        Row: {
+          created_at: string | null
+          file_name: string
+          file_size: number | null
+          file_url: string
+          id: string
+          mime_type: string | null
+          request_id: string | null
+          user_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          file_name: string
+          file_size?: number | null
+          file_url: string
+          id?: string
+          mime_type?: string | null
+          request_id?: string | null
+          user_id: string
+        }
+        Update: {
+          created_at?: string | null
+          file_name?: string
+          file_size?: number | null
+          file_url?: string
+          id?: string
+          mime_type?: string | null
+          request_id?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "files_request_id_fkey"
+            columns: ["request_id"]
+            isOneToOne: false
+            referencedRelation: "requests"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      plans: {
+        Row: {
+          created_at: string | null
           description: string | null
           id: string
-          is_active: boolean | null
-          section_key: string
-          subtitle: string | null
-          title: string
-          updated_at: string
+          name: string
+          price: number | null
+          updated_at: string | null
         }
         Insert: {
-          background_image?: string | null
-          created_at?: string
-          cta_link?: string | null
-          cta_text?: string | null
+          created_at?: string | null
           description?: string | null
           id?: string
-          is_active?: boolean | null
-          section_key: string
-          subtitle?: string | null
-          title: string
-          updated_at?: string
+          name: string
+          price?: number | null
+          updated_at?: string | null
         }
         Update: {
-          background_image?: string | null
-          created_at?: string
-          cta_link?: string | null
-          cta_text?: string | null
+          created_at?: string | null
           description?: string | null
           id?: string
-          is_active?: boolean | null
-          section_key?: string
-          subtitle?: string | null
-          title?: string
-          updated_at?: string
-        }
-        Relationships: []
-      }
-      scooters: {
-        Row: {
-          battery_capacity: number
-          charging_time_hours: number
-          created_at: string
-          description: string | null
-          features: Json | null
-          id: string
-          image_url: string | null
-          is_active: boolean | null
-          is_featured: boolean | null
-          model: string
-          name: string
-          power_kw: number
-          price: number
-          range_km: number
-          sort_order: number | null
-          top_speed: number
-          torque_nm: number
-          updated_at: string
-          weight_kg: number
-        }
-        Insert: {
-          battery_capacity: number
-          charging_time_hours: number
-          created_at?: string
-          description?: string | null
-          features?: Json | null
-          id?: string
-          image_url?: string | null
-          is_active?: boolean | null
-          is_featured?: boolean | null
-          model: string
-          name: string
-          power_kw: number
-          price: number
-          range_km: number
-          sort_order?: number | null
-          top_speed: number
-          torque_nm: number
-          updated_at?: string
-          weight_kg: number
-        }
-        Update: {
-          battery_capacity?: number
-          charging_time_hours?: number
-          created_at?: string
-          description?: string | null
-          features?: Json | null
-          id?: string
-          image_url?: string | null
-          is_active?: boolean | null
-          is_featured?: boolean | null
-          model?: string
           name?: string
-          power_kw?: number
-          price?: number
-          range_km?: number
-          sort_order?: number | null
-          top_speed?: number
-          torque_nm?: number
-          updated_at?: string
-          weight_kg?: number
+          price?: number | null
+          updated_at?: string | null
         }
         Relationships: []
       }
-      site_settings: {
+      product_highlights: {
+        Row: {
+          created_at: string
+          display_order: number
+          icon_type: string
+          id: string
+          product_id: string
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          display_order?: number
+          icon_type?: string
+          id?: string
+          product_id: string
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          display_order?: number
+          icon_type?: string
+          id?: string
+          product_id?: string
+          title?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "product_highlights_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "products"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      products: {
         Row: {
           created_at: string
           description: string | null
+          display_order: number | null
           id: string
-          setting_key: string
-          setting_type: string
-          setting_value: Json
+          image_1_url: string | null
+          image_2_url: string | null
+          name: string
+          page_type: string
+          preview_url: string | null
+          price_type: string
+          remix_url: string | null
+          thumbnail_url: string | null
           updated_at: string
         }
         Insert: {
           created_at?: string
           description?: string | null
+          display_order?: number | null
           id?: string
-          setting_key: string
-          setting_type: string
-          setting_value: Json
+          image_1_url?: string | null
+          image_2_url?: string | null
+          name: string
+          page_type?: string
+          preview_url?: string | null
+          price_type?: string
+          remix_url?: string | null
+          thumbnail_url?: string | null
           updated_at?: string
         }
         Update: {
           created_at?: string
           description?: string | null
+          display_order?: number | null
           id?: string
-          setting_key?: string
-          setting_type?: string
-          setting_value?: Json
+          image_1_url?: string | null
+          image_2_url?: string | null
+          name?: string
+          page_type?: string
+          preview_url?: string | null
+          price_type?: string
+          remix_url?: string | null
+          thumbnail_url?: string | null
           updated_at?: string
         }
         Relationships: []
       }
-      team_members: {
+      profiles: {
         Row: {
           avatar_url: string | null
-          bio: string | null
-          created_at: string
+          confidence_level: number | null
+          contact_details: Json | null
+          created_at: string | null
+          display_name: string | null
+          email: string
           id: string
-          is_active: boolean | null
-          linkedin_url: string | null
-          name: string
-          position: string
-          sort_order: number | null
-          twitter_url: string | null
-          updated_at: string
+          onboarding_completed: boolean | null
+          role: Database["public"]["Enums"]["user_role"]
+          updated_at: string | null
         }
         Insert: {
           avatar_url?: string | null
-          bio?: string | null
-          created_at?: string
-          id?: string
-          is_active?: boolean | null
-          linkedin_url?: string | null
-          name: string
-          position: string
-          sort_order?: number | null
-          twitter_url?: string | null
-          updated_at?: string
+          confidence_level?: number | null
+          contact_details?: Json | null
+          created_at?: string | null
+          display_name?: string | null
+          email: string
+          id: string
+          onboarding_completed?: boolean | null
+          role?: Database["public"]["Enums"]["user_role"]
+          updated_at?: string | null
         }
         Update: {
           avatar_url?: string | null
-          bio?: string | null
-          created_at?: string
+          confidence_level?: number | null
+          contact_details?: Json | null
+          created_at?: string | null
+          display_name?: string | null
+          email?: string
           id?: string
-          is_active?: boolean | null
-          linkedin_url?: string | null
-          name?: string
-          position?: string
-          sort_order?: number | null
-          twitter_url?: string | null
-          updated_at?: string
+          onboarding_completed?: boolean | null
+          role?: Database["public"]["Enums"]["user_role"]
+          updated_at?: string | null
         }
         Relationships: []
       }
-      technology_features: {
+      reflections: {
         Row: {
+          challenge_id: string
+          confidence_rating: number
           created_at: string
-          description: string
-          icon_name: string
           id: string
-          is_active: boolean | null
-          sort_order: number | null
-          title: string
-          updated_at: string
+          lessons_learned: string | null
+          mood: string | null
+          reflection_text: string | null
+          user_challenge_id: string
+          user_id: string
         }
         Insert: {
+          challenge_id: string
+          confidence_rating: number
           created_at?: string
-          description: string
-          icon_name: string
           id?: string
-          is_active?: boolean | null
-          sort_order?: number | null
-          title: string
-          updated_at?: string
+          lessons_learned?: string | null
+          mood?: string | null
+          reflection_text?: string | null
+          user_challenge_id: string
+          user_id: string
         }
         Update: {
+          challenge_id?: string
+          confidence_rating?: number
           created_at?: string
-          description?: string
-          icon_name?: string
           id?: string
-          is_active?: boolean | null
-          sort_order?: number | null
-          title?: string
-          updated_at?: string
+          lessons_learned?: string | null
+          mood?: string | null
+          reflection_text?: string | null
+          user_challenge_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "reflections_challenge_id_fkey"
+            columns: ["challenge_id"]
+            isOneToOne: false
+            referencedRelation: "challenges"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "reflections_user_challenge_id_fkey"
+            columns: ["user_challenge_id"]
+            isOneToOne: false
+            referencedRelation: "user_challenges"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      requests: {
+        Row: {
+          created_at: string | null
+          id: string
+          message: string
+          status: Database["public"]["Enums"]["request_status"]
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          message: string
+          status?: Database["public"]["Enums"]["request_status"]
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          message?: string
+          status?: Database["public"]["Enums"]["request_status"]
+          updated_at?: string | null
+          user_id?: string
         }
         Relationships: []
       }
-      testimonials: {
+      user_challenge_preferences: {
         Row: {
-          avatar_url: string | null
-          company: string | null
-          created_at: string
-          id: string
-          is_active: boolean | null
-          is_featured: boolean | null
-          location: string | null
-          name: string
-          rating: number | null
-          role: string | null
-          sort_order: number | null
-          text: string
-          updated_at: string
+          auto_reset_enabled: boolean | null
+          created_at: string | null
+          daily_challenge_count: number | null
+          difficulty_preference: string | null
+          last_reset_date: string | null
+          preferred_categories: string[] | null
+          timezone: string | null
+          updated_at: string | null
+          user_id: string
         }
         Insert: {
-          avatar_url?: string | null
-          company?: string | null
-          created_at?: string
-          id?: string
-          is_active?: boolean | null
-          is_featured?: boolean | null
-          location?: string | null
-          name: string
-          rating?: number | null
-          role?: string | null
-          sort_order?: number | null
-          text: string
-          updated_at?: string
+          auto_reset_enabled?: boolean | null
+          created_at?: string | null
+          daily_challenge_count?: number | null
+          difficulty_preference?: string | null
+          last_reset_date?: string | null
+          preferred_categories?: string[] | null
+          timezone?: string | null
+          updated_at?: string | null
+          user_id: string
         }
         Update: {
-          avatar_url?: string | null
-          company?: string | null
+          auto_reset_enabled?: boolean | null
+          created_at?: string | null
+          daily_challenge_count?: number | null
+          difficulty_preference?: string | null
+          last_reset_date?: string | null
+          preferred_categories?: string[] | null
+          timezone?: string | null
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_challenge_preferences_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: true
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      user_challenges: {
+        Row: {
+          assigned_date: string
+          challenge_id: string
+          completed_at: string | null
+          created_at: string
+          id: string
+          points_earned: number | null
+          proof_image_url: string | null
+          proof_text: string | null
+          status: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          assigned_date?: string
+          challenge_id: string
+          completed_at?: string | null
           created_at?: string
           id?: string
-          is_active?: boolean | null
-          is_featured?: boolean | null
-          location?: string | null
-          name?: string
-          rating?: number | null
-          role?: string | null
-          sort_order?: number | null
-          text?: string
+          points_earned?: number | null
+          proof_image_url?: string | null
+          proof_text?: string | null
+          status?: string
           updated_at?: string
+          user_id: string
+        }
+        Update: {
+          assigned_date?: string
+          challenge_id?: string
+          completed_at?: string | null
+          created_at?: string
+          id?: string
+          points_earned?: number | null
+          proof_image_url?: string | null
+          proof_text?: string | null
+          status?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_challenges_challenge_id_fkey"
+            columns: ["challenge_id"]
+            isOneToOne: false
+            referencedRelation: "challenges"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      user_goals: {
+        Row: {
+          created_at: string
+          goal: string
+          id: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          goal: string
+          id?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          goal?: string
+          id?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      user_roles: {
+        Row: {
+          created_at: string | null
+          id: string
+          role: Database["public"]["Enums"]["user_role"]
+          user_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          role?: Database["public"]["Enums"]["user_role"]
+          user_id: string
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          role?: Database["public"]["Enums"]["user_role"]
+          user_id?: string
+        }
+        Relationships: []
+      }
+      user_stats: {
+        Row: {
+          badges: Json | null
+          challenges_completed: number | null
+          created_at: string
+          current_streak: number | null
+          id: string
+          last_challenge_date: string | null
+          level: number | null
+          longest_streak: number | null
+          total_points: number | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          badges?: Json | null
+          challenges_completed?: number | null
+          created_at?: string
+          current_streak?: number | null
+          id?: string
+          last_challenge_date?: string | null
+          level?: number | null
+          longest_streak?: number | null
+          total_points?: number | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          badges?: Json | null
+          challenges_completed?: number | null
+          created_at?: string
+          current_streak?: number | null
+          id?: string
+          last_challenge_date?: string | null
+          level?: number | null
+          longest_streak?: number | null
+          total_points?: number | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      user_usage: {
+        Row: {
+          created_at: string
+          credits_remaining: number
+          credits_used: number
+          id: string
+          plan_type: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          credits_remaining?: number
+          credits_used?: number
+          id?: string
+          plan_type?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          credits_remaining?: number
+          credits_used?: number
+          id?: string
+          plan_type?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      voice_generations: {
+        Row: {
+          audio_url: string | null
+          created_at: string
+          id: string
+          text_content: string
+          user_id: string
+          voice_model: string
+        }
+        Insert: {
+          audio_url?: string | null
+          created_at?: string
+          id?: string
+          text_content: string
+          user_id: string
+          voice_model?: string
+        }
+        Update: {
+          audio_url?: string | null
+          created_at?: string
+          id?: string
+          text_content?: string
+          user_id?: string
+          voice_model?: string
         }
         Relationships: []
       }
@@ -406,10 +742,41 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      get_current_user_role: {
+        Args: Record<PropertyKey, never>
+        Returns: Database["public"]["Enums"]["user_role"]
+      }
+      get_profiles_secure: {
+        Args: Record<PropertyKey, never>
+        Returns: {
+          avatar_url: string
+          confidence_level: number
+          contact_details: Json
+          created_at: string
+          display_name: string
+          email: string
+          id: string
+          onboarding_completed: boolean
+          role: Database["public"]["Enums"]["user_role"]
+          updated_at: string
+        }[]
+      }
+      has_role: {
+        Args: {
+          _role: Database["public"]["Enums"]["user_role"]
+          _user_id: string
+        }
+        Returns: boolean
+      }
     }
     Enums: {
-      [_ in never]: never
+      request_status:
+        | "pending"
+        | "accepted"
+        | "in-progress"
+        | "completed"
+        | "rejected"
+      user_role: "admin" | "user"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -536,6 +903,15 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      request_status: [
+        "pending",
+        "accepted",
+        "in-progress",
+        "completed",
+        "rejected",
+      ],
+      user_role: ["admin", "user"],
+    },
   },
 } as const
