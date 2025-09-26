@@ -29,7 +29,7 @@ const ContactSalesPage = () => {
       title: "Email",
       description: "Detailed inquiries and documents",
       action: "Send Email",
-      link: "mailto:sales@evolutionev.com",
+      link: "mailto:zroxweb@gmail.com",
       primary: false
     },
     {
@@ -155,7 +155,7 @@ const ContactSalesPage = () => {
                   
                   <div>
                     <Label htmlFor="email">Email</Label>
-                    <Input id="email" type="email" placeholder="Enter your email" />
+                    <Input id="email" type="email" placeholder="zroxweb@gmail.com" />
                   </div>
                   
                   <div>
@@ -292,10 +292,10 @@ const ContactSalesPage = () => {
                     <div>
                       <p className="text-muted-foreground mb-2">Sales Email</p>
                       <a 
-                        href="mailto:sales@evolutionev.com"
+                        href="mailto:zroxweb@gmail.com"
                         className="text-lg font-semibold text-primary hover:text-primary-glow"
                       >
-                        sales@evolutionev.com
+                        zroxweb@gmail.com
                       </a>
                     </div>
                     <div>

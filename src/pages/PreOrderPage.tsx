@@ -99,7 +99,7 @@ const PreOrderPage = () => {
                   
                   <div>
                     <Label htmlFor="email">Email</Label>
-                    <Input id="email" type="email" placeholder="Enter your email" />
+                    <Input id="email" type="email" placeholder="zroxweb@gmail.com" />
                   </div>
                   
                   <div>
@@ -183,10 +183,10 @@ const PreOrderPage = () => {
                       Send us your requirements
                     </p>
                     <a 
-                      href="mailto:sales@evolutionev.com"
+                      href="mailto:zroxweb@gmail.com"
                       className="text-primary hover:text-primary-glow font-semibold"
                     >
-                      sales@evolutionev.com
+                      zroxweb@gmail.com
                     </a>
                   </CardContent>
                 </Card>

@@ -112,17 +112,23 @@ export default function ContactPage() {
             
             {/* Quick Contact Options */}
             <div className="flex flex-wrap justify-center gap-4 mt-8">
-              <Button className="glow-button" size="lg">
-                <Calendar className="w-5 h-5 mr-2" />
-                Schedule Test Ride
+              <Button className="glow-button" size="lg" asChild>
+                <a href="/test-ride">
+                  <Calendar className="w-5 h-5 mr-2" />
+                  Schedule Test Ride
+                </a>
               </Button>
-              <Button variant="outline" size="lg" className="border-primary text-primary hover:bg-primary/10">
-                <MessageCircle className="w-5 h-5 mr-2" />
-                Live Chat
+              <Button variant="outline" size="lg" className="border-primary text-primary hover:bg-primary/10" asChild>
+                <a href="/live-chat">
+                  <MessageCircle className="w-5 h-5 mr-2" />
+                  Live Chat
+                </a>
               </Button>
-              <Button variant="outline" size="lg" className="border-primary text-primary hover:bg-primary/10">
-                <Phone className="w-5 h-5 mr-2" />
-                Call Now
+              <Button variant="outline" size="lg" className="border-primary text-primary hover:bg-primary/10" asChild>
+                <a href="/call-now">
+                  <Phone className="w-5 h-5 mr-2" />
+                  Call Now
+                </a>
               </Button>
             </div>
           </div>

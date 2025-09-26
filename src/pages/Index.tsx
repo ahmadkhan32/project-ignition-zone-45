@@ -4,7 +4,7 @@ import { TechnologySection } from "@/components/TechnologySection";
 import { GallerySection } from "@/components/GallerySection";
 import { TestimonialsSection } from "@/components/TestimonialsSection";
 import { FAQSection } from "@/components/FAQSection";
-import { CTASection } from "@/components/CTASection";
+import { ModernCTASection } from "@/components/ModernCTASection";
 import { Footer } from "@/components/Footer";
 
 const Index = () => {
@@ -16,7 +16,7 @@ const Index = () => {
       <GallerySection />
       <TestimonialsSection />
       <FAQSection />
-      <CTASection />
+      <ModernCTASection />
       <Footer />
     </div>
   );

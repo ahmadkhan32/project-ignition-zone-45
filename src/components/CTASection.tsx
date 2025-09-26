@@ -28,17 +28,20 @@ export const CTASection = () => {
 
             {/* CTA Buttons */}
             <div className="flex flex-col sm:flex-row gap-6 justify-center items-center mb-12">
-              <Button size="lg" className="glow-button text-lg px-8 py-4 group">
-                Pre-Order Now
-                <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform duration-300" />
+              <Button size="lg" className="glow-button text-lg px-8 py-4 group" asChild>
+                <a href="/pre-order">
+                  Pre-Order Now
+                  <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform duration-300" />
+                </a>
               </Button>
               
               <Button 
                 size="lg" 
                 variant="outline" 
                 className="text-lg px-8 py-4 border-primary text-primary hover:bg-primary/10 hover:scale-105 transition-all duration-300"
+                asChild
               >
-                Schedule Test Ride
+                <a href="/test-ride">Schedule Test Ride</a>
               </Button>
             </div>
 
@@ -69,10 +72,10 @@ export const CTASection = () => {
                 Get personalized recommendations from our experts
               </p>
               <a 
-                href="mailto:sales@evolutionev.com" 
+                href="mailto:zroxweb@gmail.com" 
                 className="text-primary hover:text-primary-glow transition-colors duration-300 font-medium"
               >
-                sales@evolutionev.com
+                zroxweb@gmail.com
               </a>
             </div>
 
@@ -80,15 +83,17 @@ export const CTASection = () => {
               <div className="w-12 h-12 bg-gradient-to-br from-primary to-primary-glow rounded-xl flex items-center justify-center mb-4 mx-auto">
                 <Phone className="w-6 h-6 text-primary-foreground" />
               </div>
-              <h3 className="text-lg font-semibold mb-2 text-foreground">Call Us</h3>
+              <h3 className="text-lg font-semibold mb-2 text-foreground">WhatsApp</h3>
               <p className="text-muted-foreground mb-4">
-                Speak with a specialist about your needs
+                Get instant support and quick responses
               </p>
               <a 
-                href="tel:+1-800-EVOLUTION" 
+                href="https://wa.me/923100004068" 
                 className="text-primary hover:text-primary-glow transition-colors duration-300 font-medium"
+                target="_blank"
+                rel="noopener noreferrer"
               >
-                +1 (800) EVO-LUTION
+                +92 310 000 4068
               </a>
             </div>
           </div>

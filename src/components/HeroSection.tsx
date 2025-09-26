@@ -205,11 +205,11 @@ export const HeroSection = () => {
 
             {/* CTA Buttons */}
             <div className="flex flex-col sm:flex-row gap-4">
-              <Button size="lg" className="glow-button">
-                View Details
+              <Button size="lg" className="glow-button" asChild>
+                <a href="/scooters">View Details</a>
               </Button>
-              <Button size="lg" variant="outline" className="border-primary text-primary hover:bg-primary/10">
-                Book Test Ride
+              <Button size="lg" variant="outline" className="border-primary text-primary hover:bg-primary/10" asChild>
+                <a href="/test-ride">Book Test Ride</a>
               </Button>
             </div>
           </div>

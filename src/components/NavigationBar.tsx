@@ -51,15 +51,8 @@ const navItems = [
             ))}
           </div>
 
-          {/* Contact & CTA */}
-          <div className="hidden md:flex items-center space-x-4">
-            <a
-              href="https://wa.me/923100004068"
-              className="flex items-center space-x-2 text-primary hover:text-primary-glow transition-colors duration-300"
-            >
-              <Phone className="w-4 h-4" />
-              <span className="font-semibold">+92 310 000 4068</span>
-            </a>
+          {/* CTA Button */}
+          <div className="hidden md:flex items-center">
             <Link to="/pre-order">
               <Button className="glow-button">
                 Pre-Order Now
@@ -90,14 +83,7 @@ const navItems = [
                   {item.name}
                 </Link>
               ))}
-               <div className="px-3 py-2 space-y-2">
-                <a
-                  href="https://wa.me/923100004068"
-                  className="flex items-center justify-center space-x-2 text-primary hover:text-primary-glow transition-colors duration-300 py-2"
-                >
-                  <Phone className="w-4 h-4" />
-                  <span className="font-semibold">+92 310 000 4068</span>
-                </a>
+               <div className="px-3 py-2">
                 <Link to="/pre-order">
                   <Button className="glow-button w-full">
                     Pre-Order Now
