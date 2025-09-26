@@ -22,6 +22,9 @@ import AdminTestimonials from '@/components/admin/AdminTestimonials';
 import AdminFAQs from '@/components/admin/AdminFAQs';
 import AdminTechnology from '@/components/admin/AdminTechnology';
 import AdminOverview from '@/components/admin/AdminOverview';
+import AdminSiteContent from '@/components/admin/AdminSiteContent';
+import AdminSEO from '@/components/admin/AdminSEO';
+import AdminNavigation from '@/components/admin/AdminNavigation';
 
 const AdminDashboard = () => {
   const { isAdminLoggedIn, logout, loading } = useAdmin();
@@ -91,10 +94,14 @@ const AdminDashboard = () => {
       {/* Main Content */}
       <main className="container mx-auto px-4 py-8">
         <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-          <TabsList className="grid w-full grid-cols-6 lg:w-fit lg:grid-cols-6 bg-muted/50">
+          <TabsList className="grid w-full grid-cols-3 lg:grid-cols-9 bg-muted/50">
             <TabsTrigger value="overview" className="flex items-center gap-2">
               <Database className="w-4 h-4" />
               <span className="hidden sm:inline">Overview</span>
+            </TabsTrigger>
+            <TabsTrigger value="content" className="flex items-center gap-2">
+              <Settings className="w-4 h-4" />
+              <span className="hidden sm:inline">Content</span>
             </TabsTrigger>
             <TabsTrigger value="scooters" className="flex items-center gap-2">
               <Zap className="w-4 h-4" />
@@ -112,14 +119,26 @@ const AdminDashboard = () => {
               <HelpCircle className="w-4 h-4" />
               <span className="hidden sm:inline">FAQs</span>
             </TabsTrigger>
-            <TabsTrigger value="settings" className="flex items-center gap-2">
+            <TabsTrigger value="gallery" className="flex items-center gap-2">
               <Building className="w-4 h-4" />
-              <span className="hidden sm:inline">Settings</span>
+              <span className="hidden sm:inline">Gallery</span>
+            </TabsTrigger>
+            <TabsTrigger value="navigation" className="flex items-center gap-2">
+              <Building className="w-4 h-4" />
+              <span className="hidden sm:inline">Menu</span>
+            </TabsTrigger>
+            <TabsTrigger value="seo" className="flex items-center gap-2">
+              <Building className="w-4 h-4" />
+              <span className="hidden sm:inline">SEO</span>
             </TabsTrigger>
           </TabsList>
 
           <TabsContent value="overview" className="space-y-6">
             <AdminOverview />
+          </TabsContent>
+
+          <TabsContent value="content" className="space-y-6">
+            <AdminSiteContent />
           </TabsContent>
 
           <TabsContent value="scooters" className="space-y-6">
@@ -138,8 +157,16 @@ const AdminDashboard = () => {
             <AdminFAQs />
           </TabsContent>
 
-          <TabsContent value="settings" className="space-y-6">
+          <TabsContent value="gallery" className="space-y-6">
             <AdminSettings />
+          </TabsContent>
+
+          <TabsContent value="navigation" className="space-y-6">
+            <AdminNavigation />
+          </TabsContent>
+
+          <TabsContent value="seo" className="space-y-6">
+            <AdminSEO />
           </TabsContent>
         </Tabs>
       </main>

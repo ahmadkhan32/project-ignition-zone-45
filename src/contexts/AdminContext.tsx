@@ -41,20 +41,48 @@ export const AdminProvider: React.FC<{ children: React.ReactNode }> = ({ childre
 
   const login = async (username: string, password: string): Promise<boolean> => {
     try {
-      const { data, error } = await (supabase as any)
-        .from('admin_users')
-        .select('id, username')
-        .eq('username', username)
-        .eq('password_hash', `crypt('${password}', password_hash)`)
-        .single();
+      // Check for brute force attempts
+      const clientIP = '127.0.0.1'; // In production, get real client IP
+      
+      const { data: canAttempt } = await (supabase as any).rpc('check_login_attempts', {
+        ip_addr: clientIP,
+        username_input: username
+      });
 
-      if (error || !data) {
+      if (!canAttempt) {
+        console.error('Too many failed login attempts. Please try again later.');
         return false;
       }
 
-      setAdminUser(data);
+      // Verify password using secure function
+      const { data, error } = await (supabase as any).rpc('verify_admin_password', {
+        username_input: username,
+        password_input: password
+      });
+
+      const success = data && data.length > 0;
+
+      // Log the attempt
+      await (supabase as any).rpc('log_login_attempt', {
+        ip_addr: clientIP,
+        username_input: username,
+        success_flag: success
+      });
+
+      if (!success) {
+        return false;
+      }
+
+      const adminData = data[0];
+      setAdminUser(adminData);
       setIsAdminLoggedIn(true);
-      localStorage.setItem('evolutionev_admin', JSON.stringify(data));
+      localStorage.setItem('evolutionev_admin', JSON.stringify(adminData));
+      
+      // Set session timeout (30 minutes)
+      setTimeout(() => {
+        logout();
+      }, 30 * 60 * 1000);
+      
       return true;
     } catch (error) {
       console.error('Login error:', error);
