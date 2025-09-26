@@ -1,13 +1,15 @@
 import { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Menu, X } from "lucide-react";
+import { Menu, X, Settings } from "lucide-react";
+import { useAdmin } from "@/contexts/AdminContext";
 import logo from "@/assets/logo.png";
 
 export const NavigationBar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const location = useLocation();
+  const { isAdminLoggedIn } = useAdmin();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -52,8 +54,22 @@ const navItems = [
             ))}
           </div>
 
-          {/* CTA Button */}
-          <div className="hidden md:block">
+          {/* CTA Button & Admin Access */}
+          <div className="hidden md:flex items-center space-x-4">
+            {isAdminLoggedIn ? (
+              <Link to="/admin">
+                <Button variant="outline" size="sm" className="border-primary text-primary hover:bg-primary/10">
+                  <Settings className="w-4 h-4 mr-2" />
+                  Admin Panel
+                </Button>
+              </Link>
+            ) : (
+              <Link to="/admin/login">
+                <Button variant="ghost" size="sm" className="text-muted-foreground hover:text-primary">
+                  Admin
+                </Button>
+              </Link>
+            )}
             <Button className="glow-button">
               Pre-Order Now
             </Button>
@@ -82,7 +98,21 @@ const navItems = [
                   {item.name}
                 </a>
               ))}
-              <div className="px-3 py-2">
+               <div className="px-3 py-2 space-y-2">
+                {isAdminLoggedIn ? (
+                  <Link to="/admin">
+                    <Button variant="outline" size="sm" className="w-full border-primary text-primary hover:bg-primary/10">
+                      <Settings className="w-4 h-4 mr-2" />
+                      Admin Panel
+                    </Button>
+                  </Link>
+                ) : (
+                  <Link to="/admin/login">
+                    <Button variant="ghost" size="sm" className="w-full text-muted-foreground hover:text-primary">
+                      Admin Access
+                    </Button>
+                  </Link>
+                )}
                 <Button className="glow-button w-full">
                   Pre-Order Now
                 </Button>
