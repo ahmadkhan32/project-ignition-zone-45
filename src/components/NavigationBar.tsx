@@ -1,15 +1,12 @@
 import { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Menu, X, Settings } from "lucide-react";
-import { useAdmin } from "@/contexts/AdminContext";
-import logo from "@/assets/logo.png";
+import { Menu, X } from "lucide-react";
 
 export const NavigationBar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const location = useLocation();
-  const { isAdminLoggedIn } = useAdmin();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -43,33 +40,19 @@ const navItems = [
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center space-x-8">
             {navItems.map((item) => (
-              <a
+              <Link
                 key={item.name}
-                href={item.href}
+                to={item.href}
                 className="relative text-foreground hover:text-primary transition-colors duration-300 group"
               >
                 {item.name}
                 <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-primary transition-all duration-300 group-hover:w-full"></span>
-              </a>
+              </Link>
             ))}
           </div>
 
-          {/* CTA Button & Admin Access */}
-          <div className="hidden md:flex items-center space-x-4">
-            {isAdminLoggedIn ? (
-              <Link to="/admin">
-                <Button variant="outline" size="sm" className="border-primary text-primary hover:bg-primary/10">
-                  <Settings className="w-4 h-4 mr-2" />
-                  Admin Panel
-                </Button>
-              </Link>
-            ) : (
-              <Link to="/admin/login">
-                <Button variant="ghost" size="sm" className="text-muted-foreground hover:text-primary">
-                  Admin
-                </Button>
-              </Link>
-            )}
+          {/* CTA Button */}
+          <div className="hidden md:flex items-center">
             <Button className="glow-button">
               Pre-Order Now
             </Button>
@@ -89,30 +72,16 @@ const navItems = [
           <div className="md:hidden bg-background border-t border-border">
             <div className="px-2 pt-2 pb-3 space-y-1">
               {navItems.map((item) => (
-                <a
+                <Link
                   key={item.name}
-                  href={item.href}
+                  to={item.href}
                   className="block px-3 py-2 text-foreground hover:text-primary transition-colors duration-300"
                   onClick={() => setIsMobileMenuOpen(false)}
                 >
                   {item.name}
-                </a>
+                </Link>
               ))}
-               <div className="px-3 py-2 space-y-2">
-                {isAdminLoggedIn ? (
-                  <Link to="/admin">
-                    <Button variant="outline" size="sm" className="w-full border-primary text-primary hover:bg-primary/10">
-                      <Settings className="w-4 h-4 mr-2" />
-                      Admin Panel
-                    </Button>
-                  </Link>
-                ) : (
-                  <Link to="/admin/login">
-                    <Button variant="ghost" size="sm" className="w-full text-muted-foreground hover:text-primary">
-                      Admin Access
-                    </Button>
-                  </Link>
-                )}
+               <div className="px-3 py-2">
                 <Button className="glow-button w-full">
                   Pre-Order Now
                 </Button>
