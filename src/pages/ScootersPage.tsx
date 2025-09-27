@@ -1,112 +1,95 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { NavigationBar } from "@/components/NavigationBar";
 import { Footer } from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Battery, Zap, Gauge, Clock } from "lucide-react";
-import scooter1 from "@/assets/scooter-1.jpg";
-import scooter2 from "@/assets/scooter-2.jpg";
-import scooter3 from "@/assets/scooter-3.jpg";
-import scooter4 from "@/assets/scooter-4.jpg";
-import scooter5 from "@/assets/scooter-5.jpg";
+import { supabase } from "@/integrations/supabase/client";
+import { useToast } from "@/hooks/use-toast";
 
 interface ScooterModel {
-  id: number;
+  id: string;
   name: string;
-  image: string;
+  description: string | null;
   price: string;
-  category: string;
-  specs: {
-    battery: number;
-    range: number;
-    speed: number;
-    charging: string;
-  };
-  highlights: string[];
+  max_speed: string;
+  max_range: string;
+  charge_time: string;
+  image_1_url: string | null;
+  image_2_url: string | null;
+  thumbnail_url: string | null;
+  is_active: boolean;
+  is_featured: boolean;
+  display_order: number;
 }
 
-const scooters: ScooterModel[] = [
-  {
-    id: 1,
-    name: "EV Sport Pro",
-    image: scooter1,
-    price: "$4,999",
-    category: "Performance",
-    specs: {
-      battery: 3.2,
-      range: 85,
-      speed: 65,
-      charging: "2.5 hrs",
-    },
-    highlights: ["Smart Display", "GPS Navigation", "Anti-theft"]
-  },
-  {
-    id: 2,
-    name: "EV Racing",
-    image: scooter2,
-    price: "$6,499",
-    category: "Sport",
-    specs: {
-      battery: 4.1,
-      range: 120,
-      speed: 85,
-      charging: "3 hrs",
-    },
-    highlights: ["Sport Mode", "Racing Dashboard", "Carbon Fiber"]
-  },
-  {
-    id: 3,
-    name: "EV Urban",
-    image: scooter3,
-    price: "$3,499",
-    category: "City",
-    specs: {
-      battery: 2.8,
-      range: 65,
-      speed: 45,
-      charging: "2 hrs",
-    },
-    highlights: ["Compact Design", "Easy Storage", "Eco Mode"]
-  },
-  {
-    id: 4,
-    name: "EV Executive",
-    image: scooter4,
-    price: "$5,799",
-    category: "Luxury",
-    specs: {
-      battery: 3.8,
-      range: 100,
-      speed: 70,
-      charging: "2.8 hrs",
-    },
-    highlights: ["Premium Materials", "Luxury Seat", "Wireless Charging"]
-  },
-  {
-    id: 5,
-    name: "EV Adventure",
-    image: scooter5,
-    price: "$7,299",
-    category: "Adventure",
-    specs: {
-      battery: 4.5,
-      range: 140,
-      speed: 75,
-      charging: "3.5 hrs",
-    },
-    highlights: ["All-Terrain", "Weather Resistant", "Extended Range"]
-  },
-];
-
-const categories = ["All", "City", "Performance", "Sport", "Luxury", "Adventure"];
-
 export default function ScootersPage() {
-  const [selectedCategory, setSelectedCategory] = useState("All");
+  const [scooters, setScooters] = useState<ScooterModel[]>([]);
+  const [loading, setLoading] = useState(true);
+  const { toast } = useToast();
 
-  const filteredScooters = selectedCategory === "All" 
-    ? scooters 
-    : scooters.filter(scooter => scooter.category === selectedCategory);
+  useEffect(() => {
+    fetchScooters();
+    
+    // Set up real-time subscription
+    const channel = supabase
+      .channel('scooters_page_changes')
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'scooters' }, () => {
+        fetchScooters();
+      })
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, []);
+
+  const fetchScooters = async () => {
+    try {
+      const { data, error } = await supabase
+        .from('scooters')
+        .select('*')
+        .eq('is_active', true)
+        .order('display_order', { ascending: true });
+
+      if (error) throw error;
+      setScooters(data || []);
+    } catch (error) {
+      console.error('Error fetching scooters:', error);
+      toast({
+        title: "Error",
+        description: "Failed to load scooters",
+        variant: "destructive",
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleTestRide = (scooterId: string, scooterName: string) => {
+    const message = `Hi! I'm interested in scheduling a test ride for the ${scooterName}. Could you please help me with the booking?`;
+    const whatsappUrl = `https://wa.me/+923100004068?text=${encodeURIComponent(message)}`;
+    window.open(whatsappUrl, '_blank');
+  };
+
+  const handlePreOrder = (scooterId: string, scooterName: string) => {
+    const message = `Hi! I'd like to pre-order the ${scooterName}. Please provide me with more details about the process and pricing.`;
+    const whatsappUrl = `https://wa.me/+923100004068?text=${encodeURIComponent(message)}`;
+    window.open(whatsappUrl, '_blank');
+  };
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-background">
+        <NavigationBar />
+        <main className="pt-20 flex items-center justify-center min-h-[60vh]">
+          <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-primary"></div>
+        </main>
+        <Footer />
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-background">
@@ -130,106 +113,101 @@ export default function ScootersPage() {
           </div>
         </section>
 
-        {/* Category Filter */}
-        <section className="py-8 border-b border-border">
-          <div className="container mx-auto px-4">
-            <div className="flex flex-wrap justify-center gap-4">
-              {categories.map(category => (
-                <Button
-                  key={category}
-                  variant={selectedCategory === category ? "default" : "outline"}
-                  onClick={() => setSelectedCategory(category)}
-                  className="transition-all duration-300"
-                >
-                  {category}
-                </Button>
-              ))}
-            </div>
-          </div>
-        </section>
-
         {/* Scooters Grid */}
         <section className="py-16">
           <div className="container mx-auto px-4">
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {filteredScooters.map((scooter, index) => (
-                <div
-                  key={scooter.id}
-                  className="group bg-card/50 backdrop-blur-sm border border-border rounded-2xl overflow-hidden hover:shadow-glow transition-all duration-500 animate-fade-in"
-                  style={{ animationDelay: `${index * 150}ms` }}
-                >
-                  {/* Image */}
-                  <div className="relative aspect-video overflow-hidden">
-                    <img
-                      src={scooter.image}
-                      alt={scooter.name}
-                      className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
-                    />
-                    <div className="absolute top-4 left-4">
-                      <Badge variant="secondary" className="bg-background/80">
-                        {scooter.category}
-                      </Badge>
-                    </div>
-                    <div className="absolute top-4 right-4">
-                      <Badge className="bg-primary text-primary-foreground">
-                        {scooter.price}
-                      </Badge>
-                    </div>
-                  </div>
-
-                  {/* Content */}
-                  <div className="p-6 space-y-4">
-                    <div>
-                      <h3 className="text-2xl font-bold mb-2">{scooter.name}</h3>
-                      <div className="flex flex-wrap gap-2 mb-4">
-                        {scooter.highlights.map(highlight => (
-                          <Badge key={highlight} variant="outline" className="text-xs">
-                            {highlight}
+            {scooters.length === 0 ? (
+              <div className="text-center py-12">
+                <h3 className="text-2xl font-bold mb-4">No Scooters Available</h3>
+                <p className="text-muted-foreground">Check back later for our latest models.</p>
+              </div>
+            ) : (
+              <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                {scooters.map((scooter, index) => (
+                  <div
+                    key={scooter.id}
+                    className="group bg-card/50 backdrop-blur-sm border border-border rounded-2xl overflow-hidden hover:shadow-glow transition-all duration-500 animate-fade-in"
+                    style={{ animationDelay: `${index * 150}ms` }}
+                  >
+                    {/* Image */}
+                    <div className="relative aspect-video overflow-hidden">
+                      <img
+                        src={scooter.image_1_url || scooter.thumbnail_url || '/placeholder.svg'}
+                        alt={scooter.name}
+                        className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+                      />
+                      <div className="absolute top-4 right-4">
+                        <Badge className="bg-primary text-primary-foreground">
+                          {scooter.price}
+                        </Badge>
+                      </div>
+                      {scooter.is_featured && (
+                        <div className="absolute top-4 left-4">
+                          <Badge variant="secondary" className="bg-background/80">
+                            Featured
                           </Badge>
-                        ))}
-                      </div>
+                        </div>
+                      )}
                     </div>
 
-                    {/* Quick Specs */}
-                    <div className="grid grid-cols-2 gap-3 text-sm">
-                      <div className="flex items-center space-x-2">
-                        <Battery className="w-4 h-4 text-primary" />
-                        <span>{scooter.specs.battery} kWh</span>
+                    {/* Content */}
+                    <div className="p-6 space-y-4">
+                      <div>
+                        <h3 className="text-2xl font-bold mb-2">{scooter.name}</h3>
+                        {scooter.description && (
+                          <p className="text-sm text-muted-foreground mb-4">
+                            {scooter.description}
+                          </p>
+                        )}
                       </div>
-                      <div className="flex items-center space-x-2">
-                        <Zap className="w-4 h-4 text-primary" />
-                        <span>{scooter.specs.range} km</span>
-                      </div>
-                      <div className="flex items-center space-x-2">
-                        <Gauge className="w-4 h-4 text-primary" />
-                        <span>{scooter.specs.speed} km/h</span>
-                      </div>
-                      <div className="flex items-center space-x-2">
-                        <Clock className="w-4 h-4 text-primary" />
-                        <span>{scooter.specs.charging}</span>
-                      </div>
-                    </div>
 
-                    {/* Action Buttons */}
-                    <div className="flex flex-col space-y-2 pt-4">
-                      <Link to={`/scooter/${scooter.id}`}>
-                        <Button className="w-full glow-button">
-                          View Details
-                        </Button>
-                      </Link>
-                      <div className="grid grid-cols-2 gap-2">
-                        <Button variant="outline" size="sm" className="border-primary text-primary hover:bg-primary/10">
-                          Test Ride
-                        </Button>
-                        <Button variant="outline" size="sm" className="border-primary text-primary hover:bg-primary/10">
-                          Pre-Order
-                        </Button>
+                      {/* Quick Specs */}
+                      <div className="grid grid-cols-2 gap-3 text-sm">
+                        <div className="flex items-center space-x-2">
+                          <Gauge className="w-4 h-4 text-primary" />
+                          <span>{scooter.max_speed}</span>
+                        </div>
+                        <div className="flex items-center space-x-2">
+                          <Zap className="w-4 h-4 text-primary" />
+                          <span>{scooter.max_range}</span>
+                        </div>
+                        <div className="flex items-center space-x-2 col-span-2">
+                          <Clock className="w-4 h-4 text-primary" />
+                          <span>Charge Time: {scooter.charge_time}</span>
+                        </div>
+                      </div>
+
+                      {/* Action Buttons */}
+                      <div className="flex flex-col space-y-2 pt-4">
+                        <Link to={`/scooter/${scooter.id}`}>
+                          <Button className="w-full glow-button">
+                            View Details
+                          </Button>
+                        </Link>
+                        <div className="grid grid-cols-2 gap-2">
+                          <Button 
+                            variant="outline" 
+                            size="sm" 
+                            className="border-primary text-primary hover:bg-primary/10"
+                            onClick={() => handleTestRide(scooter.id, scooter.name)}
+                          >
+                            Test Ride
+                          </Button>
+                          <Button 
+                            variant="outline" 
+                            size="sm" 
+                            className="border-primary text-primary hover:bg-primary/10"
+                            onClick={() => handlePreOrder(scooter.id, scooter.name)}
+                          >
+                            Pre-Order
+                          </Button>
+                        </div>
                       </div>
                     </div>
                   </div>
-                </div>
-              ))}
-            </div>
+                ))}
+              </div>
+            )}
           </div>
         </section>
 

@@ -17,6 +17,9 @@ import SpecSheetPage from "./pages/SpecSheetPage";
 import ShowroomPage from "./pages/ShowroomPage";
 import LiveChatPage from "./pages/LiveChatPage";
 import CallNowPage from "./pages/CallNowPage";
+import AdminLogin from "./pages/admin/AdminLogin";
+import AdminRegistration from "./pages/admin/AdminRegistration";
+import AdminDashboard from "./pages/admin/AdminDashboard";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -39,10 +42,16 @@ const App = () => (
           <Route path="/test-ride" element={<TestRidePage />} />
           <Route path="/contact-sales" element={<ContactSalesPage />} />
           <Route path="/spec-sheet" element={<SpecSheetPage />} />
-          <Route path="/showroom" element={<ShowroomPage />} />
-          <Route path="/live-chat" element={<LiveChatPage />} />
-          <Route path="/call-now" element={<CallNowPage />} />
-          <Route path="*" element={<NotFound />} />
+            <Route path="/showroom" element={<ShowroomPage />} />
+            <Route path="/live-chat" element={<LiveChatPage />} />
+            <Route path="/call-now" element={<CallNowPage />} />
+            
+            {/* Admin Routes */}
+            <Route path="/admin/login" element={<AdminLogin />} />
+            <Route path="/admin/register" element={<AdminRegistration />} />
+            <Route path="/admin/dashboard" element={<AdminDashboard />} />
+            
+            <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
     </TooltipProvider>
