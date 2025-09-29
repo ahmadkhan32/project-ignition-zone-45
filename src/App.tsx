@@ -20,6 +20,7 @@ import CallNowPage from "./pages/CallNowPage";
 import AdminLogin from "./pages/admin/AdminLogin";
 import AdminRegistration from "./pages/admin/AdminRegistration";
 import AdminDashboard from "./pages/admin/AdminDashboard";
+import AddScooterForm from "./pages/admin/AddScooterForm";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -50,6 +51,7 @@ const App = () => (
             <Route path="/admin/login" element={<AdminLogin />} />
             <Route path="/admin/register" element={<AdminRegistration />} />
             <Route path="/admin/dashboard" element={<AdminDashboard />} />
+            <Route path="/admin/add-scooter" element={<AddScooterForm />} />
             
             <Route path="*" element={<NotFound />} />
         </Routes>
