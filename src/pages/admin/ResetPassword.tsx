@@ -1,24 +1,38 @@
-import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { supabase } from "../../integrations/supabase/client";
 import { Button } from "../../components/ui/button";
 import { Input } from "../../components/ui/input";
 import { Label } from "../../components/ui/label";
 import { toast } from "../../hooks/use-toast";
-import { Mail, Lock, User } from "lucide-react";
+import { Lock } from "lucide-react";
 
-export default function AdminRegistration() {
-  const [email, setEmail] = useState("");
+export default function ResetPassword() {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [fullName, setFullName] = useState("");
   const [loading, setLoading] = useState(false);
+  const [isValidToken, setIsValidToken] = useState(false);
   const navigate = useNavigate();
 
-  const handleRegister = async (e: React.FormEvent) => {
+  useEffect(() => {
+    // Check if we have a valid session (coming from reset email)
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      if (session) {
+        setIsValidToken(true);
+      } else {
+        toast({
+          title: "Invalid or expired reset link",
+          description: "Please request a new password reset link.",
+          variant: "destructive",
+        });
+        navigate("/admin/forgot-password");
+      }
+    });
+  }, [navigate]);
+
+  const handleResetPassword = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    // Validation
     if (password !== confirmPassword) {
       toast({
         title: "Password mismatch",
@@ -40,22 +54,15 @@ export default function AdminRegistration() {
     setLoading(true);
 
     try {
-      const { data, error } = await supabase.auth.signUp({
-        email,
-        password,
-        options: {
-          data: {
-            full_name: fullName,
-          },
-          emailRedirectTo: `${window.location.origin}/admin/dashboard`,
-        },
+      const { error } = await supabase.auth.updateUser({
+        password: password,
       });
 
       if (error) throw error;
 
       toast({
-        title: "Registration successful!",
-        description: "Please check your email to confirm your account.",
+        title: "Password updated!",
+        description: "Your password has been successfully reset.",
       });
 
       setTimeout(() => {
@@ -63,7 +70,7 @@ export default function AdminRegistration() {
       }, 2000);
     } catch (error: any) {
       toast({
-        title: "Registration failed",
+        title: "Failed to reset password",
         description: error.message,
         variant: "destructive",
       });
@@ -72,49 +79,27 @@ export default function AdminRegistration() {
     }
   };
 
+  if (!isValidToken) {
+    return (
+      <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-background to-muted">
+        <div className="text-center">
+          <p className="text-muted-foreground">Validating reset link...</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-background to-muted p-4">
       <div className="bg-card shadow-2xl rounded-2xl p-8 w-full max-w-md border border-border">
         <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold mb-2">Admin Registration</h1>
-          <p className="text-muted-foreground">Create your admin account</p>
+          <h1 className="text-3xl font-bold mb-2">Reset Password</h1>
+          <p className="text-muted-foreground">Enter your new password</p>
         </div>
 
-        <form onSubmit={handleRegister} className="space-y-4">
+        <form onSubmit={handleResetPassword} className="space-y-4">
           <div className="space-y-2">
-            <Label htmlFor="fullName">Full Name</Label>
-            <div className="relative">
-              <User className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-              <Input
-                id="fullName"
-                type="text"
-                placeholder="John Doe"
-                className="pl-10"
-                value={fullName}
-                onChange={(e) => setFullName(e.target.value)}
-                required
-              />
-            </div>
-          </div>
-
-          <div className="space-y-2">
-            <Label htmlFor="email">Email</Label>
-            <div className="relative">
-              <Mail className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-              <Input
-                id="email"
-                type="email"
-                placeholder="admin@example.com"
-                className="pl-10"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                required
-              />
-            </div>
-          </div>
-
-          <div className="space-y-2">
-            <Label htmlFor="password">Password</Label>
+            <Label htmlFor="password">New Password</Label>
             <div className="relative">
               <Lock className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
               <Input
@@ -131,7 +116,7 @@ export default function AdminRegistration() {
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="confirmPassword">Confirm Password</Label>
+            <Label htmlFor="confirmPassword">Confirm New Password</Label>
             <div className="relative">
               <Lock className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
               <Input
@@ -153,19 +138,9 @@ export default function AdminRegistration() {
             disabled={loading}
             className="w-full"
           >
-            {loading ? "Creating account..." : "Create Account"}
+            {loading ? "Updating password..." : "Update Password"}
           </Button>
         </form>
-
-        <p className="mt-6 text-center text-sm text-muted-foreground">
-          Already have an account?{" "}
-          <Link
-            to="/admin/login"
-            className="text-primary font-medium hover:underline"
-          >
-            Login here
-          </Link>
-        </p>
       </div>
     </div>
   );
