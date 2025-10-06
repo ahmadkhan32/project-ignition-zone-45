@@ -45,9 +45,9 @@ const App = () => (
       <BrowserRouter>
         <AuthProvider>
           <Routes>
-            {/* Default Route - Login Page First for Admin */}
-            <Route path="/" element={<Login />} />
-            <Route path="/home" element={<Index />} />
+            {/* Default Route - Index Page First */}
+            <Route path="/" element={<Index />} />
+            <Route path="/login" element={<Login />} />
             <Route path="/scooters" element={<ScootersPage />} />
             <Route path="/scooter/:id" element={<ScooterDetail />} />
             <Route path="/technology" element={<TechnologyPage />} />

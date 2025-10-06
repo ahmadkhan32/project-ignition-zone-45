@@ -60,13 +60,6 @@ interface ScooterModel {
 const Index = () => {
   const { user, loading } = useAuth();
   const navigate = useNavigate();
-
-  // Redirect to login if not authenticated
-  useEffect(() => {
-    if (!loading && !user) {
-      navigate("/");
-    }
-  }, [user, loading, navigate]);
   const [scooters, setScooters] = useState<ScooterModel[]>([]);
   const [scootersLoading, setScootersLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);

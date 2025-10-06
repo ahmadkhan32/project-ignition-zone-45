@@ -19,7 +19,7 @@ export const NavigationBar = () => {
   }, []);
 
 const navItems = [
-  { name: "Home", href: "/home" },
+  { name: "Home", href: "/" },
   { name: "Scooters", href: "/scooters" },
   { name: "Technology", href: "/technology" },
   { name: "Gallery", href: "/gallery" },
