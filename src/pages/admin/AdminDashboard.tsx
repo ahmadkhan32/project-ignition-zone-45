@@ -189,11 +189,11 @@ const AdminDashboard: React.FC = () => {
       // Generate unique filename
       const fileExt = file.name.split('.').pop();
       const fileName = `${Date.now()}-${Math.random().toString(36).substring(2)}.${fileExt}`;
-      const filePath = `scooters/${fileName}`;
+      const filePath = `admin-uploads/${fileName}`;
       
-      // Upload to Supabase Storage
+      // Upload to Supabase Storage - Admin Images Bucket
       const { data, error } = await supabase.storage
-        .from('scooter-images')
+        .from('admin-images')
         .upload(filePath, file, {
           cacheControl: '3600',
           upsert: false
@@ -208,7 +208,7 @@ const AdminDashboard: React.FC = () => {
 
       // Get public URL
       const { data: { publicUrl } } = supabase.storage
-        .from('scooter-images')
+        .from('admin-images')
         .getPublicUrl(filePath);
 
       // Update form data with public URL

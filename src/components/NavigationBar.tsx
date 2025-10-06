@@ -55,7 +55,7 @@ const navItems = [
 
           {/* CTA Button and Admin Button */}
           <div className="hidden md:flex items-center space-x-3">
-            <Link to="/admin-dashboard">
+            <Link to="/login">
               <Button className="bg-blue-600 hover:bg-blue-700 text-white">
                 <Shield className="w-4 h-4 mr-2" />
                 Admin
@@ -92,10 +92,10 @@ const navItems = [
                 </Link>
               ))}
               <div className="px-3 py-2">
-                <Link to="/admin-dashboard">
+                <Link to="/login">
                   <Button className="w-full bg-blue-600 hover:bg-blue-700 text-white">
                     <Shield className="w-4 h-4 mr-2" />
-                    Admin Dashboard
+                    Admin Login
                   </Button>
                 </Link>
               </div>
