@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Gmail Notifications</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        .container {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 30px;
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+        }
+        .step {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 10px;
+            border-left: 4px solid #4CAF50;
+        }
+        .success {
+            background: rgba(40, 167, 69, 0.2);
+            border: 1px solid #28a745;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 10px 0;
+        }
+        .button {
+            background: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            margin: 10px 5px;
+        }
+        .button:hover {
+            background: #45a049;
+        }
+        .code {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 15px;
+            border-radius: 5px;
+            font-family: monospace;
+            margin: 10px 0;
+        }
+        .warning {
+            background: rgba(255, 193, 7, 0.2);
+            border: 1px solid #ffc107;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📧 Test Gmail Notifications</h1>
+        <p>Test your Gmail notification setup for user registrations</p>
+
+        <div class="step">
+            <h2>🔧 Step 1: Configure Supabase</h2>
+            <div class="code">
+                1. Go to: <a href="https://supabase.com/dashboard" class="button" target="_blank">Supabase Dashboard</a><br>
+                2. Navigate to: Authentication → Settings<br>
+                3. Enable: "Enable email confirmations" ✅<br>
+                4. Set Site URL: http://localhost:8080<br>
+                5. Add Redirect URLs:<br>
+                   • http://localhost:8080/auth/callback<br>
+                   • http://localhost:8080/dashboard
+            </div>
+        </div>
+
+        <div class="step">
+            <h2>📧 Step 2: Test Registration</h2>
+            <div class="code">
+                1. Go to: <a href="http://localhost:8080/register" class="button" target="_blank">Registration Page</a><br>
+                2. Fill the form with YOUR Gmail address:<br>
+                   • Full Name: "Test User"<br>
+                   • Email: "your-email@gmail.com" (Use your actual Gmail)<br>
+                   • Phone: "+1234567890"<br>
+                   • Password: "Test123!@#"<br>
+                   • Confirm Password: "Test123!@#"<br>
+                3. Click "Create Account"<br>
+                4. Check your Gmail inbox for confirmation email!
+            </div>
+        </div>
+
+        <div class="step">
+            <h2>📱 Step 3: Check Gmail</h2>
+            <div class="code">
+                1. Open Gmail: <a href="https://gmail.com" class="button" target="_blank">Gmail</a><br>
+                2. Look for email from: noreply@supabase.io<br>
+                3. Subject: "Confirm your signup"<br>
+                4. Click the confirmation link in the email<br>
+                5. Should redirect to /auth/callback<br>
+                6. See "Email Confirmed!" message
+            </div>
+        </div>
+
+        <div class="step">
+            <h2>🔐 Step 4: Test Login</h2>
+            <div class="code">
+                1. Go to: <a href="http://localhost:8080/login" class="button" target="_blank">Login Page</a><br>
+                2. Enter same credentials you used for registration<br>
+                3. Click "Sign In"<br>
+                4. Should redirect to dashboard<br>
+                5. See your profile data displayed
+            </div>
+        </div>
+
+        <div class="step">
+            <h2>🎯 Expected Results</h2>
+            <div class="success">
+                <strong>✅ Gmail Notifications:</strong><br>
+                • Registration email received in Gmail<br>
+                • Professional email template with confirmation link<br>
+                • Click link to confirm account<br>
+                • User can login after confirmation<br>
+                • Dashboard access granted
+            </div>
+        </div>
+
+        <div class="step">
+            <h2>🔧 Gmail Configuration Tips</h2>
+            <div class="code">
+                <strong>Set up Gmail Filters:</strong><br>
+                1. Gmail Settings → Filters and Blocked Addresses<br>
+                2. Create filter: From "noreply@supabase.io"<br>
+                3. Actions: Apply label "Registration Notifications"<br>
+                4. Never send to Spam<br>
+                5. Mark as important<br><br>
+                
+                <strong>Enable Notifications:</strong><br>
+                • Desktop notifications: ON<br>
+                • Email notifications: ON<br>
+                • Sound notifications: ON
+            </div>
+        </div>
+
+        <div class="step">
+            <h2>🚨 Troubleshooting</h2>
+            <div class="warning">
+                <strong>If you don't receive emails:</strong><br>
+                • Check Spam folder - emails might be filtered<br>
+                • Verify Supabase settings - email confirmations enabled<br>
+                • Check Gmail filters - not blocked by filters<br>
+                • Test with different email - try another Gmail address<br><br>
+                
+                <strong>If emails go to Spam:</strong><br>
+                • Mark as "Not Spam" in Gmail<br>
+                • Add to contacts: noreply@supabase.io<br>
+                • Create filter to never send to Spam<br>
+                • Whitelist domain: supabase.io
+            </div>
+        </div>
+
+        <div class="step">
+            <h2>🎉 Test Pages</h2>
+            <div class="code">
+                <a href="http://localhost:8080/register" class="button" target="_blank">Registration</a>
+                <a href="http://localhost:8080/login" class="button" target="_blank">Login</a>
+                <a href="http://localhost:8080/dashboard" class="button" target="_blank">Dashboard</a>
+                <a href="https://gmail.com" class="button" target="_blank">Gmail</a>
+            </div>
+        </div>
+
+        <div class="step">
+            <h2>📧 Email Template Preview</h2>
+            <div class="code">
+                <strong>Subject:</strong> Confirm your signup<br>
+                <strong>From:</strong> noreply@supabase.io<br>
+                <strong>Content:</strong><br>
+                Welcome to Our Platform! 🎉<br>
+                Hi [Your Email],<br>
+                Thank you for registering with us! Please confirm your email address by clicking the link below:<br>
+                [Confirm Email Address Button]<br>
+                This link will expire in 24 hours.<br>
+                Best regards,<br>
+                Your Team
+            </div>
+        </div>
+    </div>
+</body>
+</html>

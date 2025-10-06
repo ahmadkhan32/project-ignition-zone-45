@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Email Authentication</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        .container {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 30px;
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+        }
+        .step {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 10px;
+            border-left: 4px solid #4CAF50;
+        }
+        .code {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 15px;
+            border-radius: 5px;
+            font-family: monospace;
+            margin: 10px 0;
+        }
+        .button {
+            background: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            margin: 10px 5px;
+        }
+        .button:hover {
+            background: #45a049;
+        }
+        .warning {
+            background: rgba(255, 193, 7, 0.2);
+            border: 1px solid #ffc107;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 10px 0;
+        }
+        .success {
+            background: rgba(40, 167, 69, 0.2);
+            border: 1px solid #28a745;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📧 Test Email Authentication System</h1>
+        <p>Complete guide to test registration and login with Gmail notifications</p>
+
+        <div class="step">
+            <h2>🔧 Step 1: Configure Supabase (One-time setup)</h2>
+            <p>Before testing, configure your Supabase dashboard:</p>
+            <div class="code">
+                1. Go to: Supabase Dashboard → Authentication → Settings<br>
+                2. Enable: "Enable email confirmations" ✅<br>
+                3. Set Site URL: http://localhost:8080<br>
+                4. Add Redirect URL: http://localhost:8080/auth/callback
+            </div>
+        </div>
+
+        <div class="step">
+            <h2>📝 Step 2: Test Registration</h2>
+            <p>Test the registration process with your Gmail:</p>
+            <div class="code">
+                1. Go to: <a href="http://localhost:8080/register" class="button" target="_blank">Registration Page</a><br>
+                2. Fill the form with your Gmail address<br>
+                3. Click "Create Account"<br>
+                4. Check your Gmail inbox for confirmation email
+            </div>
+            <div class="warning">
+                <strong>⚠️ Important:</strong> Use a real Gmail address that you can access. 
+                Check your spam folder if you don't see the email in your inbox.
+            </div>
+        </div>
+
+        <div class="step">
+            <h2>📧 Step 3: Check Gmail</h2>
+            <p>Look for the confirmation email in your Gmail:</p>
+            <div class="code">
+                From: noreply@your-project.supabase.co<br>
+                Subject: Confirm your signup<br>
+                Content: Click the "Confirm your email" link
+            </div>
+            <div class="success">
+                <strong>✅ Success:</strong> If you receive the email, Supabase SMTP is working correctly!
+            </div>
+        </div>
+
+        <div class="step">
+            <h2>🔗 Step 4: Test Email Confirmation</h2>
+            <p>Click the link in your Gmail email:</p>
+            <div class="code">
+                1. Open the email from Supabase<br>
+                2. Click the "Confirm your email" link<br>
+                3. Should redirect to: /auth/callback<br>
+                4. See "Email Confirmed!" message<br>
+                5. Auto-redirect to dashboard
+            </div>
+        </div>
+
+        <div class="step">
+            <h2>🔐 Step 5: Test Login</h2>
+            <p>Test login with the same credentials:</p>
+            <div class="code">
+                1. Go to: <a href="http://localhost:8080/login" class="button" target="_blank">Login Page</a><br>
+                2. Enter same email and password<br>
+                3. Click "Sign In"<br>
+                4. Should redirect to dashboard successfully
+            </div>
+        </div>
+
+        <div class="step">
+            <h2>🎯 Expected Results</h2>
+            <div class="success">
+                <strong>✅ Registration:</strong> Form validation, email sent to Gmail, success message<br>
+                <strong>✅ Email Confirmation:</strong> Gmail receives email, link works, auto-redirect<br>
+                <strong>✅ Login:</strong> Same credentials work, redirects to dashboard<br>
+                <strong>✅ Dashboard:</strong> Protected route accessible after login
+            </div>
+        </div>
+
+        <div class="step">
+            <h2>🔧 Troubleshooting</h2>
+            <div class="warning">
+                <strong>If no email received:</strong><br>
+                • Check spam folder<br>
+                • Wait 1-2 minutes<br>
+                • Check Supabase logs<br>
+                • Try different Gmail address<br><br>
+                
+                <strong>If email link doesn't work:</strong><br>
+                • Check redirect URLs in Supabase<br>
+                • Try incognito mode<br>
+                • Check browser console<br><br>
+                
+                <strong>If login fails:</strong><br>
+                • Make sure email is confirmed first<br>
+                • Check password is correct<br>
+                • Clear browser storage
+            </div>
+        </div>
+
+        <div class="step">
+            <h2>🎉 Test Complete!</h2>
+            <p>If all steps work correctly, your Gmail authentication system is fully functional!</p>
+            <div class="success">
+                <strong>✅ Gmail Notifications:</strong> Working via Supabase SMTP<br>
+                <strong>✅ Email Confirmation:</strong> Click link to verify<br>
+                <strong>✅ Login System:</strong> Works with same credentials<br>
+                <strong>✅ Dashboard Access:</strong> Protected routes working
+            </div>
+        </div>
+    </div>
+</body>
+</html>

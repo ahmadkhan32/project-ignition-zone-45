@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Debug Login Issues</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        .container {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 30px;
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+        }
+        .step {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 10px;
+            border-left: 4px solid #4CAF50;
+        }
+        .error {
+            background: rgba(255, 87, 87, 0.2);
+            border: 1px solid #ff5757;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 10px 0;
+        }
+        .success {
+            background: rgba(40, 167, 69, 0.2);
+            border: 1px solid #28a745;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 10px 0;
+        }
+        .warning {
+            background: rgba(255, 193, 7, 0.2);
+            border: 1px solid #ffc107;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 10px 0;
+        }
+        .button {
+            background: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            margin: 10px 5px;
+        }
+        .button:hover {
+            background: #45a049;
+        }
+        .button.danger {
+            background: #dc3545;
+        }
+        .button.danger:hover {
+            background: #c82333;
+        }
+        .code {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 15px;
+            border-radius: 5px;
+            font-family: monospace;
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔧 Debug Login Issues</h1>
+        <p>Fix "Invalid email or password" error step by step</p>
+
+        <div class="step">
+            <h2>🚨 Most Common Cause: Email Not Confirmed</h2>
+            <div class="error">
+                <strong>❌ Problem:</strong> You registered but didn't click the email verification link
+            </div>
+            <div class="code">
+                1. Check your Gmail inbox for confirmation email<br>
+                2. Look in spam folder if not in inbox<br>
+                3. Click the verification link in the email<br>
+                4. Try logging in again
+            </div>
+        </div>
+
+        <div class="step">
+            <h2>🧪 Step 1: Check Registration Status</h2>
+            <div class="code">
+                1. Go to: <a href="http://localhost:8080/register" class="button" target="_blank">Registration Page</a><br>
+                2. Try registering with the same email<br>
+                3. If it says "User already exists" → Account exists, check email confirmation<br>
+                4. If it allows registration → Previous registration failed
+            </div>
+        </div>
+
+        <div class="step">
+            <h2>📧 Step 2: Check Email Confirmation</h2>
+            <div class="code">
+                1. Open Gmail - Check inbox<br>
+                2. Look for email from Supabase (subject: "Confirm your signup")<br>
+                3. If found - Click the link to confirm<br>
+                4. If not found - Check spam folder<br>
+                5. If still not found - Registration might have failed
+            </div>
+            <div class="warning">
+                <strong>⚠️ Important:</strong> The email might be in your spam folder. 
+                Look for emails from noreply@your-project.supabase.co
+            </div>
+        </div>
+
+        <div class="step">
+            <h2>🔄 Step 3: Test with New Account</h2>
+            <div class="code">
+                1. Use a different email (e.g., test2@gmail.com)<br>
+                2. Register with new email<br>
+                3. Check Gmail for confirmation email<br>
+                4. Click verification link<br>
+                5. Try logging in with new credentials
+            </div>
+        </div>
+
+        <div class="step">
+            <h2>🔧 Step 4: Quick Fixes</h2>
+            <div class="success">
+                <strong>✅ Fix 1: Resend Confirmation Email</strong><br>
+                1. Go to Supabase Dashboard → Authentication → Users<br>
+                2. Find your email in the list<br>
+                3. Click "Resend confirmation email"<br>
+                4. Check Gmail for new confirmation email<br>
+                5. Click the link to confirm
+            </div>
+            <div class="success">
+                <strong>✅ Fix 2: Reset Password</strong><br>
+                1. Go to: <a href="http://localhost:8080/forgot-password" class="button" target="_blank">Forgot Password</a><br>
+                2. Enter your email address<br>
+                3. Check Gmail for password reset email<br>
+                4. Click the link and set a new password<br>
+                5. Try logging in with new password
+            </div>
+        </div>
+
+        <div class="step">
+            <h2>🧪 Step 5: Test Complete Flow</h2>
+            <div class="code">
+                1. Go to: <a href="http://localhost:8080/register" class="button" target="_blank">Registration</a><br>
+                2. Use email: test@gmail.com<br>
+                3. Use password: Test123!@#<br>
+                4. Click "Create Account"<br>
+                5. Check Gmail for confirmation email<br>
+                6. Click the link in the email<br>
+                7. Go to: <a href="http://localhost:8080/login" class="button" target="_blank">Login</a><br>
+                8. Enter same credentials<br>
+                9. Should redirect to dashboard
+            </div>
+        </div>
+
+        <div class="step">
+            <h2>🔧 Step 6: Check Supabase Configuration</h2>
+            <div class="warning">
+                <strong>⚠️ Required Settings:</strong><br>
+                1. Go to: Supabase Dashboard → Authentication → Settings<br>
+                2. Enable: "Enable email confirmations" ✅<br>
+                3. Set Site URL: http://localhost:8080<br>
+                4. Add Redirect URL: http://localhost:8080/auth/callback
+            </div>
+        </div>
+
+        <div class="step">
+            <h2>🚨 Step 7: If Still Having Issues</h2>
+            <div class="error">
+                <strong>❌ Check Browser Console:</strong><br>
+                1. Open browser console (F12)<br>
+                2. Look for errors in the console<br>
+                3. Check network tab for failed requests<br>
+                4. Look for Supabase errors
+            </div>
+            <div class="error">
+                <strong>❌ Check Supabase Logs:</strong><br>
+                1. Go to: Supabase Dashboard → Logs → Auth<br>
+                2. Look for errors in the logs<br>
+                3. Check email delivery status<br>
+                4. Look for authentication errors
+            </div>
+        </div>
+
+        <div class="step">
+            <h2>🎯 Test Pages</h2>
+            <div class="code">
+                <a href="http://localhost:8080/register" class="button" target="_blank">Registration</a>
+                <a href="http://localhost:8080/login" class="button" target="_blank">Login</a>
+                <a href="http://localhost:8080/dashboard" class="button" target="_blank">Dashboard</a>
+                <a href="http://localhost:8080/forgot-password" class="button" target="_blank">Forgot Password</a>
+            </div>
+        </div>
+
+        <div class="step">
+            <h2>🎉 Expected Results</h2>
+            <div class="success">
+                <strong>✅ Successful Registration:</strong><br>
+                • Form validation - All fields required<br>
+                • Email sent - Confirmation email to Gmail<br>
+                • User feedback - Clear success message<br>
+                • Form cleared - After successful registration
+            </div>
+            <div class="success">
+                <strong>✅ Successful Email Confirmation:</strong><br>
+                • Email received - In Gmail inbox<br>
+                • Link works - Redirects to callback page<br>
+                • Success message - "Email Confirmed!"<br>
+                • Auto-redirect - To dashboard
+            </div>
+            <div class="success">
+                <strong>✅ Successful Login:</strong><br>
+                • Email confirmed - Can login successfully<br>
+                • Error handling - Clear error messages<br>
+                • Dashboard access - Protected route works<br>
+                • Session management - User stays logged in
+            </div>
+        </div>
+    </div>
+</body>
+</html>

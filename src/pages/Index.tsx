@@ -1,3 +1,4 @@
+import React, { useState, useEffect } from "react";
 import { NavigationBar } from "@/components/NavigationBar";
 import { HeroSection } from "@/components/HeroSection";
 import { TechnologySection } from "@/components/TechnologySection";
@@ -6,11 +7,311 @@ import { TestimonialsSection } from "@/components/TestimonialsSection";
 import { FAQSection } from "@/components/FAQSection";
 import { ModernCTASection } from "@/components/ModernCTASection";
 import { Footer } from "@/components/Footer";
+import { useAuth } from "@/contexts/AuthContext";
+import { useNavigate } from "react-router-dom";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { supabase } from "@/integrations/supabase/client";
+import { 
+  User, 
+  LogIn, 
+  UserPlus, 
+  Shield, 
+  Settings, 
+  BarChart3,
+  Users,
+  ShoppingCart,
+  Star,
+  Zap,
+  Eye,
+  Heart,
+  Share2
+} from "lucide-react";
+
+interface ScooterModel {
+  id: string;
+  name: string;
+  description: string | null;
+  price: string;
+  max_speed: string;
+  max_range: string;
+  charge_time: string;
+  image_1_url: string | null;
+  image_2_url: string | null;
+  thumbnail_url: string | null;
+  is_active: boolean;
+  is_featured: boolean;
+  display_order: number;
+  smart_display: boolean;
+  gps_navigation: boolean;
+  anti_theft_system: boolean;
+  mobile_app_connectivity: boolean;
+  led_lighting_system: boolean;
+  regenerative_braking: boolean;
+  power_output: string;
+  torque: string;
+  weight: string;
+  connectivity_mobile_app: string;
+  connectivity_gps_tracking: string;
+  connectivity_bluetooth: string;
+}
 
 const Index = () => {
+  const { user, loading } = useAuth();
+  const navigate = useNavigate();
+  const [scooters, setScooters] = useState<ScooterModel[]>([]);
+  const [scootersLoading, setScootersLoading] = useState(true);
+
+  // Fetch scooters for display
+  const fetchScooters = async () => {
+    try {
+      setScootersLoading(true);
+      const { data, error } = await supabase
+        .from("scooters")
+        .select("*")
+        .eq("is_active", true)
+        .order("display_order", { ascending: true })
+        .limit(6); // Show only 6 scooters on homepage
+
+      if (error) {
+        console.error("Error fetching scooters:", error);
+        return;
+      }
+
+      if (Array.isArray(data)) {
+        const mappedData = data.map((item: any) => ({
+          id: item.id || "",
+          name: item.name || "",
+          description: item.description || "",
+          price: item.price || "",
+          max_speed: item.max_speed || "",
+          max_range: item.max_range || "",
+          charge_time: item.charge_time || "",
+          image_1_url: item.image_1_url || "",
+          image_2_url: item.image_2_url || "",
+          thumbnail_url: item.thumbnail_url || "",
+          is_active: item.is_active || false,
+          is_featured: item.is_featured || false,
+          display_order: item.display_order || 0,
+          smart_display: item.smart_display || false,
+          gps_navigation: item.gps_navigation || false,
+          anti_theft_system: item.anti_theft_system || false,
+          mobile_app_connectivity: item.mobile_app_connectivity || false,
+          led_lighting_system: item.led_lighting_system || false,
+          regenerative_braking: item.regenerative_braking || false,
+          power_output: item.power_output || "300 kW",
+          torque: item.torque || "180 Nm",
+          weight: item.weight || "200 kg",
+          connectivity_mobile_app: item.connectivity_mobile_app || "iOS & Android",
+          connectivity_gps_tracking: item.connectivity_gps_tracking || "Built-in",
+          connectivity_bluetooth: item.connectivity_bluetooth || "5.0",
+        }));
+        setScooters(mappedData);
+      }
+    } catch (err) {
+      console.error("Unexpected error fetching scooters:", err);
+    } finally {
+      setScootersLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchScooters();
+  }, []);
+
   return (
     <div className="min-h-screen bg-background">
       <NavigationBar />
+      
+      {/* Admin Access Banner - Only show for authenticated users */}
+      {user && (
+        <div className="bg-gradient-to-r from-blue-600 to-purple-600 text-white py-4">
+          <div className="container mx-auto px-4">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center space-x-4">
+                <div className="flex items-center space-x-2">
+                  <Zap className="w-6 h-6" />
+                  <span className="text-xl font-bold">Admin Access</span>
+                </div>
+                <Badge variant="secondary" className="bg-white/20 text-white">
+                  Welcome back, {user.email}
+                </Badge>
+              </div>
+              
+              <div className="flex items-center space-x-4">
+                <Button 
+                  onClick={() => navigate("/admin-dashboard")}
+                  variant="secondary"
+                  className="bg-white/20 text-white hover:bg-white/30"
+                >
+                  <Shield className="w-4 h-4 mr-2" />
+                  Admin Dashboard
+                </Button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Quick Access Cards */}
+      <div className="container mx-auto px-4 py-8">
+        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+          <Card className="hover:shadow-lg transition-shadow cursor-pointer" onClick={() => navigate("/scooters")}>
+            <CardHeader className="text-center">
+              <ShoppingCart className="w-8 h-8 mx-auto text-blue-600 mb-2" />
+              <CardTitle className="text-lg">Browse Scooters</CardTitle>
+              <CardDescription>View our electric scooter collection</CardDescription>
+            </CardHeader>
+          </Card>
+
+          <Card className="hover:shadow-lg transition-shadow cursor-pointer" onClick={() => navigate("/technology")}>
+            <CardHeader className="text-center">
+              <Zap className="w-8 h-8 mx-auto text-green-600 mb-2" />
+              <CardTitle className="text-lg">Technology</CardTitle>
+              <CardDescription>Advanced features and specs</CardDescription>
+            </CardHeader>
+          </Card>
+
+          <Card className="hover:shadow-lg transition-shadow cursor-pointer" onClick={() => navigate("/gallery")}>
+            <CardHeader className="text-center">
+              <Star className="w-8 h-8 mx-auto text-purple-600 mb-2" />
+              <CardTitle className="text-lg">Gallery</CardTitle>
+              <CardDescription>Visual showcase of our scooters</CardDescription>
+            </CardHeader>
+          </Card>
+
+          <Card className="hover:shadow-lg transition-shadow cursor-pointer" onClick={() => navigate("/contact")}>
+            <CardHeader className="text-center">
+              <Users className="w-8 h-8 mx-auto text-orange-600 mb-2" />
+              <CardTitle className="text-lg">Contact</CardTitle>
+              <CardDescription>Get in touch with our team</CardDescription>
+            </CardHeader>
+          </Card>
+        </div>
+      </div>
+
+      {/* Featured Scooters Section */}
+      <div className="container mx-auto px-4 py-8">
+        <div className="text-center mb-8">
+          <h2 className="text-3xl font-bold text-gray-900 mb-4">Featured Electric Scooters</h2>
+          <p className="text-gray-600 text-lg">Discover our latest collection of high-performance electric scooters</p>
+        </div>
+
+        {scootersLoading ? (
+          <div className="text-center py-12">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
+            <p className="mt-4 text-gray-600">Loading scooters...</p>
+          </div>
+        ) : scooters.length > 0 ? (
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {scooters.map((scooter) => (
+              <Card key={scooter.id} className="hover:shadow-xl transition-all duration-300 group">
+                <div className="relative overflow-hidden rounded-t-lg">
+                  <img
+                    src={scooter.image_1_url || scooter.thumbnail_url || "/placeholder.svg"}
+                    alt={scooter.name}
+                    className="w-full h-64 object-cover group-hover:scale-105 transition-transform duration-300"
+                  />
+                  {scooter.is_featured && (
+                    <Badge className="absolute top-4 left-4 bg-yellow-500 text-white">
+                      Featured
+                    </Badge>
+                  )}
+                  <div className="absolute top-4 right-4 flex space-x-2">
+                    <Button size="sm" variant="secondary" className="bg-white/80 hover:bg-white">
+                      <Heart className="w-4 h-4" />
+                    </Button>
+                    <Button size="sm" variant="secondary" className="bg-white/80 hover:bg-white">
+                      <Share2 className="w-4 h-4" />
+                    </Button>
+                  </div>
+                </div>
+                
+                <CardContent className="p-6">
+                  <div className="flex justify-between items-start mb-3">
+                    <CardTitle className="text-xl font-bold text-gray-900">{scooter.name}</CardTitle>
+                    <span className="text-2xl font-bold text-blue-600">{scooter.price}</span>
+                  </div>
+                  
+                  <p className="text-gray-600 mb-4 line-clamp-2">{scooter.description}</p>
+                  
+                  {/* Key Specifications */}
+                  <div className="grid grid-cols-2 gap-4 mb-4">
+                    <div className="text-center p-3 bg-gray-50 rounded-lg">
+                      <div className="text-2xl font-bold text-blue-600">{scooter.max_speed}</div>
+                      <div className="text-sm text-gray-600">Max Speed</div>
+                    </div>
+                    <div className="text-center p-3 bg-gray-50 rounded-lg">
+                      <div className="text-2xl font-bold text-green-600">{scooter.max_range}</div>
+                      <div className="text-sm text-gray-600">Range</div>
+                    </div>
+                  </div>
+
+                  {/* Advanced Features */}
+                  <div className="mb-4">
+                    <h4 className="font-semibold text-gray-900 mb-2">Advanced Features</h4>
+                    <div className="flex flex-wrap gap-2">
+                      {scooter.smart_display && (
+                        <Badge variant="secondary" className="bg-blue-100 text-blue-800">Smart Display</Badge>
+                      )}
+                      {scooter.gps_navigation && (
+                        <Badge variant="secondary" className="bg-green-100 text-green-800">GPS Navigation</Badge>
+                      )}
+                      {scooter.anti_theft_system && (
+                        <Badge variant="secondary" className="bg-red-100 text-red-800">Anti-Theft</Badge>
+                      )}
+                      {scooter.mobile_app_connectivity && (
+                        <Badge variant="secondary" className="bg-purple-100 text-purple-800">Mobile App</Badge>
+                      )}
+                    </div>
+                  </div>
+
+                  {/* Action Buttons */}
+                  <div className="flex space-x-3">
+                    <Button 
+                      onClick={() => navigate(`/scooter/${scooter.id}`)}
+                      className="flex-1 bg-blue-600 hover:bg-blue-700"
+                    >
+                      <Eye className="w-4 h-4 mr-2" />
+                      View Details
+                    </Button>
+                    <Button 
+                      onClick={() => navigate("/contact")}
+                      variant="outline"
+                      className="flex-1"
+                    >
+                      <Users className="w-4 h-4 mr-2" />
+                      Contact Sales
+                    </Button>
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        ) : (
+          <div className="text-center py-12">
+            <ShoppingCart className="w-16 h-16 text-gray-400 mx-auto mb-4" />
+            <h3 className="text-xl font-semibold text-gray-900 mb-2">No Scooters Available</h3>
+            <p className="text-gray-600">Check back later for our latest electric scooter collection.</p>
+          </div>
+        )}
+
+        {/* View All Button */}
+        {scooters.length > 0 && (
+          <div className="text-center mt-8">
+            <Button 
+              onClick={() => navigate("/scooters")}
+              size="lg"
+              className="bg-blue-600 hover:bg-blue-700 px-8 py-3"
+            >
+              <ShoppingCart className="w-5 h-5 mr-2" />
+              View All Scooters
+            </Button>
+          </div>
+        )}
+      </div>
+
       <HeroSection />
       <TechnologySection />
       <GallerySection />

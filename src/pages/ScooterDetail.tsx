@@ -15,154 +15,50 @@ import {
   Navigation, 
   Wifi,
   ArrowLeft,
-  RotateCcw
+  RotateCcw,
+  Monitor,
+  MapPin,
+  Lock,
+  WifiIcon,
+  Lightbulb,
+  RotateCw
 } from "lucide-react";
-import scooter1 from "@/assets/scooter-1.jpg";
-import scooter2 from "@/assets/scooter-2.jpg";
-import scooter3 from "@/assets/scooter-3.jpg";
-import scooter4 from "@/assets/scooter-4.jpg";
-import scooter5 from "@/assets/scooter-5.jpg";
+import { supabase } from "@/integrations/supabase/client";
 
 interface ScooterModel {
-  id: number;
+  id: string;
   name: string;
-  image: string;
+  description: string | null;
   price: string;
-  specs: {
-    battery: number;
-    range: number;
-    speed: number;
-    charging: string;
-    power: number;
-    torque: number;
-  };
-  features: string[];
-  description: string;
-  colors: string[];
+  max_speed: string;
+  max_range: string;
+  charge_time: string;
+  image_1_url: string | null;
+  image_2_url: string | null;
+  thumbnail_url: string | null;
+  is_active: boolean;
+  is_featured: boolean;
+  display_order: number;
+  
+  // Advanced Features
+  smart_display: boolean;
+  gps_navigation: boolean;
+  anti_theft_system: boolean;
+  mobile_app_connectivity: boolean;
+  led_lighting_system: boolean;
+  regenerative_braking: boolean;
+  
+  // Technical Specifications
+  power_output: string;
+  torque: string;
+  weight: string;
+  connectivity_mobile_app: string;
+  connectivity_gps_tracking: string;
+  connectivity_bluetooth: string;
 }
 
-const scooters: ScooterModel[] = [
-  {
-    id: 1,
-    name: "EV Sport Pro",
-    image: scooter1,
-    price: "$4,999",
-    specs: {
-      battery: 3.2,
-      range: 85,
-      speed: 65,
-      charging: "2.5 hrs",
-      power: 3500,
-      torque: 180,
-    },
-    features: [
-      "Smart Digital Display",
-      "GPS Navigation",
-      "Anti-theft System",
-      "Mobile App Connectivity",
-      "LED Lighting System",
-      "Regenerative Braking"
-    ],
-    description: "The perfect balance of performance and efficiency for urban commuting.",
-    colors: ["Midnight Black", "Electric Blue", "Arctic White"]
-  },
-  {
-    id: 2,
-    name: "EV Racing",
-    image: scooter2,
-    price: "$6,499",
-    specs: {
-      battery: 4.1,
-      range: 120,
-      speed: 85,
-      charging: "3 hrs",
-      power: 5000,
-      torque: 220,
-    },
-    features: [
-      "Sport Mode",
-      "Advanced Suspension",
-      "Racing Dashboard",
-      "Performance Analytics",
-      "Carbon Fiber Elements",
-      "Track Mode"
-    ],
-    description: "Built for speed enthusiasts who demand maximum performance.",
-    colors: ["Racing Red", "Carbon Black", "Neon Green"]
-  },
-  {
-    id: 3,
-    name: "EV Urban",
-    image: scooter3,
-    price: "$3,499",
-    specs: {
-      battery: 2.8,
-      range: 65,
-      speed: 45,
-      charging: "2 hrs",
-      power: 2500,
-      torque: 140,
-    },
-    features: [
-      "Compact Design",
-      "Easy Storage",
-      "City Navigation",
-      "Eco Mode",
-      "Quick Charge",
-      "Lightweight Frame"
-    ],
-    description: "Designed for city dwellers who need efficient urban mobility.",
-    colors: ["Urban Gray", "Sky Blue", "Mint Green"]
-  },
-  {
-    id: 4,
-    name: "EV Executive",
-    image: scooter4,
-    price: "$5,799",
-    specs: {
-      battery: 3.8,
-      range: 100,
-      speed: 70,
-      charging: "2.8 hrs",
-      power: 4200,
-      torque: 200,
-    },
-    features: [
-      "Premium Materials",
-      "Luxury Seat",
-      "Advanced Security",
-      "Climate Display",
-      "Wireless Charging",
-      "Premium Sound"
-    ],
-    description: "Luxury meets performance in this executive-class electric scooter.",
-    colors: ["Platinum Silver", "Deep Blue", "Pearl White"]
-  },
-  {
-    id: 5,
-    name: "EV Adventure",
-    image: scooter5,
-    price: "$7,299",
-    specs: {
-      battery: 4.5,
-      range: 140,
-      speed: 75,
-      charging: "3.5 hrs",
-      power: 4800,
-      torque: 240,
-    },
-    features: [
-      "All-Terrain Capability",
-      "Weather Resistant",
-      "Extended Range",
-      "Adventure GPS",
-      "Rugged Design",
-      "Off-road Mode"
-    ],
-    description: "Built for adventurers who want to explore beyond city limits.",
-    colors: ["Adventure Orange", "Forest Green", "Desert Tan"]
-  },
-];
+// Default colors for display
+const defaultColors = ["Midnight Black", "Electric Blue", "Arctic White"];
 
 const CountUpNumber = ({ value, duration = 2000 }: { value: number; duration?: number }) => {
   const [count, setCount] = useState(0);
@@ -188,8 +84,96 @@ export default function ScooterDetail() {
   const navigate = useNavigate();
   const [selectedColor, setSelectedColor] = useState(0);
   const [is360View, setIs360View] = useState(false);
+  const [scooter, setScooter] = useState<ScooterModel | null>(null);
+  const [loading, setLoading] = useState(true);
 
-  const scooter = scooters.find(s => s.id === parseInt(id || '1')) || scooters[0];
+  useEffect(() => {
+    const fetchScooter = async () => {
+      if (!id) return;
+      
+      try {
+        const { data, error } = await supabase
+          .from('scooters')
+          .select('*')
+          .eq('id', id)
+          .single();
+
+        if (error) {
+          console.error('Error fetching scooter:', error);
+          return;
+        }
+
+        // Map data to include default values for new fields (they may not exist in DB yet)
+        const scooterData = data as any;
+        const scooterWithDefaults = {
+          ...scooterData,
+          // Set default values for advanced features (will be false if columns don't exist)
+          smart_display: scooterData.smart_display ?? false,
+          gps_navigation: scooterData.gps_navigation ?? false,
+          anti_theft_system: scooterData.anti_theft_system ?? false,
+          mobile_app_connectivity: scooterData.mobile_app_connectivity ?? false,
+          led_lighting_system: scooterData.led_lighting_system ?? false,
+          regenerative_braking: scooterData.regenerative_braking ?? false,
+          // Set default values for technical specs (will be empty if columns don't exist)
+          power_output: scooterData.power_output ?? "",
+          torque: scooterData.torque ?? "",
+          weight: scooterData.weight ?? "",
+          connectivity_mobile_app: scooterData.connectivity_mobile_app ?? "",
+          connectivity_gps_tracking: scooterData.connectivity_gps_tracking ?? "",
+          connectivity_bluetooth: scooterData.connectivity_bluetooth ?? "",
+        };
+        setScooter(scooterWithDefaults);
+      } catch (err) {
+        console.error('Unexpected error:', err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchScooter();
+    
+    // Set up real-time subscription for automatic updates
+    const channel = supabase
+      .channel('scooter_detail_changes')
+      .on('postgres_changes', { 
+        event: '*', 
+        schema: 'public', 
+        table: 'scooters',
+        filter: `id=eq.${id}`
+      }, () => {
+        console.log('Scooter data changed, refreshing...');
+        fetchScooter();
+      })
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, [id]);
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-primary mx-auto"></div>
+          <p className="mt-4 text-muted-foreground">Loading scooter details...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (!scooter) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <div className="text-center">
+          <h1 className="text-2xl font-bold mb-4">Scooter Not Found</h1>
+          <Button onClick={() => navigate('/scooters')}>
+            Back to Scooters
+          </Button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-background">
@@ -215,11 +199,14 @@ export default function ScooterDetail() {
             <div className="space-y-6">
               <div className="relative aspect-video rounded-2xl overflow-hidden bg-gradient-to-br from-primary/5 to-primary/10">
                 <img
-                  src={scooter.image}
+                  src={scooter.image_1_url || scooter.thumbnail_url || '/placeholder.svg'}
                   alt={scooter.name}
                   className={`w-full h-full object-cover transition-all duration-700 ${
                     is360View ? 'animate-spin' : 'hover:scale-105'
                   }`}
+                  onError={(e) => {
+                    (e.target as HTMLImageElement).src = '/placeholder.svg';
+                  }}
                 />
                 
                 {/* 360 View Button */}
@@ -237,7 +224,7 @@ export default function ScooterDetail() {
               <div className="space-y-4">
                 <h3 className="text-lg font-semibold">Available Colors</h3>
                 <div className="flex space-x-3">
-                  {scooter.colors.map((color, index) => (
+                  {defaultColors.map((color, index) => (
                     <button
                       key={color}
                       onClick={() => setSelectedColor(index)}
@@ -274,22 +261,11 @@ export default function ScooterDetail() {
               <div className="grid grid-cols-2 gap-6">
                 <div className="space-y-2">
                   <div className="flex items-center space-x-2">
-                    <Battery className="w-5 h-5 text-primary" />
-                    <span className="text-sm text-muted-foreground">Battery</span>
-                  </div>
-                  <div className="text-2xl font-bold">
-                    <CountUpNumber value={scooter.specs.battery} /> kWh
-                  </div>
-                  <Progress value={(scooter.specs.battery / 5) * 100} className="h-2" />
-                </div>
-
-                <div className="space-y-2">
-                  <div className="flex items-center space-x-2">
                     <Zap className="w-5 h-5 text-primary" />
                     <span className="text-sm text-muted-foreground">Range</span>
                   </div>
                   <div className="text-2xl font-bold">
-                    <CountUpNumber value={scooter.specs.range} /> km
+                    {scooter.max_range}
                   </div>
                 </div>
 
@@ -299,7 +275,7 @@ export default function ScooterDetail() {
                     <span className="text-sm text-muted-foreground">Top Speed</span>
                   </div>
                   <div className="text-2xl font-bold">
-                    <CountUpNumber value={scooter.specs.speed} /> km/h
+                    {scooter.max_speed}
                   </div>
                 </div>
 
@@ -308,7 +284,17 @@ export default function ScooterDetail() {
                     <Clock className="w-5 h-5 text-primary" />
                     <span className="text-sm text-muted-foreground">Charging</span>
                   </div>
-                  <div className="text-2xl font-bold">{scooter.specs.charging}</div>
+                  <div className="text-2xl font-bold">{scooter.charge_time}</div>
+                </div>
+
+                <div className="space-y-2">
+                  <div className="flex items-center space-x-2">
+                    <Battery className="w-5 h-5 text-primary" />
+                    <span className="text-sm text-muted-foreground">Power</span>
+                  </div>
+                  <div className="text-2xl font-bold">
+                    {scooter.power_output}
+                  </div>
                 </div>
               </div>
 
@@ -331,71 +317,129 @@ export default function ScooterDetail() {
         </section>
 
         {/* Features Section */}
-        <section className="py-16 bg-muted/30">
+        <section className="py-16 bg-gradient-to-br from-gray-900 to-gray-800">
           <div className="container mx-auto px-4">
-            <h2 className="text-3xl font-bold text-center mb-12">
+            <h2 className="text-3xl font-bold text-center mb-12 text-white">
               Advanced Features
             </h2>
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {scooter.features.map((feature, index) => (
-                <div
-                  key={feature}
-                  className="bg-card/50 backdrop-blur-sm border border-border rounded-xl p-6 hover:shadow-glow transition-all duration-300 animate-fade-in"
-                  style={{ animationDelay: `${index * 100}ms` }}
-                >
+              {scooter.smart_display && (
+                <div className="bg-white/10 backdrop-blur-sm border border-white/20 rounded-xl p-6 hover:bg-white/20 transition-all duration-300 animate-fade-in">
                   <div className="flex items-center space-x-3">
-                    <div className="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center">
-                      <Smartphone className="w-5 h-5 text-primary" />
+                    <div className="w-10 h-10 bg-blue-500/20 rounded-lg flex items-center justify-center">
+                      <Monitor className="w-5 h-5 text-blue-400" />
                     </div>
-                    <span className="font-semibold">{feature}</span>
+                    <span className="font-semibold text-white">Smart Digital Display</span>
                   </div>
                 </div>
-              ))}
+              )}
+              {scooter.gps_navigation && (
+                <div className="bg-white/10 backdrop-blur-sm border border-white/20 rounded-xl p-6 hover:bg-white/20 transition-all duration-300 animate-fade-in">
+                  <div className="flex items-center space-x-3">
+                    <div className="w-10 h-10 bg-green-500/20 rounded-lg flex items-center justify-center">
+                      <Navigation className="w-5 h-5 text-green-400" />
+                    </div>
+                    <span className="font-semibold text-white">GPS Navigation</span>
+                  </div>
+                </div>
+              )}
+              {scooter.anti_theft_system && (
+                <div className="bg-white/10 backdrop-blur-sm border border-white/20 rounded-xl p-6 hover:bg-white/20 transition-all duration-300 animate-fade-in">
+                  <div className="flex items-center space-x-3">
+                    <div className="w-10 h-10 bg-red-500/20 rounded-lg flex items-center justify-center">
+                      <Shield className="w-5 h-5 text-red-400" />
+                    </div>
+                    <span className="font-semibold text-white">Anti-theft System</span>
+                  </div>
+                </div>
+              )}
+              {scooter.mobile_app_connectivity && (
+                <div className="bg-white/10 backdrop-blur-sm border border-white/20 rounded-xl p-6 hover:bg-white/20 transition-all duration-300 animate-fade-in">
+                  <div className="flex items-center space-x-3">
+                    <div className="w-10 h-10 bg-purple-500/20 rounded-lg flex items-center justify-center">
+                      <Smartphone className="w-5 h-5 text-purple-400" />
+                    </div>
+                    <span className="font-semibold text-white">Mobile App Connectivity</span>
+                  </div>
+                </div>
+              )}
+              {scooter.led_lighting_system && (
+                <div className="bg-white/10 backdrop-blur-sm border border-white/20 rounded-xl p-6 hover:bg-white/20 transition-all duration-300 animate-fade-in">
+                  <div className="flex items-center space-x-3">
+                    <div className="w-10 h-10 bg-yellow-500/20 rounded-lg flex items-center justify-center">
+                      <Lightbulb className="w-5 h-5 text-yellow-400" />
+                    </div>
+                    <span className="font-semibold text-white">LED Lighting System</span>
+                  </div>
+                </div>
+              )}
+              {scooter.regenerative_braking && (
+                <div className="bg-white/10 backdrop-blur-sm border border-white/20 rounded-xl p-6 hover:bg-white/20 transition-all duration-300 animate-fade-in">
+                  <div className="flex items-center space-x-3">
+                    <div className="w-10 h-10 bg-orange-500/20 rounded-lg flex items-center justify-center">
+                      <RotateCw className="w-5 h-5 text-orange-400" />
+                    </div>
+                    <span className="font-semibold text-white">Regenerative Braking</span>
+                  </div>
+                </div>
+              )}
             </div>
           </div>
         </section>
 
         {/* Additional Specs */}
-        <section className="py-16">
+        <section className="py-16 bg-gradient-to-br from-gray-800 to-gray-900">
           <div className="container mx-auto px-4">
-            <h2 className="text-3xl font-bold text-center mb-12">
+            <h2 className="text-3xl font-bold text-center mb-12 text-white">
               Technical Specifications
             </h2>
             <div className="max-w-4xl mx-auto">
               <div className="grid md:grid-cols-2 gap-8">
                 <div className="space-y-4">
-                  <h3 className="text-xl font-semibold mb-4">Performance</h3>
+                  <h3 className="text-xl font-semibold mb-4 text-white">Performance</h3>
                   <div className="space-y-3">
-                    <div className="flex justify-between items-center py-2 border-b border-border">
-                      <span className="text-muted-foreground">Power Output</span>
-                      <span className="font-semibold">{scooter.specs.power}W</span>
-                    </div>
-                    <div className="flex justify-between items-center py-2 border-b border-border">
-                      <span className="text-muted-foreground">Torque</span>
-                      <span className="font-semibold">{scooter.specs.torque} Nm</span>
-                    </div>
-                    <div className="flex justify-between items-center py-2 border-b border-border">
-                      <span className="text-muted-foreground">Weight</span>
-                      <span className="font-semibold">65 kg</span>
-                    </div>
+                    {scooter.power_output && (
+                      <div className="flex justify-between items-center py-3 border-b border-white/20 bg-white/5 rounded-lg px-4">
+                        <span className="text-gray-300">Power Output</span>
+                        <span className="font-semibold text-white">{scooter.power_output}</span>
+                      </div>
+                    )}
+                    {scooter.torque && (
+                      <div className="flex justify-between items-center py-3 border-b border-white/20 bg-white/5 rounded-lg px-4">
+                        <span className="text-gray-300">Torque</span>
+                        <span className="font-semibold text-white">{scooter.torque}</span>
+                      </div>
+                    )}
+                    {scooter.weight && (
+                      <div className="flex justify-between items-center py-3 border-b border-white/20 bg-white/5 rounded-lg px-4">
+                        <span className="text-gray-300">Weight</span>
+                        <span className="font-semibold text-white">{scooter.weight}</span>
+                      </div>
+                    )}
                   </div>
                 </div>
                 
                 <div className="space-y-4">
-                  <h3 className="text-xl font-semibold mb-4">Connectivity</h3>
+                  <h3 className="text-xl font-semibold mb-4 text-white">Connectivity</h3>
                   <div className="space-y-3">
-                    <div className="flex justify-between items-center py-2 border-b border-border">
-                      <span className="text-muted-foreground">Mobile App</span>
-                      <Badge variant="secondary">iOS & Android</Badge>
-                    </div>
-                    <div className="flex justify-between items-center py-2 border-b border-border">
-                      <span className="text-muted-foreground">GPS Tracking</span>
-                      <Badge variant="secondary">Built-in</Badge>
-                    </div>
-                    <div className="flex justify-between items-center py-2 border-b border-border">
-                      <span className="text-muted-foreground">Bluetooth</span>
-                      <Badge variant="secondary">5.0</Badge>
-                    </div>
+                    {scooter.connectivity_mobile_app && (
+                      <div className="flex justify-between items-center py-3 border-b border-white/20 bg-white/5 rounded-lg px-4">
+                        <span className="text-gray-300">Mobile App</span>
+                        <Badge className="bg-blue-500/20 text-blue-300 border-blue-500/30">{scooter.connectivity_mobile_app}</Badge>
+                      </div>
+                    )}
+                    {scooter.connectivity_gps_tracking && (
+                      <div className="flex justify-between items-center py-3 border-b border-white/20 bg-white/5 rounded-lg px-4">
+                        <span className="text-gray-300">GPS Tracking</span>
+                        <Badge className="bg-green-500/20 text-green-300 border-green-500/30">{scooter.connectivity_gps_tracking}</Badge>
+                      </div>
+                    )}
+                    {scooter.connectivity_bluetooth && (
+                      <div className="flex justify-between items-center py-3 border-b border-white/20 bg-white/5 rounded-lg px-4">
+                        <span className="text-gray-300">Bluetooth</span>
+                        <Badge className="bg-purple-500/20 text-purple-300 border-purple-500/30">{scooter.connectivity_bluetooth}</Badge>
+                      </div>
+                    )}
                   </div>
                 </div>
               </div>

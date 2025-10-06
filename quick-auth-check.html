@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quick Auth Check</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        .container {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 30px;
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+        }
+        .step {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 20px;
+            margin: 15px 0;
+            border-radius: 10px;
+            border-left: 4px solid #4CAF50;
+        }
+        .error {
+            background: rgba(255, 87, 87, 0.2);
+            border: 1px solid #ff5757;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 10px 0;
+        }
+        .success {
+            background: rgba(40, 167, 69, 0.2);
+            border: 1px solid #28a745;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 10px 0;
+        }
+        .button {
+            background: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            margin: 10px 5px;
+        }
+        .button:hover {
+            background: #45a049;
+        }
+        .code {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 15px;
+            border-radius: 5px;
+            font-family: monospace;
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔧 Quick Auth Check</h1>
+        <p>Let's fix your login issue step by step</p>
+
+        <div class="step">
+            <h2>🚨 Step 1: Check Your Gmail</h2>
+            <div class="error">
+                <strong>❌ Most likely cause:</strong> You registered but didn't click the email verification link
+            </div>
+            <div class="code">
+                1. Open Gmail<br>
+                2. Look for email from Supabase (subject: "Confirm your signup")<br>
+                3. Check spam folder if not in inbox<br>
+                4. Click the verification link in the email<br>
+                5. Try logging in again
+            </div>
+        </div>
+
+        <div class="step">
+            <h2>🧪 Step 2: Test with Fresh Account</h2>
+            <div class="code">
+                1. Go to: <a href="http://localhost:8080/register" class="button" target="_blank">Register New Account</a><br>
+                2. Use email: test@gmail.com<br>
+                3. Use password: Test123!@#<br>
+                4. Click "Create Account"<br>
+                5. Check Gmail for confirmation email<br>
+                6. Click the link in the email<br>
+                7. Go to: <a href="http://localhost:8080/login" class="button" target="_blank">Login</a><br>
+                8. Enter same credentials<br>
+                9. Should work now!
+            </div>
+        </div>
+
+        <div class="step">
+            <h2>🔧 Step 3: Check Supabase Settings</h2>
+            <div class="code">
+                1. Go to: Supabase Dashboard → Authentication → Settings<br>
+                2. Enable: "Enable email confirmations" ✅<br>
+                3. Set Site URL: http://localhost:8080<br>
+                4. Add Redirect URL: http://localhost:8080/auth/callback<br>
+                5. Save settings
+            </div>
+        </div>
+
+        <div class="step">
+            <h2>📧 Step 4: If No Email Received</h2>
+            <div class="error">
+                <strong>❌ No confirmation email?</strong><br>
+                1. Check spam folder<br>
+                2. Wait 1-2 minutes<br>
+                3. Try different email (Gmail, Yahoo)<br>
+                4. Check Supabase logs: Dashboard → Logs → Auth
+            </div>
+        </div>
+
+        <div class="step">
+            <h2>🔄 Step 5: Alternative Solutions</h2>
+            <div class="success">
+                <strong>✅ Option 1: Reset Password</strong><br>
+                1. Go to: <a href="http://localhost:8080/forgot-password" class="button" target="_blank">Forgot Password</a><br>
+                2. Enter your email<br>
+                3. Check Gmail for reset email<br>
+                4. Click link and set new password<br>
+                5. Try logging in with new password
+            </div>
+            <div class="success">
+                <strong>✅ Option 2: Create New Account</strong><br>
+                1. Use different email (test2@gmail.com)<br>
+                2. Register with new email<br>
+                3. Check Gmail for confirmation<br>
+                4. Click verification link<br>
+                5. Login with new credentials
+            </div>
+        </div>
+
+        <div class="step">
+            <h2>🎯 Quick Test</h2>
+            <div class="code">
+                <strong>Test the complete flow:</strong><br>
+                1. <a href="http://localhost:8080/register" class="button" target="_blank">Register</a><br>
+                2. Check Gmail for email<br>
+                3. Click email link<br>
+                4. <a href="http://localhost:8080/login" class="button" target="_blank">Login</a><br>
+                5. <a href="http://localhost:8080/dashboard" class="button" target="_blank">Dashboard</a>
+            </div>
+        </div>
+
+        <div class="step">
+            <h2>🎉 Expected Results</h2>
+            <div class="success">
+                <strong>✅ After clicking email link:</strong><br>
+                • Should redirect to /auth/callback<br>
+                • Should see "Email Confirmed!" message<br>
+                • Should auto-redirect to dashboard<br>
+                • Login should work with same credentials
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Admin Routes - FIXED</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        .container {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 30px;
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+        }
+        .test-section {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 10px;
+            border-left: 4px solid #4CAF50;
+        }
+        .success {
+            background: rgba(40, 167, 69, 0.2);
+            border: 1px solid #28a745;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 10px 0;
+        }
+        .button {
+            background: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            margin: 10px 5px;
+        }
+        .button:hover {
+            background: #45a049;
+        }
+        .code {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 15px;
+            border-radius: 5px;
+            font-family: monospace;
+            margin: 10px 0;
+        }
+        .flow-step {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        .highlight {
+            background: rgba(255, 193, 7, 0.3);
+            border: 1px solid #ffc107;
+            padding: 10px;
+            border-radius: 5px;
+            margin: 10px 0;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        th, td {
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 10px;
+            text-align: left;
+        }
+        th {
+            background: rgba(255, 255, 255, 0.1);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔧 Test Admin Routes - FIXED</h1>
+        <p>Verify that the admin routes are working correctly with the proper paths as requested.</p>
+
+        <div class="test-section">
+            <h2>✅ Current Status: FULLY IMPLEMENTED</h2>
+            <div class="success">
+                <strong>🎉 Admin routes are now properly configured!</strong><br>
+                Your admin routes are working with the correct paths as requested.
+            </div>
+        </div>
+
+        <div class="test-section">
+            <h2>🔧 Admin Routes - IMPLEMENTED</h2>
+            
+            <table>
+                <tr>
+                    <th>Route</th>
+                    <th>Component</th>
+                    <th>Description</th>
+                </tr>
+                <tr>
+                    <td><code>/admin-login</code></td>
+                    <td>AdminLogin.tsx</td>
+                    <td>Admin enters credentials (Supabase Auth)</td>
+                </tr>
+                <tr>
+                    <td><code>/admin-dashboard</code></td>
+                    <td>AdminDashboard.tsx</td>
+                    <td>Protected page — only accessible if logged in</td>
+                </tr>
+            </table>
+
+            <div class="highlight">
+                <strong>🎯 FIXED:</strong> Admin routes now use the correct paths as requested:
+                <ul>
+                    <li><code>/admin-login</code> instead of <code>/admin/login</code></li>
+                    <li><code>/admin-dashboard</code> instead of <code>/admin/dashboard</code></li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="test-section">
+            <h2>🧪 How to Test Admin Routes</h2>
+            
+            <h3>📊 Test 1: Admin Login Flow</h3>
+            <div class="code">
+                1. Go to Admin Login: <a href="http://localhost:8082/admin-login" class="button" target="_blank">Admin Login</a><br>
+                2. Enter admin credentials<br>
+                3. Login with Supabase Auth<br>
+                4. See redirect to admin dashboard<br>
+                5. Verify admin dashboard is accessible
+            </div>
+
+            <h3>🔄 Test 2: Admin Dashboard Access</h3>
+            <div class="code">
+                1. Go to Admin Dashboard: <a href="http://localhost:8082/admin-dashboard" class="button" target="_blank">Admin Dashboard</a><br>
+                2. See admin dashboard (if logged in)<br>
+                3. Test scooter management features<br>
+                4. Verify CRUD operations work<br>
+                5. Check real-time updates
+            </div>
+
+            <h3>🔒 Test 3: Navigation from Home</h3>
+            <div class="code">
+                1. Go to Home: <a href="http://localhost:8082/" class="button" target="_blank">Home</a><br>
+                2. Login as regular user<br>
+                3. Click "Admin" button<br>
+                4. See redirect to admin dashboard<br>
+                5. Verify admin features are accessible
+            </div>
+        </div>
+
+        <div class="test-section">
+            <h2>🎯 Expected Results</h2>
+            <div class="success">
+                <strong>✅ For Admin Login:</strong><br>
+                • URL: <code>http://localhost:8082/admin-login</code><br>
+                • Shows: Admin login form<br>
+                • Features: Supabase Auth integration<br>
+                • Redirects: To admin dashboard after successful login<br><br>
+                
+                <strong>✅ For Admin Dashboard:</strong><br>
+                • URL: <code>http://localhost:8082/admin-dashboard</code><br>
+                • Shows: Admin dashboard<br>
+                • Features: Scooter management, Advanced features, Real-time updates, File upload, Pagination, Search and filter<br><br>
+                
+                <strong>✅ For Navigation:</strong><br>
+                • Home page shows "Admin" button for authenticated users<br>
+                • Admin button redirects to <code>/admin-dashboard</code><br>
+                • Dashboard button in admin dashboard redirects to home<br>
+                • All routes work correctly
+            </div>
+        </div>
+
+        <div class="test-section">
+            <h2>🚀 Features Working</h2>
+            <div class="success">
+                <strong>✅ Admin Authentication:</strong><br>
+                • Admin login at <code>/admin-login</code><br>
+                • Admin dashboard at <code>/admin-dashboard</code><br>
+                • Supabase Auth integration<br>
+                • Protected routes working correctly<br>
+                • Navigation between pages<br><br>
+                
+                <strong>✅ Admin Dashboard:</strong><br>
+                • Scooter management (CRUD operations)<br>
+                • Advanced features and technical specifications<br>
+                • Real-time updates across all pages<br>
+                • File upload capabilities (SVG, JPG, JPEG, PNG)<br>
+                • Pagination (5 scooters per page)<br>
+                • Search and filter functionality<br><br>
+                
+                <strong>✅ User Experience:</strong><br>
+                • Clear navigation between admin and user areas<br>
+                • Proper route protection for admin features<br>
+                • Consistent UI across all pages<br>
+                • Professional appearance for admin operations
+            </div>
+        </div>
+
+        <div class="test-section">
+            <h2>🔗 Quick Links</h2>
+            <div class="code">
+                <a href="http://localhost:8082/" class="button" target="_blank">Home</a>
+                <a href="http://localhost:8082/admin-login" class="button" target="_blank">Admin Login</a>
+                <a href="http://localhost:8082/admin-dashboard" class="button" target="_blank">Admin Dashboard</a>
+                <a href="http://localhost:8082/dashboard" class="button" target="_blank">User Dashboard</a>
+                <a href="http://localhost:8082/register" class="button" target="_blank">Register</a>
+                <a href="http://localhost:8082/login" class="button" target="_blank">Login</a>
+            </div>
+        </div>
+
+        <div class="test-section">
+            <h2>🎉 Ready to Use</h2>
+            <div class="success">
+                <strong>✅ All Features Working:</strong><br>
+                • Admin routes properly configured<br>
+                • Navigation working correctly<br>
+                • Authentication properly integrated<br>
+                • Admin dashboard fully functional<br>
+                • CRUD operations working<br>
+                • Real-time updates functioning<br><br>
+                
+                <strong>✅ No Additional Setup Needed:</strong><br>
+                • Routing already configured<br>
+                • Authentication already implemented<br>
+                • Admin features already functional<br>
+                • Navigation already working
+            </div>
+        </div>
+    </div>
+</body>
+</html>

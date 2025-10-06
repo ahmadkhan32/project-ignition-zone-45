@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Vercel Deployment</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        .container {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 30px;
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+        }
+        .step {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 10px;
+            border-left: 4px solid #4CAF50;
+        }
+        .success {
+            background: rgba(40, 167, 69, 0.2);
+            border: 1px solid #28a745;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 10px 0;
+        }
+        .button {
+            background: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            margin: 10px 5px;
+        }
+        .button:hover {
+            background: #45a049;
+        }
+        .code {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 15px;
+            border-radius: 5px;
+            font-family: monospace;
+            margin: 10px 0;
+        }
+        .warning {
+            background: rgba(255, 193, 7, 0.2);
+            border: 1px solid #ffc107;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🚀 Test Vercel Deployment</h1>
+        <p>Test your Vercel auto-deployment setup</p>
+
+        <div class="step">
+            <h2>🔧 Step 1: Install Vercel CLI</h2>
+            <div class="code">
+                # Install Vercel CLI globally
+                npm install -g vercel
+                
+                # Login to Vercel
+                vercel login
+            </div>
+        </div>
+
+        <div class="step">
+            <h2>🚀 Step 2: Deploy to Vercel</h2>
+            <div class="code">
+                # Deploy your project
+                vercel
+                
+                # Follow the prompts:
+                # - Set up and deploy? Y
+                # - Which scope? (your account)
+                # - Link to existing project? N
+                # - Project name? (your-project-name)
+                # - Directory? ./
+                # - Override settings? N
+            </div>
+        </div>
+
+        <div class="step">
+            <h2>⚙️ Step 3: Set Environment Variables</h2>
+            <div class="code">
+                1. Go to: <a href="https://vercel.com/dashboard" class="button" target="_blank">Vercel Dashboard</a><br>
+                2. Select: Your project<br>
+                3. Go to: Settings → Environment Variables<br>
+                4. Add:<br>
+                   • VITE_SUPABASE_URL = https://scpdntuuikcqasmfxkeq.supabase.co<br>
+                   • VITE_SUPABASE_PUBLISHABLE_KEY = your-supabase-anon-key
+            </div>
+        </div>
+
+        <div class="step">
+            <h2>🔄 Step 4: Redeploy with Environment Variables</h2>
+            <div class="code">
+                # Redeploy with environment variables
+                vercel --prod
+            </div>
+        </div>
+
+        <div class="step">
+            <h2>🔗 Step 5: Connect to GitHub</h2>
+            <div class="code">
+                1. Go to: <a href="https://vercel.com/dashboard" class="button" target="_blank">Vercel Dashboard</a><br>
+                2. Select: Your project<br>
+                3. Go to: Settings → Git<br>
+                4. Connect: Your GitHub repository<br>
+                5. Enable: "Automatic deployments"
+            </div>
+        </div>
+
+        <div class="step">
+            <h2>🧪 Step 6: Test Auto-Deployment</h2>
+            <div class="code">
+                1. Make a test change to your code<br>
+                2. Commit: git add . && git commit -m "Test auto-deployment"<br>
+                3. Push: git push origin main<br>
+                4. Watch: Vercel Dashboard → Deployments<br>
+                5. See: New deployment starting automatically<br>
+                6. Visit: Your live URL to see changes
+            </div>
+        </div>
+
+        <div class="step">
+            <h2>🎯 Expected Results</h2>
+            <div class="success">
+                <strong>✅ Auto-Deployment Features:</strong><br>
+                • Automatic deployment when you push to GitHub<br>
+                • Real-time updates on Vercel<br>
+                • Zero downtime deployments<br>
+                • Live preview of changes<br>
+                • Environment variables properly configured
+            </div>
+        </div>
+
+        <div class="step">
+            <h2>🚀 Quick Commands</h2>
+            <div class="code">
+                <strong>Initial Deployment:</strong><br>
+                npm install -g vercel<br>
+                vercel login<br>
+                vercel<br>
+                # Set environment variables in Vercel dashboard<br>
+                vercel --prod<br><br>
+                
+                <strong>Daily Development:</strong><br>
+                # 1. Make changes to your code<br>
+                # 2. Test locally: npm run dev<br>
+                # 3. Commit and push:<br>
+                git add .<br>
+                git commit -m "Your changes"<br>
+                git push origin main<br>
+                # 4. Vercel automatically deploys!<br>
+                # 5. Visit your live URL to see changes
+            </div>
+        </div>
+
+        <div class="step">
+            <h2>🎉 Benefits</h2>
+            <div class="success">
+                <strong>✅ Auto-Deployment Benefits:</strong><br>
+                • No manual deployment needed<br>
+                • Real-time updates for users<br>
+                • Professional hosting with Vercel<br>
+                • Automatic HTTPS and CDN<br>
+                • Global edge network for fast loading<br>
+                • Continuous integration with GitHub
+            </div>
+        </div>
+
+        <div class="step">
+            <h2>📞 Troubleshooting</h2>
+            <div class="warning">
+                <strong>Common Issues:</strong><br>
+                • Build fails? → Check build logs in Vercel dashboard<br>
+                • Environment variables? → Set them in Vercel project settings<br>
+                • Domain not working? → Check DNS configuration<br>
+                • Changes not showing? → Clear browser cache<br><br>
+                
+                <strong>Support Resources:</strong><br>
+                • <a href="https://vercel.com/docs/deployments" class="button" target="_blank">Vercel Docs</a><br>
+                • <a href="https://vercel.com/docs/git" class="button" target="_blank">Git Integration</a><br>
+                • <a href="https://vercel.com/docs/environment-variables" class="button" target="_blank">Environment Variables</a>
+            </div>
+        </div>
+
+        <div class="step">
+            <h2>🎯 Test Pages</h2>
+            <div class="code">
+                <a href="http://localhost:8080/register" class="button" target="_blank">Registration</a>
+                <a href="http://localhost:8080/login" class="button" target="_blank">Login</a>
+                <a href="http://localhost:8080/dashboard" class="button" target="_blank">Dashboard</a>
+                <a href="https://vercel.com/dashboard" class="button" target="_blank">Vercel Dashboard</a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

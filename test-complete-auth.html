@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Complete Auth System</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        .container {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 30px;
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+        }
+        .step {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 10px;
+            border-left: 4px solid #4CAF50;
+        }
+        .success {
+            background: rgba(40, 167, 69, 0.2);
+            border: 1px solid #28a745;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 10px 0;
+        }
+        .button {
+            background: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            margin: 10px 5px;
+        }
+        .button:hover {
+            background: #45a049;
+        }
+        .code {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 15px;
+            border-radius: 5px;
+            font-family: monospace;
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔐 Test Complete Auth System</h1>
+        <p>Complete Login & Registration System with Supabase Authentication</p>
+
+        <div class="step">
+            <h2>🚀 Step 1: Test Registration</h2>
+            <div class="code">
+                1. Go to: <a href="http://localhost:8080/register" class="button" target="_blank">Registration Page</a><br>
+                2. Fill the form:<br>
+                   • Full Name: "John Doe"<br>
+                   • Email: "john@gmail.com"<br>
+                   • Phone: "+1234567890"<br>
+                   • Password: "Test123!@#"<br>
+                   • Confirm Password: "Test123!@#"<br>
+                3. Click "Create Account"<br>
+                4. See success message: "Registration successful! Please check your email..."
+            </div>
+        </div>
+
+        <div class="step">
+            <h2>📧 Step 2: Test Email Confirmation</h2>
+            <div class="code">
+                1. Open Gmail - Check inbox<br>
+                2. Look for email from Supabase (subject: "Confirm your signup")<br>
+                3. Click the link in the email<br>
+                4. Should redirect to /auth/callback<br>
+                5. See "Email Confirmed!" message<br>
+                6. Auto-redirect to dashboard
+            </div>
+        </div>
+
+        <div class="step">
+            <h2>🔐 Step 3: Test Login</h2>
+            <div class="code">
+                1. Go to: <a href="http://localhost:8080/login" class="button" target="_blank">Login Page</a><br>
+                2. Enter same credentials:<br>
+                   • Email: "john@gmail.com"<br>
+                   • Password: "Test123!@#"<br>
+                3. Click "Sign In"<br>
+                4. Should redirect to dashboard
+            </div>
+        </div>
+
+        <div class="step">
+            <h2>🎯 Step 4: Test Dashboard</h2>
+            <div class="code">
+                1. Go to: <a href="http://localhost:8080/dashboard" class="button" target="_blank">Dashboard</a><br>
+                2. Should see user profile data<br>
+                3. Look for green success message: "Your profile data is stored in Supabase database"<br>
+                4. Check user information displayed correctly
+            </div>
+        </div>
+
+        <div class="step">
+            <h2>🔧 Step 5: Test OAuth Login (Optional)</h2>
+            <div class="code">
+                1. Go to: <a href="http://localhost:8080/login" class="button" target="_blank">Login Page</a><br>
+                2. Click "Continue with Google" or "Continue with GitHub"<br>
+                3. Complete OAuth flow<br>
+                4. Should redirect to dashboard
+            </div>
+        </div>
+
+        <div class="step">
+            <h2>🔧 Step 6: Test Password Reset</h2>
+            <div class="code">
+                1. Go to: <a href="http://localhost:8080/forgot-password" class="button" target="_blank">Forgot Password</a><br>
+                2. Enter your email address<br>
+                3. Check Gmail for password reset email<br>
+                4. Click the link and set new password<br>
+                5. Try logging in with new password
+            </div>
+        </div>
+
+        <div class="step">
+            <h2>🎉 Expected Results</h2>
+            <div class="success">
+                <strong>✅ Registration:</strong><br>
+                • Form validation - All fields required<br>
+                • Data storage - Stored in Supabase<br>
+                • Email confirmation - Gmail notification<br>
+                • Profile creation - Automatic profile record<br>
+                • Success feedback - Clear user messages
+            </div>
+            <div class="success">
+                <strong>✅ Login:</strong><br>
+                • Credential validation - Same email/password works<br>
+                • Session creation - User authenticated<br>
+                • Profile loading - User data retrieved<br>
+                • Dashboard access - Protected route works<br>
+                • OAuth support - Google/GitHub login
+            </div>
+            <div class="success">
+                <strong>✅ Dashboard:</strong><br>
+                • User profile - Display stored user data<br>
+                • Session info - Authentication status<br>
+                • Logout - Sign out functionality<br>
+                • Protected access - Requires authentication<br>
+                • Real-time updates - Automatic data refresh
+            </div>
+        </div>
+
+        <div class="step">
+            <h2>🔧 System Features</h2>
+            <div class="code">
+                <strong>✅ Registration Features:</strong><br>
+                • Full Name - Required field<br>
+                • Email - Validated email format<br>
+                • Phone - International phone number support<br>
+                • Password - Strong password requirements<br>
+                • Confirm Password - Password confirmation<br>
+                • Form validation - Real-time validation<br>
+                • Error handling - Clear error messages<br><br>
+                
+                <strong>✅ Login Features:</strong><br>
+                • Email/Password - Standard authentication<br>
+                • OAuth Login - Google and GitHub<br>
+                • Remember me - Session persistence<br>
+                • Forgot password - Password reset<br>
+                • Error handling - Detailed error messages<br><br>
+                
+                <strong>✅ Dashboard Features:</strong><br>
+                • User profile - Display stored user data<br>
+                • Session info - Authentication status<br>
+                • Logout - Sign out functionality<br>
+                • Protected access - Requires authentication<br>
+                • Real-time updates - Automatic data refresh
+            </div>
+        </div>
+
+        <div class="step">
+            <h2>🎯 Test Pages</h2>
+            <div class="code">
+                <a href="http://localhost:8080/register" class="button" target="_blank">Registration</a>
+                <a href="http://localhost:8080/login" class="button" target="_blank">Login</a>
+                <a href="http://localhost:8080/dashboard" class="button" target="_blank">Dashboard</a>
+                <a href="http://localhost:8080/forgot-password" class="button" target="_blank">Forgot Password</a>
+                <a href="http://localhost:8080/auth/callback" class="button" target="_blank">Auth Callback</a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
