@@ -76,8 +76,8 @@ export default function Login() {
       setMessageType("success");
       toast.success("Login successful!");
       
-      // Navigate to home page after successful login
-      navigate("/");
+      // Navigate to admin dashboard after successful login
+      navigate("/admin-dashboard");
       
     } catch (error: any) {
       console.error("Login error:", error);

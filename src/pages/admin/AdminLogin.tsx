@@ -31,7 +31,7 @@ export default function AdminLogin() {
       });
 
       setTimeout(() => {
-        navigate("/dashboard");
+        navigate("/admin-dashboard");
       }, 1500);
     } catch (error: any) {
       toast({
