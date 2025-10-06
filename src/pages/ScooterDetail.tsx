@@ -304,10 +304,28 @@ export default function ScooterDetail() {
                   Pre-Order Now
                 </Button>
                 <div className="grid grid-cols-2 gap-4">
-                  <Button size="lg" variant="outline" className="border-primary text-primary hover:bg-primary/10">
+                  <Button 
+                    size="lg" 
+                    variant="outline" 
+                    className="border-primary text-primary hover:bg-primary/10"
+                    onClick={() => {
+                      const message = `Hi! I'm interested in booking a test ride for the ${scooter.name}. Can you please provide more details?`;
+                      const whatsappUrl = `https://wa.me/+923100004068?text=${encodeURIComponent(message)}`;
+                      window.open(whatsappUrl, '_blank');
+                    }}
+                  >
                     Book Test Ride
                   </Button>
-                  <Button size="lg" variant="outline" className="border-primary text-primary hover:bg-primary/10">
+                  <Button 
+                    size="lg" 
+                    variant="outline" 
+                    className="border-primary text-primary hover:bg-primary/10"
+                    onClick={() => {
+                      const message = `Hi! I need support regarding the ${scooter.name}. Can you please help me?`;
+                      const whatsappUrl = `https://wa.me/+923100004068?text=${encodeURIComponent(message)}`;
+                      window.open(whatsappUrl, '_blank');
+                    }}
+                  >
                     Contact Support
                   </Button>
                 </div>

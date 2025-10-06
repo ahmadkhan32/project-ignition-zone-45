@@ -34,6 +34,7 @@ import AdminDashboard from "./pages/admin/AdminDashboard";
 import AddScooterForm from "./pages/admin/AddScooterForm";
 import NotFound from "./pages/NotFound";
 
+
 const queryClient = new QueryClient();
 
 const App = () => (
@@ -44,8 +45,9 @@ const App = () => (
       <BrowserRouter>
         <AuthProvider>
           <Routes>
-            {/* Public Routes - Accessible to everyone (no login required) */}
-            <Route path="/" element={<Index />} />
+            {/* Default Route - Login Page First for Admin */}
+            <Route path="/" element={<Login />} />
+            <Route path="/home" element={<Index />} />
             <Route path="/scooters" element={<ScootersPage />} />
             <Route path="/scooter/:id" element={<ScooterDetail />} />
             <Route path="/technology" element={<TechnologyPage />} />
@@ -59,7 +61,7 @@ const App = () => (
             <Route path="/showroom" element={<ShowroomPage />} />
             <Route path="/live-chat" element={<LiveChatPage />} />
             <Route path="/call-now" element={<CallNowPage />} />
-            
+            <Route path="/registerss" element={<Register />} />
             {/* Admin Routes - Only for admins */}
             <Route path="/admin-login" element={<AdminLogin />} />
             <Route path="/admin/register" element={<AdminRegistration />} />
@@ -80,6 +82,7 @@ const App = () => (
             <Route path="/dashboard" element={<Navigate to="/admin-dashboard" replace />} />
             
             <Route path="*" element={<NotFound />} />
+          
           </Routes>
         </AuthProvider>
       </BrowserRouter>

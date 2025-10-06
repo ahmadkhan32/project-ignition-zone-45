@@ -31,7 +31,7 @@ export default function AdminLogin() {
       });
 
       setTimeout(() => {
-        navigate("/admin/dashboard");
+        navigate("/dashboard");
       }, 1500);
     } catch (error: any) {
       toast({
@@ -88,7 +88,7 @@ export default function AdminLogin() {
         <div className="text-center mb-8">
           <h1 className="text-3xl font-bold mb-2">Admin Login</h1>
           <p className="text-muted-foreground">Sign in to manage your scooters</p>
-        </div>
+        </div>s
 
         <form onSubmit={handleEmailLogin} className="space-y-4">
           <div className="space-y-2">

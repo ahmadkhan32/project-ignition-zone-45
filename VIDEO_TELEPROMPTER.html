@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Video Teleprompter - Electric Scooter Management System</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: #1e293b;
+            color: #e2e8f0;
+            overflow: hidden;
+        }
+        .teleprompter {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: #0f172a;
+            border-radius: 10px;
+            padding: 30px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.3);
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 8px;
+        }
+        .header h1 {
+            color: white;
+            margin: 0;
+            font-size: 2rem;
+        }
+        .section {
+            margin: 30px 0;
+            padding: 25px;
+            background: #1e293b;
+            border-radius: 8px;
+            border-left: 4px solid #3b82f6;
+        }
+        .section h3 {
+            color: #60a5fa;
+            margin-top: 0;
+            font-size: 1.5rem;
+        }
+        .script {
+            font-size: 1.2rem;
+            line-height: 1.8;
+            margin: 20px 0;
+            padding: 20px;
+            background: #0f172a;
+            border-radius: 6px;
+            border: 1px solid #374151;
+        }
+        .action {
+            color: #fbbf24;
+            font-weight: bold;
+            margin: 10px 0;
+        }
+        .duration {
+            color: #10b981;
+            font-weight: bold;
+            background: #064e3b;
+            padding: 4px 8px;
+            border-radius: 4px;
+            display: inline-block;
+            margin: 10px 0;
+        }
+        .controls {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #1e293b;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        .controls button {
+            background: #3b82f6;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            margin: 5px;
+            font-size: 14px;
+        }
+        .controls button:hover {
+            background: #2563eb;
+        }
+        .controls button.active {
+            background: #10b981;
+        }
+        .timer {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            background: #1e293b;
+            color: #10b981;
+            padding: 15px;
+            border-radius: 8px;
+            font-size: 1.5rem;
+            font-weight: bold;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        .progress {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: #374151;
+        }
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, #3b82f6, #10b981);
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+        .highlight {
+            background: #fef3c7;
+            color: #92400e;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-weight: bold;
+        }
+        .section.active {
+            border-left-color: #10b981;
+            background: #064e3b;
+        }
+        .section.completed {
+            border-left-color: #6b7280;
+            background: #374151;
+            opacity: 0.7;
+        }
+    </style>
+</head>
+<body>
+    <div class="timer" id="timer">00:00</div>
+    
+    <div class="controls">
+        <button onclick="startRecording()">🎬 Start Recording</button>
+        <button onclick="pauseRecording()">⏸️ Pause</button>
+        <button onclick="nextSection()">⏭️ Next Section</button>
+        <button onclick="resetTimer()">🔄 Reset</button>
+    </div>
+
+    <div class="teleprompter">
+        <div class="header">
+            <h1>🎬 Video Teleprompter</h1>
+            <p>Electric Scooter Management System - Project Demo</p>
+        </div>
+
+        <div class="section" id="section-0">
+            <h3>🎬 Title Screen (0:00 - 0:10)</h3>
+            <div class="duration">Duration: 10 seconds</div>
+            <div class="action">🎬 ACTION: Show project logo and title</div>
+            <div class="script">
+                "Electric Scooter Management System - Project Demo"
+            </div>
+        </div>
+
+        <div class="section" id="section-1">
+            <h3>📋 System Overview (0:10 - 1:00)</h3>
+            <div class="duration">Duration: 50 seconds</div>
+            <div class="action">🎬 ACTION: Show architecture diagram</div>
+            <div class="script">
+                "This system is built with React, TypeScript, and Supabase. 
+                It provides public scooter browsing and secure admin management 
+                with real-time updates. The system includes responsive design, 
+                authentication, file uploads, and comprehensive admin management."
+            </div>
+        </div>
+
+        <div class="section" id="section-2">
+            <h3>🌐 Public Demo (1:00 - 4:00)</h3>
+            <div class="duration">Duration: 3 minutes</div>
+            <div class="action">🎬 ACTION: Navigate to homepage</div>
+            <div class="script">
+                "Let's start with the public experience. The homepage displays 
+                featured scooters without requiring login. Users can browse all 
+                scooters with search and filter functionality. Clicking on a 
+                scooter shows detailed information including specifications and 
+                advanced features."
+            </div>
+        </div>
+
+        <div class="section" id="section-3">
+            <h3>🔐 Admin Login (4:00 - 5:00)</h3>
+            <div class="duration">Duration: 1 minute</div>
+            <div class="action">🎬 ACTION: Navigate to /admin-login and login</div>
+            <div class="script">
+                "Now let's explore admin functionality. Admins access through 
+                secure login with email and password authentication. After 
+                authentication, admins are redirected to the dashboard."
+            </div>
+        </div>
+
+        <div class="section" id="section-4">
+            <h3>📊 Admin Dashboard (5:00 - 9:00)</h3>
+            <div class="duration">Duration: 4 minutes</div>
+            <div class="action">🎬 ACTION: Show admin dashboard and features</div>
+            <div class="script">
+                "The admin dashboard provides comprehensive management including 
+                scooter listing, search, and pagination. Admins can search by name, 
+                description, price, or specifications. The system includes pagination 
+                with 5 scooters per page for easy management."
+            </div>
+        </div>
+
+        <div class="section" id="section-5">
+            <h3>⚙️ CRUD Operations (9:00 - 13:00)</h3>
+            <div class="duration">Duration: 4 minutes</div>
+            <div class="action">🎬 ACTION: Demonstrate add, edit, delete operations</div>
+            <div class="script">
+                "Let's add a new scooter with comprehensive information. The form 
+                includes basic details, advanced features, and technical specifications. 
+                The system supports multiple image uploads with live previews. After 
+                saving, the scooter appears immediately due to real-time updates. 
+                Editing is just as easy, and deleting includes confirmation dialogs."
+            </div>
+        </div>
+
+        <div class="section" id="section-6">
+            <h3>🔄 Real-time Demo (13:00 - 14:00)</h3>
+            <div class="duration">Duration: 1 minute</div>
+            <div class="action">🎬 ACTION: Open two browser tabs and make changes</div>
+            <div class="script">
+                "Let me demonstrate real-time updates. Watch as changes in the admin 
+                dashboard appear immediately in the public pages. This real-time 
+                functionality is powered by Supabase subscriptions."
+            </div>
+        </div>
+
+        <div class="section" id="section-7">
+            <h3>📱 Responsive Design (14:00 - 15:00)</h3>
+            <div class="duration">Duration: 1 minute</div>
+            <div class="action">🎬 ACTION: Show different screen sizes</div>
+            <div class="script">
+                "The system is fully responsive and works seamlessly across all 
+                devices from mobile to desktop. The interface adapts perfectly to 
+                different screen sizes."
+            </div>
+        </div>
+
+        <div class="section" id="section-8">
+            <h3>🎯 Conclusion (15:00 - 16:00)</h3>
+            <div class="duration">Duration: 1 minute</div>
+            <div class="action">🎬 ACTION: Show project summary</div>
+            <div class="script">
+                "This system demonstrates modern web development with complete user 
+                experience, real-time updates, and responsive design. It's production-ready 
+                and can be deployed immediately. Thank you for watching!"
+            </div>
+        </div>
+    </div>
+
+    <div class="progress">
+        <div class="progress-bar" id="progressBar"></div>
+    </div>
+
+    <script>
+        let startTime = null;
+        let isRecording = false;
+        let currentSection = 0;
+        let timerInterval = null;
+
+        function startRecording() {
+            if (!isRecording) {
+                startTime = Date.now();
+                isRecording = true;
+                timerInterval = setInterval(updateTimer, 1000);
+                document.querySelector('.controls button').textContent = '⏸️ Pause';
+                document.querySelector('.controls button').classList.add('active');
+            }
+        }
+
+        function pauseRecording() {
+            if (isRecording) {
+                isRecording = false;
+                clearInterval(timerInterval);
+                document.querySelector('.controls button').textContent = '🎬 Resume';
+                document.querySelector('.controls button').classList.remove('active');
+            }
+        }
+
+        function nextSection() {
+            if (currentSection < 8) {
+                document.getElementById(`section-${currentSection}`).classList.add('completed');
+                currentSection++;
+                document.getElementById(`section-${currentSection}`).classList.add('active');
+                updateProgress();
+            }
+        }
+
+        function resetTimer() {
+            startTime = null;
+            isRecording = false;
+            clearInterval(timerInterval);
+            document.getElementById('timer').textContent = '00:00';
+            document.querySelector('.controls button').textContent = '🎬 Start Recording';
+            document.querySelector('.controls button').classList.remove('active');
+            currentSection = 0;
+            document.querySelectorAll('.section').forEach(section => {
+                section.classList.remove('active', 'completed');
+            });
+            document.getElementById('section-0').classList.add('active');
+            updateProgress();
+        }
+
+        function updateTimer() {
+            if (startTime) {
+                const elapsed = Math.floor((Date.now() - startTime) / 1000);
+                const minutes = Math.floor(elapsed / 60);
+                const seconds = elapsed % 60;
+                document.getElementById('timer').textContent = 
+                    `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+            }
+        }
+
+        function updateProgress() {
+            const progress = (currentSection / 8) * 100;
+            document.getElementById('progressBar').style.width = `${progress}%`;
+        }
+
+        // Keyboard shortcuts
+        document.addEventListener('keydown', function(e) {
+            if (e.key === ' ') {
+                e.preventDefault();
+                if (isRecording) {
+                    pauseRecording();
+                } else {
+                    startRecording();
+                }
+            } else if (e.key === 'ArrowRight') {
+                nextSection();
+            } else if (e.key === 'r') {
+                resetTimer();
+            }
+        });
+
+        // Initialize
+        document.getElementById('section-0').classList.add('active');
+        updateProgress();
+    </script>
+</body>
+</html>

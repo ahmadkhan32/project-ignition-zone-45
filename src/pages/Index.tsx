@@ -60,19 +60,29 @@ interface ScooterModel {
 const Index = () => {
   const { user, loading } = useAuth();
   const navigate = useNavigate();
+
+  // Redirect to login if not authenticated
+  useEffect(() => {
+    if (!loading && !user) {
+      navigate("/");
+    }
+  }, [user, loading, navigate]);
   const [scooters, setScooters] = useState<ScooterModel[]>([]);
   const [scootersLoading, setScootersLoading] = useState(true);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const scootersPerPage = 6;
 
   // Fetch scooters for display
   const fetchScooters = async () => {
     try {
       setScootersLoading(true);
-      const { data, error } = await supabase
+      const { data, error, count } = await supabase
         .from("scooters")
-        .select("*")
+        .select("*", { count: 'exact' })
         .eq("is_active", true)
         .order("display_order", { ascending: true })
-        .limit(6); // Show only 6 scooters on homepage
+        .range((currentPage - 1) * scootersPerPage, currentPage * scootersPerPage - 1);
 
       if (error) {
         console.error("Error fetching scooters:", error);
@@ -108,6 +118,11 @@ const Index = () => {
           connectivity_bluetooth: item.connectivity_bluetooth || "5.0",
         }));
         setScooters(mappedData);
+        
+        // Calculate total pages
+        const totalScooters = count || 0;
+        const pages = Math.ceil(totalScooters / scootersPerPage);
+        setTotalPages(pages);
       }
     } catch (err) {
       console.error("Unexpected error fetching scooters:", err);
@@ -118,7 +133,26 @@ const Index = () => {
 
   useEffect(() => {
     fetchScooters();
-  }, []);
+  }, [currentPage]);
+
+  // Pagination functions
+  const goToPage = (page: number) => {
+    if (page >= 1 && page <= totalPages) {
+      setCurrentPage(page);
+    }
+  };
+
+  const goToNextPage = () => {
+    if (currentPage < totalPages) {
+      setCurrentPage(currentPage + 1);
+    }
+  };
+
+  const goToPrevPage = () => {
+    if (currentPage > 1) {
+      setCurrentPage(currentPage - 1);
+    }
+  };
 
   return (
     <div className="min-h-screen bg-background">
@@ -128,29 +162,8 @@ const Index = () => {
       {user && (
         <div className="bg-gradient-to-r from-blue-600 to-purple-600 text-white py-4">
           <div className="container mx-auto px-4">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center space-x-4">
-                <div className="flex items-center space-x-2">
-                  <Zap className="w-6 h-6" />
-                  <span className="text-xl font-bold">Admin Access</span>
-                </div>
-                <Badge variant="secondary" className="bg-white/20 text-white">
-                  Welcome back, {user.email}
-                </Badge>
-              </div>
-              
-              <div className="flex items-center space-x-4">
-                <Button 
-                  onClick={() => navigate("/admin-dashboard")}
-                  variant="secondary"
-                  className="bg-white/20 text-white hover:bg-white/30"
-                >
-                  <Shield className="w-4 h-4 mr-2" />
-                  Admin Dashboard
-                </Button>
-              </div>
-            </div>
-          </div>
+       
+        </div>
         </div>
       )}
 
@@ -194,14 +207,14 @@ const Index = () => {
       {/* Featured Scooters Section */}
       <div className="container mx-auto px-4 py-8">
         <div className="text-center mb-8">
-          <h2 className="text-3xl font-bold text-gray-900 mb-4">Featured Electric Scooters</h2>
-          <p className="text-gray-600 text-lg">Discover our latest collection of high-performance electric scooters</p>
+          <h2 className="text-3xl font-bold text-white mb-4">Featured Electric Scooters</h2>
+          <p className="text-white text-lg">Discover our latest collection of high-performance electric scooters</p>
         </div>
 
         {scootersLoading ? (
           <div className="text-center py-12">
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
-            <p className="mt-4 text-gray-600">Loading scooters...</p>
+            <p className="mt-4 text-white">Loading scooters...</p>
           </div>
         ) : scooters.length > 0 ? (
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -230,39 +243,39 @@ const Index = () => {
                 
                 <CardContent className="p-6">
                   <div className="flex justify-between items-start mb-3">
-                    <CardTitle className="text-xl font-bold text-gray-900">{scooter.name}</CardTitle>
-                    <span className="text-2xl font-bold text-blue-600">{scooter.price}</span>
+                    <CardTitle className="text-xl font-bold text-white">{scooter.name}</CardTitle>
+                    <span className="text-2xl font-bold text-blue-400">{scooter.price}</span>
                   </div>
                   
-                  <p className="text-gray-600 mb-4 line-clamp-2">{scooter.description}</p>
+                  <p className="text-white mb-4 line-clamp-2">{scooter.description}</p>
                   
                   {/* Key Specifications */}
                   <div className="grid grid-cols-2 gap-4 mb-4">
-                    <div className="text-center p-3 bg-gray-50 rounded-lg">
-                      <div className="text-2xl font-bold text-blue-600">{scooter.max_speed}</div>
-                      <div className="text-sm text-gray-600">Max Speed</div>
+                    <div className="text-center p-3 bg-white/10 rounded-lg">
+                      <div className="text-2xl font-bold text-blue-400">{scooter.max_speed}</div>
+                      <div className="text-sm text-white">Max Speed</div>
                     </div>
-                    <div className="text-center p-3 bg-gray-50 rounded-lg">
-                      <div className="text-2xl font-bold text-green-600">{scooter.max_range}</div>
-                      <div className="text-sm text-gray-600">Range</div>
+                    <div className="text-center p-3 bg-white/10 rounded-lg">
+                      <div className="text-2xl font-bold text-green-400">{scooter.max_range}</div>
+                      <div className="text-sm text-white">Range</div>
                     </div>
                   </div>
 
                   {/* Advanced Features */}
                   <div className="mb-4">
-                    <h4 className="font-semibold text-gray-900 mb-2">Advanced Features</h4>
+                    <h4 className="font-semibold text-white mb-2">Advanced Features</h4>
                     <div className="flex flex-wrap gap-2">
                       {scooter.smart_display && (
-                        <Badge variant="secondary" className="bg-blue-100 text-blue-800">Smart Display</Badge>
+                        <Badge variant="secondary" className="bg-blue-500/20 text-blue-300 border-blue-500/30">Smart Display</Badge>
                       )}
                       {scooter.gps_navigation && (
-                        <Badge variant="secondary" className="bg-green-100 text-green-800">GPS Navigation</Badge>
+                        <Badge variant="secondary" className="bg-green-500/20 text-green-300 border-green-500/30">GPS Navigation</Badge>
                       )}
                       {scooter.anti_theft_system && (
-                        <Badge variant="secondary" className="bg-red-100 text-red-800">Anti-Theft</Badge>
+                        <Badge variant="secondary" className="bg-red-500/20 text-red-300 border-red-500/30">Anti-Theft</Badge>
                       )}
                       {scooter.mobile_app_connectivity && (
-                        <Badge variant="secondary" className="bg-purple-100 text-purple-800">Mobile App</Badge>
+                        <Badge variant="secondary" className="bg-purple-500/20 text-purple-300 border-purple-500/30">Mobile App</Badge>
                       )}
                     </div>
                   </div>
@@ -292,10 +305,61 @@ const Index = () => {
         ) : (
           <div className="text-center py-12">
             <ShoppingCart className="w-16 h-16 text-gray-400 mx-auto mb-4" />
-            <h3 className="text-xl font-semibold text-gray-900 mb-2">No Scooters Available</h3>
-            <p className="text-gray-600">Check back later for our latest electric scooter collection.</p>
+            <h3 className="text-xl font-semibold text-white mb-2">No Scooters Available</h3>
+            <p className="text-white">Check back later for our latest electric scooter collection.</p>
           </div>
         )}
+
+        {/* Pagination */}
+        {totalPages > 1 && (
+          <div className="flex justify-center items-center mt-8 space-x-2">
+            <Button
+              onClick={goToPrevPage}
+              disabled={currentPage === 1}
+              className={`px-3 py-2 rounded ${
+                currentPage === 1
+                  ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                  : 'bg-blue-500 text-white hover:bg-blue-600'
+              }`}
+            >
+              Previous
+            </Button>
+            
+            {/* Page numbers */}
+            {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+              <Button
+                key={page}
+                onClick={() => goToPage(page)}
+                className={`px-3 py-2 rounded ${
+                  currentPage === page
+                    ? 'bg-blue-600 text-white'
+                    : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                }`}
+              >
+                {page}
+              </Button>
+            ))}
+            
+            <Button
+              onClick={goToNextPage}
+              disabled={currentPage === totalPages}
+              className={`px-3 py-2 rounded ${
+                currentPage === totalPages
+                  ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                  : 'bg-blue-500 text-white hover:bg-blue-600'
+              }`}
+            >
+              Next
+            </Button>
+          </div>
+        )}
+
+        {/* Page info */}
+        <div className="text-center mt-4 text-white">
+          <span>
+            Showing page {currentPage} of {totalPages} ({scooters.length} scooters on this page)
+          </span>
+        </div>
 
         {/* View All Button */}
         {scooters.length > 0 && (

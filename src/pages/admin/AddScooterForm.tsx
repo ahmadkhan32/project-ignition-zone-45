@@ -3,11 +3,7 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { NavigationBar } from "@/components/NavigationBar";
 import { Footer } from "@/components/Footer";
-import { createClient } from "@supabase/supabase-js";
-
-const supabaseUrl = "https://scpdntuuikcqasmfxkeq.supabase.co";
-const supabaseAnonKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNjcGRudHV1aWtjcWFzbWZ4a2VxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTYxNTg3OTQsImV4cCI6MjA3MTczNDc5NH0.TsmzhAJ2XjKLHygWRM3YD8E8rlCut9J9ivff41IYGtc";
-const supabase = createClient(supabaseUrl, supabaseAnonKey);
+import { supabase } from "@/integrations/supabase/client";
 
 export default function AddScooterForm() {
   const navigate = useNavigate();

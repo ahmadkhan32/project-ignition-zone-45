@@ -1,12 +1,14 @@
 import { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Menu, X, Phone } from "lucide-react";
+import { Menu, X, Phone, Shield } from "lucide-react";
+import { useAuth } from "@/contexts/AuthContext";
 
 export const NavigationBar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const location = useLocation();
+  const { user } = useAuth();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -17,7 +19,7 @@ export const NavigationBar = () => {
   }, []);
 
 const navItems = [
-  { name: "Home", href: "/" },
+  { name: "Home", href: "/home" },
   { name: "Scooters", href: "/scooters" },
   { name: "Technology", href: "/technology" },
   { name: "Gallery", href: "/gallery" },
@@ -51,8 +53,14 @@ const navItems = [
             ))}
           </div>
 
-          {/* CTA Button */}
-          <div className="hidden md:flex items-center">
+          {/* CTA Button and Admin Button */}
+          <div className="hidden md:flex items-center space-x-3">
+            <Link to="/admin-dashboard">
+              <Button className="bg-blue-600 hover:bg-blue-700 text-white">
+                <Shield className="w-4 h-4 mr-2" />
+                Admin
+              </Button>
+            </Link>
             <Link to="/pre-order">
               <Button className="glow-button">
                 Pre-Order Now
@@ -83,6 +91,14 @@ const navItems = [
                   {item.name}
                 </Link>
               ))}
+              <div className="px-3 py-2">
+                <Link to="/admin-dashboard">
+                  <Button className="w-full bg-blue-600 hover:bg-blue-700 text-white">
+                    <Shield className="w-4 h-4 mr-2" />
+                    Admin Dashboard
+                  </Button>
+                </Link>
+              </div>
                <div className="px-3 py-2">
                 <Link to="/pre-order">
                   <Button className="glow-button w-full">

@@ -76,8 +76,8 @@ export default function Login() {
       setMessageType("success");
       toast.success("Login successful!");
       
-      // Navigate to dashboard or home page
-      navigate("/dashboard");
+      // Navigate to home page after successful login
+      navigate("/home");
       
     } catch (error: any) {
       console.error("Login error:", error);
@@ -120,7 +120,7 @@ export default function Login() {
             <Button
               variant="ghost"
               size="sm"
-              onClick={() => navigate("/")}
+              onClick={() => navigate("/home")}
               className="p-2"
             >
               <ArrowLeft className="h-4 w-4" />

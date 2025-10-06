@@ -75,6 +75,8 @@ const AdminDashboard: React.FC = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [uploading, setUploading] = useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [filteredScooters, setFilteredScooters] = useState<ScooterModel[]>([]);
   const scootersPerPage = 5;
 
   useEffect(() => {
@@ -93,6 +95,22 @@ const AdminDashboard: React.FC = () => {
       supabase.removeChannel(channel);
     };
   }, [currentPage]);
+
+  // Search functionality
+  useEffect(() => {
+    if (searchTerm.trim() === "") {
+      setFilteredScooters(scooters);
+    } else {
+      const filtered = scooters.filter(scooter =>
+        scooter.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        scooter.description?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        scooter.price.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        scooter.max_speed.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        scooter.max_range.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+      setFilteredScooters(filtered);
+    }
+  }, [scooters, searchTerm]);
 
   const fetchScooters = async () => {
     const { data, error, count } = await supabase
@@ -168,18 +186,39 @@ const AdminDashboard: React.FC = () => {
     setUploading(true);
     
     try {
-      // Convert file to base64 for storage
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        const base64 = e.target?.result as string;
-        setFormData({
-          ...formData,
-          [fieldName]: base64,
+      // Generate unique filename
+      const fileExt = file.name.split('.').pop();
+      const fileName = `${Date.now()}-${Math.random().toString(36).substring(2)}.${fileExt}`;
+      const filePath = `scooters/${fileName}`;
+      
+      // Upload to Supabase Storage
+      const { data, error } = await supabase.storage
+        .from('scooter-images')
+        .upload(filePath, file, {
+          cacheControl: '3600',
+          upsert: false
         });
+
+      if (error) {
+        console.error('Error uploading to storage:', error);
+        alert('Error uploading file: ' + error.message);
         setUploading(false);
-        alert('Image uploaded successfully!');
-      };
-      reader.readAsDataURL(file);
+        return;
+      }
+
+      // Get public URL
+      const { data: { publicUrl } } = supabase.storage
+        .from('scooter-images')
+        .getPublicUrl(filePath);
+
+      // Update form data with public URL
+      setFormData({
+        ...formData,
+        [fieldName]: publicUrl,
+      });
+      
+      setUploading(false);
+      alert('Image uploaded successfully to storage!');
     } catch (error) {
       console.error('Error uploading file:', error);
       alert('Error uploading file');
@@ -386,12 +425,46 @@ const AdminDashboard: React.FC = () => {
     <div className="p-6">
       <div className="flex justify-between items-center mb-4">
         <h1 className="text-2xl font-bold">Admin Dashboard</h1>
-        <button 
-          onClick={() => navigate("/")}
-          className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-medium transition-colors"
-        >
-          🏠 Dashboard
-        </button>
+        <div className="flex space-x-2">
+          <button 
+            onClick={() => navigate("/admin-login")}
+            className="bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded-lg font-medium transition-colors"
+          >
+            ← Back to Login
+          </button>
+          <button 
+            onClick={() => navigate("/")}
+            className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-medium transition-colors"
+          >
+            🏠 Dashboard
+          </button>
+        </div>
+      </div>
+
+      {/* Search Bar */}
+      <div className="mb-6">
+        <div className="flex items-center space-x-2">
+          <input
+            type="text"
+            placeholder="Search scooters by name, description, price, speed, or range..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="flex-1 p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+          />
+          {searchTerm && (
+            <button
+              onClick={() => setSearchTerm("")}
+              className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg font-medium transition-colors"
+            >
+              Clear
+            </button>
+          )}
+        </div>
+        {searchTerm && (
+          <p className="text-sm text-gray-600 mt-2">
+            Found {filteredScooters.length} scooter(s) matching "{searchTerm}"
+          </p>
+        )}
       </div>
       {/* Form */}
       <div className="bg-gray-800 p-4 rounded-lg mb-6 text-white">
@@ -424,9 +497,9 @@ const AdminDashboard: React.FC = () => {
                 disabled={uploading}
               />
             </div>
-            {formData.image_1_url && formData.image_1_url.startsWith('data:') && (
-              <img src={formData.image_1_url} alt="Preview" className="w-20 h-20 object-cover rounded" />
-            )}
+                {formData.image_1_url && (
+                  <img src={formData.image_1_url} alt="Preview" className="w-20 h-20 object-cover rounded" />
+                )}
           </div>
 
           <div className="space-y-2">
@@ -450,9 +523,9 @@ const AdminDashboard: React.FC = () => {
                 disabled={uploading}
               />
             </div>
-            {formData.image_2_url && formData.image_2_url.startsWith('data:') && (
-              <img src={formData.image_2_url} alt="Preview" className="w-20 h-20 object-cover rounded" />
-            )}
+                {formData.image_2_url && (
+                  <img src={formData.image_2_url} alt="Preview" className="w-20 h-20 object-cover rounded" />
+                )}
           </div>
 
           <div className="space-y-2">
@@ -476,9 +549,9 @@ const AdminDashboard: React.FC = () => {
                 disabled={uploading}
               />
             </div>
-            {formData.thumbnail_url && formData.thumbnail_url.startsWith('data:') && (
-              <img src={formData.thumbnail_url} alt="Preview" className="w-20 h-20 object-cover rounded" />
-            )}
+                {formData.thumbnail_url && (
+                  <img src={formData.thumbnail_url} alt="Preview" className="w-20 h-20 object-cover rounded" />
+                )}
           </div>
           <textarea name="description" placeholder="Description" value={formData.description || ""} onChange={handleChange} className="p-2 m-1 rounded text-black w-full" />
           <input name="display_order" type="number" placeholder="Display Order" value={formData.display_order} onChange={handleChange} className="p-2 m-1 rounded text-black w-full" />
@@ -574,8 +647,20 @@ const AdminDashboard: React.FC = () => {
         )}
       </div>
       {/* Existing Scooters */}
-      <div className="grid md:grid-cols-2 gap-6">
-        {scooters.map((s) => (
+      {searchTerm && filteredScooters.length === 0 ? (
+        <div className="text-center py-12">
+          <div className="text-gray-500 text-lg mb-2">🔍 No scooters found</div>
+          <p className="text-gray-400">Try adjusting your search terms</p>
+          <button
+            onClick={() => setSearchTerm("")}
+            className="mt-4 bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg font-medium transition-colors"
+          >
+            Clear Search
+          </button>
+        </div>
+      ) : (
+        <div className="grid md:grid-cols-2 gap-6">
+          {(searchTerm ? filteredScooters : scooters).map((s) => (
           <div key={s.id} className="bg-gray-900 text-white rounded-lg shadow-lg p-4">
             <img src={s.image_1_url || s.thumbnail_url || '/placeholder.svg'} alt={s.name} className="rounded-lg mb-3" />
             <div className="flex flex-wrap items-center justify-between mb-2">
@@ -604,7 +689,7 @@ const AdminDashboard: React.FC = () => {
                 {s.led_lighting_system && <span className="bg-yellow-600 px-2 py-1 rounded">LED Lighting</span>}
                 {s.regenerative_braking && <span className="bg-orange-600 px-2 py-1 rounded">Regen Braking</span>}
               </div>
-            </div>
+        </div>
 
             {/* Technical Specifications */}
             <div className="mt-3">
@@ -628,10 +713,11 @@ const AdminDashboard: React.FC = () => {
             </div>
           </div>
         ))}
-      </div>
+        </div>
+      )}
 
-      {/* Pagination */}
-      {totalPages > 1 && (
+      {/* Pagination - Only show when not searching */}
+      {!searchTerm && totalPages > 1 && (
         <div className="flex justify-center items-center mt-8 space-x-2">
           <button
             onClick={goToPrevPage}
@@ -676,7 +762,15 @@ const AdminDashboard: React.FC = () => {
 
       {/* Page info */}
       <div className="text-center mt-4 text-gray-600">
-        Showing page {currentPage} of {totalPages} ({scooters.length} scooters on this page)
+        {searchTerm ? (
+          <span>
+            Showing {filteredScooters.length} search result(s) for "{searchTerm}"
+          </span>
+        ) : (
+          <span>
+            Showing page {currentPage} of {totalPages} ({scooters.length} scooters on this page)
+          </span>
+        )}
       </div>
     </div>
   );
