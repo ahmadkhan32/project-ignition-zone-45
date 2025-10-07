@@ -29,7 +29,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     }
 
     // Validate phone number format
-    const phoneRegex = /^[\+]?[1-9][\d]{0,15}$/;
+    const phoneRegex = /^[+]?[1-9][\d]{0,15}$/;
     if (!phoneRegex.test(phoneNumber.replace(/\s/g, ''))) {
       return res.status(400).json({ error: 'Invalid phone number format' });
     }

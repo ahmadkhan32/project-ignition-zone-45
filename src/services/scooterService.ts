@@ -11,8 +11,8 @@ export interface Scooter {
   battery_capacity?: string | null;
   motor_power?: string | null;
   weight?: string | null;
-  features?: any;
-  specs?: any;
+  features?: Record<string, unknown>;
+  specs?: Record<string, unknown>;
   image_1_url: string | null;
   image_2_url: string | null;
   thumbnail_url: string | null;
@@ -33,8 +33,8 @@ export interface CreateScooterInput {
   battery_capacity?: string;
   motor_power?: string;
   weight?: string;
-  features?: any;
-  specs?: any;
+  features?: Record<string, unknown>;
+  specs?: Record<string, unknown>;
   image_1_url?: string;
   image_2_url?: string;
   thumbnail_url?: string;
@@ -232,7 +232,7 @@ export class ScooterService {
   /**
    * REALTIME - Subscribe to scooter changes
    */
-  static subscribeToChanges(callback: (payload: any) => void) {
+  static subscribeToChanges(callback: (payload: Record<string, unknown>) => void) {
     const channel = supabase
       .channel("scooters-changes")
       .on(
@@ -252,17 +252,17 @@ export class ScooterService {
   /**
    * REALTIME - Unsubscribe from changes
    */
-  static unsubscribe(channel: any) {
+  static unsubscribe(channel: unknown) {
     supabase.removeChannel(channel);
   }
 }
 
 // Legacy functions for backward compatibility
-export async function addScooter(payload: any, imageFile?: File) {
+export async function addScooter(payload: Record<string, unknown>, imageFile?: File) {
   return ScooterService.createScooter(payload);
 }
 
-export async function updateScooter(id: string, payload: any, imageFile?: File) {
+export async function updateScooter(id: string, payload: Record<string, unknown>, imageFile?: File) {
   return ScooterService.updateScooter(id, payload);
 }
 

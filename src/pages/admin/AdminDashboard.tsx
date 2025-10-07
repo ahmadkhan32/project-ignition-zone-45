@@ -69,7 +69,7 @@ const initialForm: ScooterModel = {
 const AdminDashboard: React.FC = () => {
   const navigate = useNavigate();
   const [scooters, setScooters] = useState<ScooterModel[]>([]);
-  const [formData, setFormData] = useState<any>(initialForm);
+  const [formData, setFormData] = useState<Record<string, unknown>>(initialForm);
   const [isEditing, setIsEditing] = useState(false);
   const [editId, setEditId] = useState<string | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
@@ -121,7 +121,7 @@ const AdminDashboard: React.FC = () => {
     
     if (!error) {
       // Map data to include default values for new fields (they may not exist in DB yet)
-      const scootersWithDefaults = (data || []).map((scooter: any) => ({
+      const scootersWithDefaults = (data || []).map((scooter: Record<string, unknown>) => ({
         ...initialForm,
         ...scooter,
         // Set default values for advanced features (will be false if columns don't exist)
@@ -228,7 +228,7 @@ const AdminDashboard: React.FC = () => {
 
 
   // Helper functions for CRUD
-  const addScooter = async (data: any) => {
+  const addScooter = async (data: Record<string, unknown>) => {
     if (!data.name || !data.price) return alert("Fill all required fields");
     
     // Try with all fields first, fallback to basic fields if columns don't exist
@@ -261,7 +261,7 @@ const AdminDashboard: React.FC = () => {
       connectivity_bluetooth: data.connectivity_bluetooth,
     };
 
-    let { error } = await supabase.from('scooters').insert([fullData]);
+    const { error } = await supabase.from('scooters').insert([fullData]);
     
     // If error due to missing columns, try with basic fields only
     if (error && (error.message.includes('column') || error.message.includes('anti_theft_system') || error.message.includes('does not exist'))) {
@@ -298,7 +298,7 @@ const AdminDashboard: React.FC = () => {
     resetForm();
   };
 
-  const editScooter = async (id: string, data: any) => {
+  const editScooter = async (id: string, data: Record<string, unknown>) => {
     // Try with all fields first, fallback to basic fields if columns don't exist
     const fullData = {
       name: data.name,
@@ -329,7 +329,7 @@ const AdminDashboard: React.FC = () => {
       connectivity_bluetooth: data.connectivity_bluetooth,
     };
 
-    let { error } = await supabase
+    const { error } = await supabase
       .from('scooters')
       .update(fullData)
       .eq('id', id);

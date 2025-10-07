@@ -19,7 +19,7 @@ export class UserProfileService {
   static async getUserProfile(userId: string): Promise<UserProfile | null> {
     try {
       const { data, error } = await supabase
-        .from('user_profiles' as any)
+        .from('user_profiles')
         .select('*')
         .eq('id', userId)
         .single();
@@ -56,7 +56,7 @@ export class UserProfileService {
   static async updateUserProfile(userId: string, updates: Partial<UserProfile>): Promise<boolean> {
     try {
       const { error } = await supabase
-        .from('user_profiles' as any)
+        .from('user_profiles')
         .update({
           ...updates,
           updated_at: new Date().toISOString()
@@ -79,7 +79,7 @@ export class UserProfileService {
   static async createUserProfile(profileData: Omit<UserProfile, 'created_at' | 'updated_at'>): Promise<boolean> {
     try {
       const { error } = await supabase
-        .from('user_profiles' as any)
+        .from('user_profiles')
         .insert([{
           ...profileData,
           created_at: new Date().toISOString(),
@@ -102,7 +102,7 @@ export class UserProfileService {
   static async deleteUserProfile(userId: string): Promise<boolean> {
     try {
       const { error } = await supabase
-        .from('user_profiles' as any)
+        .from('user_profiles')
         .delete()
         .eq('id', userId);
 
@@ -122,7 +122,7 @@ export class UserProfileService {
   static async getAllUserProfiles(): Promise<UserProfile[]> {
     try {
       const { data, error } = await supabase
-        .from('user_profiles' as any)
+        .from('user_profiles')
         .select('*')
         .order('created_at', { ascending: false });
 

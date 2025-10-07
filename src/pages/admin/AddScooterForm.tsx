@@ -22,8 +22,8 @@ export default function AddScooterForm() {
     setMessage(null);
 
     // Prepare features and specs as JSON if possible, else as string
-    let featuresValue: any = features;
-    let specsValue: any = specs;
+    let featuresValue: unknown = features;
+    let specsValue: unknown = specs;
     try {
       featuresValue = features ? JSON.parse(features) : null;
     } catch {

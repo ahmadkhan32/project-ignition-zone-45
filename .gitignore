@@ -109,3 +109,4 @@ run-project.bat
 !README.md
 !package.json
 !package-lock.json
+.vercel
