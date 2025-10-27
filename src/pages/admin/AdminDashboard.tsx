@@ -846,19 +846,19 @@ const AdminDashboard: React.FC = () => {
               </button>
               {s.units_in_stock > 0 && (
                 <button 
-                  onClick={async () => {
-                    if (window.confirm(`Mark 1 unit of ${s.name} as sold?`)) {
-                      const newTotalSold = s.total_sold + 1;
-                      const newUnitsInStock = s.units_in_stock - 1;
-                      await supabase
-                        .from('scooters')
-                        .update({ total_sold: newTotalSold, units_in_stock: newUnitsInStock })
-                        .eq('id', s.id);
-                      fetchScooters();
-                      alert('Unit marked as sold! Warranty period started.');
-                    }
+                  onClick={() => {
+                    // Navigate to warranty start page with scooter details
+                    const params = new URLSearchParams({
+                      scooterId: s.id,
+                      name: s.name,
+                      serialNumber: s.serial_number || '',
+                      motorNumber: s.motor_number || '',
+                      chassisNumber: s.chassis_number || '',
+                      warrantyPeriod: s.warranty_period_months.toString(),
+                    });
+                    navigate(`/warranty-start?${params.toString()}`);
                   }}
-                  className="bg-green-600 px-3 py-1 rounded"
+                  className="bg-green-600 px-3 py-1 rounded hover:bg-green-700 transition-colors"
                 >
                   Mark as Sold
                 </button>

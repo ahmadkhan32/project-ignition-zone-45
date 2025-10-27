@@ -32,6 +32,7 @@ import AdminLogin from "./pages/admin/AdminLogin";
 import AdminRegistration from "./pages/admin/AdminRegistration";
 import AdminDashboard from "./pages/admin/AdminDashboard";
 import AddScooterForm from "./pages/admin/AddScooterForm";
+import WarrantyStartPage from "./pages/admin/WarrantyStartPage";
 import NotFound from "./pages/NotFound";
 
 
@@ -67,6 +68,7 @@ const App = () => (
             <Route path="/admin/register" element={<AdminRegistration />} />
             <Route path="/admin-dashboard" element={<AdminDashboard />} />
             <Route path="/admin/add-scooter" element={<AddScooterForm />} />
+            <Route path="/warranty-start" element={<WarrantyStartPage />} />
             
             {/* Test Routes - Development only */}
             <Route path="/test-auth" element={<TestAuth />} />
