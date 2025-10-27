@@ -59,12 +59,12 @@ export default function AdminRegistration() {
       });
 
       setTimeout(() => {
-        navigate("/admin/login");
+        navigate("/login");
       }, 2000);
-    } catch (error: any) {
+    } catch (error: unknown) {
       toast({
         title: "Registration failed",
-        description: error.message,
+        description: error instanceof Error ? error.message : "An unknown error occurred.",
         variant: "destructive",
       });
     } finally {
@@ -160,7 +160,7 @@ export default function AdminRegistration() {
         <p className="mt-6 text-center text-sm text-muted-foreground">
           Already have an account?{" "}
           <Link
-            to="/admin/login"
+            to="/login"
             className="text-primary font-medium hover:underline"
           >
             Login here

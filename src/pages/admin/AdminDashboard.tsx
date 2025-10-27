@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 
@@ -26,13 +26,46 @@ interface ScooterModel {
   regenerative_braking: boolean;
   
   // Technical Specifications
-  power_output: string;
-  torque: string;
+  motor_output: string;
+  battery: string;
   weight: string;
   connectivity_mobile_app: string;
   connectivity_gps_tracking: string;
   connectivity_bluetooth: string;
 }
+
+interface DatabaseScooterRecord {
+  [key: string]: unknown;
+}
+
+// Helper functions to get values with proper units
+const getMotorOutput = (motorOutput: string | undefined, powerOutput: string | undefined): string => {
+  if (motorOutput) {
+    // Always ensure it ends with W
+    const cleanValue = motorOutput.replace(/[^\d.]/g, '');
+    return cleanValue ? `${cleanValue}W` : "";
+  }
+  if (powerOutput) {
+    // Always ensure it ends with W
+    const cleanValue = powerOutput.replace(/[^\d.]/g, '');
+    return cleanValue ? `${cleanValue}W` : "";
+  }
+  return "";
+};
+
+const getBattery = (battery: string | undefined, torque: string | undefined): string => {
+  if (battery) {
+    // Always ensure it ends with Ah
+    const cleanValue = battery.replace(/[^\d.]/g, '');
+    return cleanValue ? `${cleanValue}Ah` : "";
+  }
+  if (torque) {
+    // Always ensure it ends with Ah
+    const cleanValue = torque.replace(/[^\d.]/g, '');
+    return cleanValue ? `${cleanValue}Ah` : "";
+  }
+  return "";
+};
 
 const initialForm: ScooterModel = {
   id: "",
@@ -58,8 +91,8 @@ const initialForm: ScooterModel = {
   regenerative_braking: false,
   
   // Technical Specifications
-  power_output: "",
-  torque: "",
+  motor_output: "",
+  battery: "",
   weight: "",
   connectivity_mobile_app: "",
   connectivity_gps_tracking: "",
@@ -69,7 +102,7 @@ const initialForm: ScooterModel = {
 const AdminDashboard: React.FC = () => {
   const navigate = useNavigate();
   const [scooters, setScooters] = useState<ScooterModel[]>([]);
-  const [formData, setFormData] = useState<Record<string, unknown>>(initialForm);
+  const [formData, setFormData] = useState<ScooterModel>(initialForm);
   const [isEditing, setIsEditing] = useState(false);
   const [editId, setEditId] = useState<string | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
@@ -78,6 +111,46 @@ const AdminDashboard: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [filteredScooters, setFilteredScooters] = useState<ScooterModel[]>([]);
   const scootersPerPage = 5;
+
+  const fetchScooters = useCallback(async () => {
+    const { data, error, count } = await supabase
+      .from('scooters')
+      .select('*', { count: 'exact' })
+      .order('display_order', { ascending: true })
+      .range((currentPage - 1) * scootersPerPage, currentPage * scootersPerPage - 1);
+    
+    if (!error) {
+      // Map data to include default values for new fields (they may not exist in DB yet)
+      const scootersWithDefaults = (data || []).map((scooter: DatabaseScooterRecord) => ({
+        ...initialForm,
+        ...scooter,
+        // Set default values for advanced features (will be false if columns don't exist)
+        smart_display: Boolean(scooter.smart_display ?? false),
+        gps_navigation: Boolean(scooter.gps_navigation ?? false),
+        anti_theft_system: Boolean(scooter.anti_theft_system ?? false),
+        mobile_app_connectivity: Boolean(scooter.mobile_app_connectivity ?? false),
+        led_lighting_system: Boolean(scooter.led_lighting_system ?? false),
+        regenerative_braking: Boolean(scooter.regenerative_braking ?? false),
+        // Set default values for technical specs (will be empty if columns don't exist)
+        // Use legacy fields if new fields don't exist yet
+        motor_output: getMotorOutput(scooter.motor_output as string, scooter.power_output as string),
+        battery: getBattery(scooter.battery as string, scooter.torque as string),
+        weight: String(scooter.weight ?? ""),
+        connectivity_mobile_app: String(scooter.connectivity_mobile_app ?? ""),
+        connectivity_gps_tracking: String(scooter.connectivity_gps_tracking ?? ""),
+        connectivity_bluetooth: String(scooter.connectivity_bluetooth ?? ""),
+      })) as ScooterModel[];
+      setScooters(scootersWithDefaults);
+      
+      // Calculate total pages
+      const totalScooters = count || 0;
+      const pages = Math.ceil(totalScooters / scootersPerPage);
+      setTotalPages(pages);
+    } else {
+      console.error('Error fetching scooters:', error);
+      alert('Error loading scooters: ' + error.message);
+    }
+  }, [currentPage, scootersPerPage]);
 
   useEffect(() => {
     fetchScooters();
@@ -94,7 +167,7 @@ const AdminDashboard: React.FC = () => {
     return () => {
       supabase.removeChannel(channel);
     };
-  }, [currentPage]);
+  }, [currentPage, fetchScooters]);
 
   // Search functionality
   useEffect(() => {
@@ -111,45 +184,6 @@ const AdminDashboard: React.FC = () => {
       setFilteredScooters(filtered);
     }
   }, [scooters, searchTerm]);
-
-  const fetchScooters = async () => {
-    const { data, error, count } = await supabase
-      .from('scooters')
-      .select('*', { count: 'exact' })
-      .order('display_order', { ascending: true })
-      .range((currentPage - 1) * scootersPerPage, currentPage * scootersPerPage - 1);
-    
-    if (!error) {
-      // Map data to include default values for new fields (they may not exist in DB yet)
-      const scootersWithDefaults = (data || []).map((scooter: Record<string, unknown>) => ({
-        ...initialForm,
-        ...scooter,
-        // Set default values for advanced features (will be false if columns don't exist)
-        smart_display: scooter.smart_display ?? false,
-        gps_navigation: scooter.gps_navigation ?? false,
-        anti_theft_system: scooter.anti_theft_system ?? false,
-        mobile_app_connectivity: scooter.mobile_app_connectivity ?? false,
-        led_lighting_system: scooter.led_lighting_system ?? false,
-        regenerative_braking: scooter.regenerative_braking ?? false,
-        // Set default values for technical specs (will be empty if columns don't exist)
-        power_output: scooter.power_output ?? "",
-        torque: scooter.torque ?? "",
-        weight: scooter.weight ?? "",
-        connectivity_mobile_app: scooter.connectivity_mobile_app ?? "",
-        connectivity_gps_tracking: scooter.connectivity_gps_tracking ?? "",
-        connectivity_bluetooth: scooter.connectivity_bluetooth ?? "",
-      }));
-      setScooters(scootersWithDefaults);
-      
-      // Calculate total pages
-      const totalScooters = count || 0;
-      const pages = Math.ceil(totalScooters / scootersPerPage);
-      setTotalPages(pages);
-    } else {
-      console.error('Error fetching scooters:', error);
-      alert('Error loading scooters: ' + error.message);
-    }
-  };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value, type } = e.target;
@@ -228,7 +262,7 @@ const AdminDashboard: React.FC = () => {
 
 
   // Helper functions for CRUD
-  const addScooter = async (data: Record<string, unknown>) => {
+  const addScooter = async (data: ScooterModel) => {
     if (!data.name || !data.price) return alert("Fill all required fields");
     
     // Try with all fields first, fallback to basic fields if columns don't exist
@@ -253,8 +287,8 @@ const AdminDashboard: React.FC = () => {
       led_lighting_system: data.led_lighting_system,
       regenerative_braking: data.regenerative_braking,
       // Technical Specifications
-      power_output: data.power_output,
-      torque: data.torque,
+      motor_output: data.motor_output,
+      battery: data.battery,
       weight: data.weight,
       connectivity_mobile_app: data.connectivity_mobile_app,
       connectivity_gps_tracking: data.connectivity_gps_tracking,
@@ -298,7 +332,7 @@ const AdminDashboard: React.FC = () => {
     resetForm();
   };
 
-  const editScooter = async (id: string, data: Record<string, unknown>) => {
+  const editScooter = async (id: string, data: ScooterModel) => {
     // Try with all fields first, fallback to basic fields if columns don't exist
     const fullData = {
       name: data.name,
@@ -321,8 +355,8 @@ const AdminDashboard: React.FC = () => {
       led_lighting_system: data.led_lighting_system,
       regenerative_braking: data.regenerative_braking,
       // Technical Specifications
-      power_output: data.power_output,
-      torque: data.torque,
+      motor_output: data.motor_output,
+      battery: data.battery,
       weight: data.weight,
       connectivity_mobile_app: data.connectivity_mobile_app,
       connectivity_gps_tracking: data.connectivity_gps_tracking,
@@ -616,8 +650,8 @@ const AdminDashboard: React.FC = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
               <h4 className="font-semibold mb-2">Performance</h4>
-              <input name="power_output" placeholder="Power Output (e.g., 3500W)" value={formData.power_output} onChange={handleChange} className="p-2 m-1 rounded text-black w-full" />
-              <input name="torque" placeholder="Torque (e.g., 180 Nm)" value={formData.torque} onChange={handleChange} className="p-2 m-1 rounded text-black w-full" />
+              <input name="motor_output" placeholder="Motor Output (e.g., 3500W)" value={formData.motor_output} onChange={handleChange} className="p-2 m-1 rounded text-black w-full" />
+              <input name="battery" placeholder="Battery (e.g., 20Ah)" value={formData.battery} onChange={handleChange} className="p-2 m-1 rounded text-black w-full" />
               <input name="weight" placeholder="Weight (e.g., 65 kg)" value={formData.weight} onChange={handleChange} className="p-2 m-1 rounded text-black w-full" />
             </div>
             <div>
@@ -695,8 +729,8 @@ const AdminDashboard: React.FC = () => {
             <div className="mt-3">
               <h4 className="font-semibold text-sm mb-1">Technical Specs:</h4>
               <div className="text-xs space-y-1">
-                {s.power_output && <div>⚡ Power: {s.power_output}</div>}
-                {s.torque && <div>🌀 Torque: {s.torque}</div>}
+                {s.motor_output && <div>⚡ Motor Output (W): {s.motor_output}</div>}
+                {s.battery && <div>🔋 Battery (Ah): {s.battery}</div>}
                 {s.weight && <div>⚖️ Weight: {s.weight}</div>}
                 {s.connectivity_mobile_app && <div>📱 Mobile App: {s.connectivity_mobile_app}</div>}
                 {s.connectivity_gps_tracking && <div>📡 GPS: {s.connectivity_gps_tracking}</div>}

@@ -136,9 +136,13 @@ export default function Register() {
       setTimeout(() => {
         navigate("/login");
       }, 3000);
-      
-    } catch (error: any) {
-      console.error("Registration error:", error);
+
+    } catch (error) {
+      if (error instanceof Error) {
+        console.error("Registration error:", error);
+      } else {
+        console.error("Registration error:", String(error));
+      }
       setMessage("An unexpected error occurred. Please try again.");
       setMessageType("error");
       toast.error("Registration failed");

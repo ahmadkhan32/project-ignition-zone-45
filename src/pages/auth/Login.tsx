@@ -79,7 +79,7 @@ export default function Login() {
       // Navigate to admin dashboard after successful login
       navigate("/admin-dashboard");
       
-    } catch (error: any) {
+    } catch (error) {
       console.error("Login error:", error);
       setMessage("An unexpected error occurred. Please try again.");
       setMessageType("error");
@@ -97,13 +97,18 @@ export default function Login() {
       if (error) {
         throw error;
       }
-      
       // OAuth will redirect, so no need to navigate manually
-    } catch (error: any) {
+    } catch (error) {
       console.error("OAuth login error:", error);
-      setMessage(error.message || `Failed to login with ${provider}`);
-      setMessageType("error");
-      toast.error(error.message || `Failed to login with ${provider}`);
+      if (error instanceof Error) {
+        setMessage(error.message || `Failed to login with ${provider}`);
+        setMessageType("error");
+        toast.error(error.message || `Failed to login with ${provider}`);
+      } else {
+        setMessage(`Failed to login with ${provider}`);
+        setMessageType("error");
+        toast.error(`Failed to login with ${provider}`);
+      }
       setLoading(false);
     }
   };

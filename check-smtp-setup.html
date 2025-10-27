@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SMTP Setup Checker</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .status {
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 4px;
+            font-weight: bold;
+        }
+        .success { background-color: #d4edda; color: #155724; }
+        .error { background-color: #f8d7da; color: #721c24; }
+        .info { background-color: #d1ecf1; color: #0c5460; }
+        .warning { background-color: #fff3cd; color: #856404; }
+        button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover { background-color: #0056b3; }
+        .log-entry {
+            background: #f8f9fa;
+            padding: 8px;
+            margin: 5px 0;
+            border-left: 4px solid #007bff;
+            font-family: monospace;
+            font-size: 12px;
+        }
+        .error-log { border-left-color: #dc3545; background-color: #f8d7da; }
+        .success-log { border-left-color: #28a745; background-color: #d4edda; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔧 SMTP Setup Checker</h1>
+        
+        <div id="status" class="status info">
+            Ready to check SMTP setup...
+        </div>
+
+        <div id="checklist">
+            <h2>📋 SMTP Configuration Checklist</h2>
+            <div id="checklistItems"></div>
+        </div>
+
+        <div id="testResults">
+            <h2>🧪 Test Results</h2>
+            <div id="testLogs"></div>
+        </div>
+
+        <button onclick="runAllChecks()">Run All Checks</button>
+        <button onclick="testEmailSignup()">Test Email Signup</button>
+        <button onclick="clearLogs()">Clear Logs</button>
+    </div>
+
+    <script>
+        // Your Supabase configuration
+        const SUPABASE_URL = 'https://scpdntuuikcqasmfxkeq.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNjcGRudHV1aWtjcWFzbWZ4a2VxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTYxNTg3OTQsImV4cCI6MjA3MTczNDc5NH0.TsmzhAJ2XjKLHygWRM3YD8E8rlCut9J9ivff41IYGtc';
+        
+        // Current Vercel URL
+        const VERCEL_URL = 'https://project-ignition-zone-45-jguxihszb-ahmads-projects-3635a9cd.vercel.app';
+
+        // Initialize Supabase client
+        const { createClient } = supabase;
+        const supabaseClient = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+        function updateStatus(message, type = 'info') {
+            const statusDiv = document.getElementById('status');
+            statusDiv.textContent = message;
+            statusDiv.className = `status ${type}`;
+        }
+
+        function addLog(message, type = 'info') {
+            const logsDiv = document.getElementById('testLogs');
+            const logDiv = document.createElement('div');
+            logDiv.className = `log-entry ${type === 'error' ? 'error-log' : type === 'success' ? 'success-log' : ''}`;
+            logDiv.textContent = `[${new Date().toLocaleTimeString()}] ${message}`;
+            logsDiv.appendChild(logDiv);
+            logsDiv.scrollTop = logsDiv.scrollHeight;
+        }
+
+        function updateChecklist(item, status, message) {
+            const checklistDiv = document.getElementById('checklistItems');
+            const itemDiv = document.createElement('div');
+            itemDiv.className = `status ${status}`;
+            itemDiv.innerHTML = `${status === 'success' ? '✅' : status === 'error' ? '❌' : '⏳'} ${item}: ${message}`;
+            checklistDiv.appendChild(itemDiv);
+        }
+
+        function clearLogs() {
+            document.getElementById('testLogs').innerHTML = '';
+            document.getElementById('checklistItems').innerHTML = '';
+        }
+
+        async function runAllChecks() {
+            clearLogs();
+            updateStatus('Running SMTP setup checks...', 'info');
+            
+            addLog('🔧 Starting SMTP setup checks...');
+            
+            // Check 1: Supabase Connection
+            await checkSupabaseConnection();
+            
+            // Check 2: Authentication Settings
+            await checkAuthSettings();
+            
+            // Check 3: Email Configuration
+            await checkEmailConfiguration();
+            
+            // Check 4: Redirect URLs
+            await checkRedirectUrls();
+            
+            updateStatus('SMTP setup checks completed', 'success');
+        }
+
+        async function checkSupabaseConnection() {
+            addLog('🔍 Checking Supabase connection...');
+            
+            try {
+                const { data, error } = await supabaseClient
+                    .from('user_profiles')
+                    .select('count')
+                    .limit(1);
+
+                if (error) {
+                    throw error;
+                }
+
+                addLog('✅ Supabase connection successful', 'success');
+                updateChecklist('Supabase Connection', 'success', 'Connected successfully');
+            } catch (error) {
+                addLog(`❌ Supabase connection failed: ${error.message}`, 'error');
+                updateChecklist('Supabase Connection', 'error', `Failed: ${error.message}`);
+            }
+        }
+
+        async function checkAuthSettings() {
+            addLog('🔍 Checking authentication settings...');
+            
+            try {
+                // Test if we can access auth
+                const { data: { session }, error } = await supabaseClient.auth.getSession();
+                
+                if (error) {
+                    throw error;
+                }
+
+                addLog('✅ Authentication service accessible', 'success');
+                updateChecklist('Authentication Service', 'success', 'Service accessible');
+                
+                // Check if we can get auth state
+                const { data: { user }, error: userError } = await supabaseClient.auth.getUser();
+                
+                if (userError && userError.message.includes('JWT')) {
+                    addLog('⚠️ JWT token issue - this is normal for unauthenticated users', 'warning');
+                } else {
+                    addLog('✅ Auth state check successful', 'success');
+                }
+                
+            } catch (error) {
+                addLog(`❌ Authentication check failed: ${error.message}`, 'error');
+                updateChecklist('Authentication Service', 'error', `Failed: ${error.message}`);
+            }
+        }
+
+        async function checkEmailConfiguration() {
+            addLog('🔍 Checking email configuration...');
+            
+            // This is a manual check since we can't access Supabase settings via API
+            addLog('📧 Email configuration checklist:', 'info');
+            addLog('1. Go to Supabase Dashboard → Authentication → Settings', 'info');
+            addLog('2. Enable "Enable email confirmations" ✅', 'info');
+            addLog('3. Set Site URL to: ' + VERCEL_URL, 'info');
+            addLog('4. Add Redirect URLs:', 'info');
+            addLog('   - ' + VERCEL_URL + '/auth/callback', 'info');
+            addLog('   - ' + VERCEL_URL + '/dashboard', 'info');
+            addLog('5. Use Supabase default SMTP (recommended)', 'info');
+            
+            updateChecklist('Email Configuration', 'info', 'Manual check required - see logs');
+        }
+
+        async function checkRedirectUrls() {
+            addLog('🔍 Checking redirect URL configuration...');
+            
+            const requiredUrls = [
+                VERCEL_URL + '/auth/callback',
+                VERCEL_URL + '/dashboard'
+            ];
+            
+            addLog('📋 Required redirect URLs:', 'info');
+            requiredUrls.forEach(url => {
+                addLog(`   - ${url}`, 'info');
+            });
+            
+            addLog('⚠️ These URLs must be added to Supabase Dashboard → Authentication → Settings', 'warning');
+            
+            updateChecklist('Redirect URLs', 'info', 'Manual configuration required');
+        }
+
+        async function testEmailSignup() {
+            addLog('🧪 Testing email signup...');
+            
+            try {
+                const testEmail = `test-${Date.now()}@example.com`;
+                const testPassword = 'Test123!@#';
+                
+                addLog(`Attempting signup with ${testEmail}...`, 'info');
+                
+                const { data, error } = await supabaseClient.auth.signUp({
+                    email: testEmail,
+                    password: testPassword,
+                    options: {
+                        emailRedirectTo: VERCEL_URL + '/auth/callback'
+                    }
+                });
+
+                if (error) {
+                    throw error;
+                }
+
+                if (data.user) {
+                    addLog('✅ Signup successful!', 'success');
+                    addLog(`User ID: ${data.user.id}`, 'info');
+                    addLog(`Email confirmed: ${data.user.email_confirmed_at ? 'Yes' : 'No'}`, 'info');
+                    addLog('📧 Check your email for confirmation link', 'info');
+                    updateChecklist('Email Signup Test', 'success', 'Signup successful');
+                } else {
+                    addLog('❌ No user data returned', 'error');
+                    updateChecklist('Email Signup Test', 'error', 'No user data returned');
+                }
+
+            } catch (error) {
+                addLog(`❌ Email signup failed: ${error.message}`, 'error');
+                updateChecklist('Email Signup Test', 'error', `Failed: ${error.message}`);
+            }
+        }
+
+        // Auto-run checks on page load
+        window.addEventListener('load', () => {
+            addLog('🚀 SMTP Setup Checker loaded');
+            addLog('Click "Run All Checks" to start diagnostics');
+        });
+    </script>
+
+    <!-- Include Supabase client -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</body>
+</html>

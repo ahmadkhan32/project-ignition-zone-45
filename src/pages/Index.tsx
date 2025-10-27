@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { NavigationBar } from "@/components/NavigationBar";
 import { HeroSection } from "@/components/HeroSection";
 import { TechnologySection } from "@/components/TechnologySection";
@@ -29,6 +29,35 @@ import {
   Share2
 } from "lucide-react";
 
+// Helper functions to get values with proper units
+const getMotorOutput = (motorOutput: string | undefined, powerOutput: string | undefined): string => {
+  if (motorOutput) {
+    // Always ensure it ends with W
+    const cleanValue = motorOutput.replace(/[^\d.]/g, '');
+    return cleanValue ? `${cleanValue}W` : "";
+  }
+  if (powerOutput) {
+    // Always ensure it ends with W
+    const cleanValue = powerOutput.replace(/[^\d.]/g, '');
+    return cleanValue ? `${cleanValue}W` : "";
+  }
+  return "";
+};
+
+const getBattery = (battery: string | undefined, torque: string | undefined): string => {
+  if (battery) {
+    // Always ensure it ends with Ah
+    const cleanValue = battery.replace(/[^\d.]/g, '');
+    return cleanValue ? `${cleanValue}Ah` : "";
+  }
+  if (torque) {
+    // Always ensure it ends with Ah
+    const cleanValue = torque.replace(/[^\d.]/g, '');
+    return cleanValue ? `${cleanValue}Ah` : "";
+  }
+  return "";
+};
+
 interface ScooterModel {
   id: string;
   name: string;
@@ -49,8 +78,8 @@ interface ScooterModel {
   mobile_app_connectivity: boolean;
   led_lighting_system: boolean;
   regenerative_braking: boolean;
-  power_output: string;
-  torque: string;
+  motor_output: string;
+  battery: string;
   weight: string;
   connectivity_mobile_app: string;
   connectivity_gps_tracking: string;
@@ -67,7 +96,7 @@ const Index = () => {
   const scootersPerPage = 6;
 
   // Fetch scooters for display
-  const fetchScooters = async () => {
+  const fetchScooters = useCallback(async () => {
     try {
       setScootersLoading(true);
       const { data, error, count } = await supabase
@@ -83,33 +112,33 @@ const Index = () => {
       }
 
       if (Array.isArray(data)) {
-        const mappedData = data.map((item: any) => ({
-          id: item.id || "",
-          name: item.name || "",
-          description: item.description || "",
-          price: item.price || "",
-          max_speed: item.max_speed || "",
-          max_range: item.max_range || "",
-          charge_time: item.charge_time || "",
-          image_1_url: item.image_1_url || "",
-          image_2_url: item.image_2_url || "",
-          thumbnail_url: item.thumbnail_url || "",
-          is_active: item.is_active || false,
-          is_featured: item.is_featured || false,
-          display_order: item.display_order || 0,
-          smart_display: item.smart_display || false,
-          gps_navigation: item.gps_navigation || false,
-          anti_theft_system: item.anti_theft_system || false,
-          mobile_app_connectivity: item.mobile_app_connectivity || false,
-          led_lighting_system: item.led_lighting_system || false,
-          regenerative_braking: item.regenerative_braking || false,
-          power_output: item.power_output || "300 kW",
-          torque: item.torque || "180 Nm",
-          weight: item.weight || "200 kg",
-          connectivity_mobile_app: item.connectivity_mobile_app || "iOS & Android",
-          connectivity_gps_tracking: item.connectivity_gps_tracking || "Built-in",
-          connectivity_bluetooth: item.connectivity_bluetooth || "5.0",
-        }));
+        const mappedData = data.map((item: Record<string, unknown>) => ({
+          id: String(item.id || ""),
+          name: String(item.name || ""),
+          description: String(item.description || ""),
+          price: String(item.price || ""),
+          max_speed: String(item.max_speed || ""),
+          max_range: String(item.max_range || ""),
+          charge_time: String(item.charge_time || ""),
+          image_1_url: String(item.image_1_url || ""),
+          image_2_url: String(item.image_2_url || ""),
+          thumbnail_url: String(item.thumbnail_url || ""),
+          is_active: Boolean(item.is_active || false),
+          is_featured: Boolean(item.is_featured || false),
+          display_order: Number(item.display_order || 0),
+          smart_display: Boolean(item.smart_display || false),
+          gps_navigation: Boolean(item.gps_navigation || false),
+          anti_theft_system: Boolean(item.anti_theft_system || false),
+          mobile_app_connectivity: Boolean(item.mobile_app_connectivity || false),
+          led_lighting_system: Boolean(item.led_lighting_system || false),
+          regenerative_braking: Boolean(item.regenerative_braking || false),
+          motor_output: getMotorOutput(String(item.motor_output || ""), String(item.power_output || "")),
+          battery: getBattery(String(item.battery || ""), String(item.torque || "")),
+          weight: String(item.weight || "200 kg"),
+          connectivity_mobile_app: String(item.connectivity_mobile_app || "iOS & Android"),
+          connectivity_gps_tracking: String(item.connectivity_gps_tracking || "Built-in"),
+          connectivity_bluetooth: String(item.connectivity_bluetooth || "5.0"),
+        })) as ScooterModel[];
         setScooters(mappedData);
         
         // Calculate total pages
@@ -122,11 +151,11 @@ const Index = () => {
     } finally {
       setScootersLoading(false);
     }
-  };
+  }, [currentPage, scootersPerPage]);
 
   useEffect(() => {
     fetchScooters();
-  }, [currentPage]);
+  }, [fetchScooters]);
 
   // Pagination functions
   const goToPage = (page: number) => {

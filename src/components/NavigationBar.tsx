@@ -29,15 +29,21 @@ const navItems = [
 
   return (
     <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-      isScrolled ? 'bg-background/95 backdrop-blur-md border-b border-border' : 'bg-transparent'
+      isScrolled ? 'bg-blue-900/95 backdrop-blur-md border-b border-blue-950' : 'bg-blue-900'
     }`}>
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
-          <div className="flex items-center space-x-2">
-            <div className="w-8 h-8 bg-gradient-to-r from-primary to-primary-glow rounded-full"></div>
-            <span className="font-display font-bold text-xl text-foreground">EvolutionEV</span>
-          </div>
+          <Link to="/" className="flex items-center space-x-3">
+            <img
+              src="/assets/ChatGPT Image Logo.png"
+              alt="EV INN Logo"
+              className="w-12 h-12 object-contain"
+            />
+            <span className="font-display font-bold text-xl text-white">
+              EV INN
+            </span>
+          </Link>
 
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center space-x-8">
@@ -79,7 +85,7 @@ const navItems = [
 
         {/* Mobile Menu */}
         {isMobileMenuOpen && (
-          <div className="md:hidden bg-background border-t border-border">
+          <div className="md:hidden bg-blue-900 border-t border-blue-950">
             <div className="px-2 pt-2 pb-3 space-y-1">
               {navItems.map((item) => (
                 <Link

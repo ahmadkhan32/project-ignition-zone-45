@@ -33,10 +33,11 @@ export default function AdminLogin() {
       setTimeout(() => {
         navigate("/admin-dashboard");
       }, 1500);
-    } catch (error: any) {
+    } catch (error) {
+      const err = error as { message?: string };
       toast({
         title: "Login failed",
-        description: error.message,
+        description: err.message ?? "An unknown error occurred.",
         variant: "destructive",
       });
     } finally {
@@ -54,10 +55,11 @@ export default function AdminLogin() {
       });
 
       if (error) throw error;
-    } catch (error: any) {
+    } catch (error) {
+      const err = error as { message?: string };
       toast({
         title: "OAuth login failed",
-        description: error.message,
+        description: err.message ?? "An unknown error occurred.",
         variant: "destructive",
       });
     }
@@ -73,10 +75,11 @@ export default function AdminLogin() {
       });
 
       if (error) throw error;
-    } catch (error: any) {
+    } catch (error) {
+      const err = error as { message?: string };
       toast({
         title: "OAuth login failed",
-        description: error.message,
+        description: err.message ?? "An unknown error occurred.",
         variant: "destructive",
       });
     }

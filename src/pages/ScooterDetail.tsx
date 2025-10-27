@@ -49,16 +49,82 @@ interface ScooterModel {
   regenerative_braking: boolean;
   
   // Technical Specifications
-  power_output: string;
-  torque: string;
+  motor_output: string;
+  battery: string;
   weight: string;
   connectivity_mobile_app: string;
   connectivity_gps_tracking: string;
   connectivity_bluetooth: string;
 }
 
+// Interface for database record (may have different field names)
+interface DatabaseScooterRecord {
+  id: string;
+  name: string;
+  description: string | null;
+  price: string;
+  max_speed: string;
+  max_range: string;
+  charge_time: string;
+  image_1_url: string | null;
+  image_2_url: string | null;
+  thumbnail_url: string | null;
+  is_active: boolean;
+  is_featured: boolean;
+  display_order: number;
+  
+  // Advanced Features (may not exist in DB yet)
+  smart_display?: boolean;
+  gps_navigation?: boolean;
+  anti_theft_system?: boolean;
+  mobile_app_connectivity?: boolean;
+  led_lighting_system?: boolean;
+  regenerative_braking?: boolean;
+  
+  // Technical Specifications (may not exist in DB yet)
+  motor_output?: string;
+  battery?: string;
+  weight?: string;
+  connectivity_mobile_app?: string;
+  connectivity_gps_tracking?: string;
+  connectivity_bluetooth?: string;
+  
+  // Legacy fields (for backward compatibility)
+  power_output?: string;
+  torque?: string;  
+}
+
 // Default colors for display
 const defaultColors = ["Midnight Black", "Electric Blue", "Arctic White"];
+
+// Helper functions to get values with proper units
+const getMotorOutput = (motorOutput: string | undefined, powerOutput: string | undefined): string => {
+  if (motorOutput) {
+    // Always ensure it ends with W
+    const cleanValue = motorOutput.replace(/[^\d.]/g, '');
+    return cleanValue ? `${cleanValue}W` : "";
+  }
+  if (powerOutput) {
+    // Always ensure it ends with W
+    const cleanValue = powerOutput.replace(/[^\d.]/g, '');
+    return cleanValue ? `${cleanValue}W` : "";
+  }
+  return "";
+};
+
+const getBattery = (battery: string | undefined, torque: string | undefined): string => {
+  if (battery) {
+    // Always ensure it ends with Ah
+    const cleanValue = battery.replace(/[^\d.]/g, '');
+    return cleanValue ? `${cleanValue}Ah` : "";
+  }
+  if (torque) {
+    // Always ensure it ends with Ah
+    const cleanValue = torque.replace(/[^\d.]/g, '');
+    return cleanValue ? `${cleanValue}Ah` : "";
+  }
+  return "";
+};
 
 const CountUpNumber = ({ value, duration = 2000 }: { value: number; duration?: number }) => {
   const [count, setCount] = useState(0);
@@ -104,8 +170,8 @@ export default function ScooterDetail() {
         }
 
         // Map data to include default values for new fields (they may not exist in DB yet)
-        const scooterData = data as any;
-        const scooterWithDefaults = {
+        const scooterData = data as DatabaseScooterRecord;
+        const scooterWithDefaults: ScooterModel = {
           ...scooterData,
           // Set default values for advanced features (will be false if columns don't exist)
           smart_display: scooterData.smart_display ?? false,
@@ -115,8 +181,9 @@ export default function ScooterDetail() {
           led_lighting_system: scooterData.led_lighting_system ?? false,
           regenerative_braking: scooterData.regenerative_braking ?? false,
           // Set default values for technical specs (will be empty if columns don't exist)
-          power_output: scooterData.power_output ?? "",
-          torque: scooterData.torque ?? "",
+          // Use legacy fields if new fields don't exist yet
+          motor_output: getMotorOutput(scooterData.motor_output, scooterData.power_output),
+          battery: getBattery(scooterData.battery, scooterData.torque),
           weight: scooterData.weight ?? "",
           connectivity_mobile_app: scooterData.connectivity_mobile_app ?? "",
           connectivity_gps_tracking: scooterData.connectivity_gps_tracking ?? "",
@@ -290,10 +357,10 @@ export default function ScooterDetail() {
                 <div className="space-y-2">
                   <div className="flex items-center space-x-2">
                     <Battery className="w-5 h-5 text-primary" />
-                    <span className="text-sm text-muted-foreground">Power</span>
+                    <span className="text-sm text-muted-foreground">Motor Output (W)</span>
                   </div>
                   <div className="text-2xl font-bold">
-                    {scooter.power_output}
+                    {scooter.motor_output}
                   </div>
                 </div>
               </div>
@@ -416,16 +483,16 @@ export default function ScooterDetail() {
                 <div className="space-y-4">
                   <h3 className="text-xl font-semibold mb-4 text-white">Performance</h3>
                   <div className="space-y-3">
-                    {scooter.power_output && (
+                    {scooter.motor_output && (
                       <div className="flex justify-between items-center py-3 border-b border-white/20 bg-white/5 rounded-lg px-4">
-                        <span className="text-gray-300">Power Output</span>
-                        <span className="font-semibold text-white">{scooter.power_output}</span>
+                        <span className="text-gray-300">Motor Output (W)</span>
+                        <span className="font-semibold text-white">{scooter.motor_output}</span>
                       </div>
                     )}
-                    {scooter.torque && (
+                    {scooter.battery && (
                       <div className="flex justify-between items-center py-3 border-b border-white/20 bg-white/5 rounded-lg px-4">
-                        <span className="text-gray-300">Torque</span>
-                        <span className="font-semibold text-white">{scooter.torque}</span>
+                        <span className="text-gray-300">Battery (Ah)</span>
+                        <span className="font-semibold text-white">{scooter.battery}</span>
                       </div>
                     )}
                     {scooter.weight && (
