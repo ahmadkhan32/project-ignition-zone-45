@@ -35,10 +35,16 @@ interface ScooterModel {
   charge_time: string;
   image_1_url: string | null;
   image_2_url: string | null;
+  image_3_url: string | null;
   thumbnail_url: string | null;
   is_active: boolean;
   is_featured: boolean;
   display_order: number;
+  
+  // Serial Numbers
+  serial_number: string;
+  motor_number: string;
+  chassis_number: string;
   
   // Advanced Features
   smart_display: boolean;
@@ -68,10 +74,16 @@ interface DatabaseScooterRecord {
   charge_time: string;
   image_1_url: string | null;
   image_2_url: string | null;
+  image_3_url?: string | null;
   thumbnail_url: string | null;
   is_active: boolean;
   is_featured: boolean;
   display_order: number;
+  
+  // Serial Numbers (may not exist in DB yet)
+  serial_number?: string;
+  motor_number?: string;
+  chassis_number?: string;
   
   // Advanced Features (may not exist in DB yet)
   smart_display?: boolean;
@@ -173,6 +185,11 @@ export default function ScooterDetail() {
         const scooterData = data as DatabaseScooterRecord;
         const scooterWithDefaults: ScooterModel = {
           ...scooterData,
+          // Set default values for serial numbers (will be empty if columns don't exist)
+          serial_number: scooterData.serial_number ?? "",
+          motor_number: scooterData.motor_number ?? "",
+          chassis_number: scooterData.chassis_number ?? "",
+          image_3_url: scooterData.image_3_url ?? null,
           // Set default values for advanced features (will be false if columns don't exist)
           smart_display: scooterData.smart_display ?? false,
           gps_navigation: scooterData.gps_navigation ?? false,
@@ -264,7 +281,7 @@ export default function ScooterDetail() {
           <div className="grid lg:grid-cols-2 gap-12 items-start">
             {/* Image Section */}
             <div className="space-y-6">
-              <div className="relative aspect-video rounded-2xl overflow-hidden bg-gradient-to-br from-primary/5 to-primary/10">
+              <div className="relative aspect-video rounded-2xl overflow-hidden bg-gradient-to-br from-primary/5 to-primary/10 mb-4">
                 <img
                   src={scooter.image_1_url || scooter.thumbnail_url || '/placeholder.svg'}
                   alt={scooter.name}
@@ -286,6 +303,36 @@ export default function ScooterDetail() {
                   {is360View ? 'Stop 360°' : 'Try 360° View'}
                 </Button>
               </div>
+
+              {/* Additional Images */}
+              {(scooter.image_2_url || scooter.image_3_url) && (
+                <div className="grid grid-cols-2 gap-4">
+                  {scooter.image_2_url && (
+                    <div className="aspect-video rounded-xl overflow-hidden">
+                      <img
+                        src={scooter.image_2_url}
+                        alt={`${scooter.name} - Detail 1`}
+                        className="w-full h-full object-cover"
+                        onError={(e) => {
+                          (e.target as HTMLImageElement).src = '/placeholder.svg';
+                        }}
+                      />
+                    </div>
+                  )}
+                  {scooter.image_3_url && (
+                    <div className="aspect-video rounded-xl overflow-hidden">
+                      <img
+                        src={scooter.image_3_url}
+                        alt={`${scooter.name} - Detail 2`}
+                        className="w-full h-full object-cover"
+                        onError={(e) => {
+                          (e.target as HTMLImageElement).src = '/placeholder.svg';
+                        }}
+                      />
+                    </div>
+                  )}
+                </div>
+              )}
 
               {/* Color Selection */}
               <div className="space-y-4">
@@ -483,6 +530,24 @@ export default function ScooterDetail() {
                 <div className="space-y-4">
                   <h3 className="text-xl font-semibold mb-4 text-white">Performance</h3>
                   <div className="space-y-3">
+                    {scooter.serial_number && (
+                      <div className="flex justify-between items-center py-3 border-b border-white/20 bg-white/5 rounded-lg px-4">
+                        <span className="text-gray-300">Serial Number</span>
+                        <span className="font-semibold text-white">{scooter.serial_number}</span>
+                      </div>
+                    )}
+                    {scooter.motor_number && (
+                      <div className="flex justify-between items-center py-3 border-b border-white/20 bg-white/5 rounded-lg px-4">
+                        <span className="text-gray-300">Motor Number</span>
+                        <span className="font-semibold text-white">{scooter.motor_number}</span>
+                      </div>
+                    )}
+                    {scooter.chassis_number && (
+                      <div className="flex justify-between items-center py-3 border-b border-white/20 bg-white/5 rounded-lg px-4">
+                        <span className="text-gray-300">Chassis Number</span>
+                        <span className="font-semibold text-white">{scooter.chassis_number}</span>
+                      </div>
+                    )}
                     {scooter.motor_output && (
                       <div className="flex justify-between items-center py-3 border-b border-white/20 bg-white/5 rounded-lg px-4">
                         <span className="text-gray-300">Motor Output (W)</span>

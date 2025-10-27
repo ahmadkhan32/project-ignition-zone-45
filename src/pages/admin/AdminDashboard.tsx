@@ -12,10 +12,21 @@ interface ScooterModel {
   charge_time: string;
   image_1_url: string | null;
   image_2_url: string | null;
+  image_3_url: string | null;
   thumbnail_url: string | null;
   is_active: boolean;
   is_featured: boolean;
   display_order: number;
+  
+  // Serial Numbers
+  serial_number: string;
+  motor_number: string;
+  chassis_number: string;
+  
+  // Inventory & Warranty
+  total_sold: number;
+  units_in_stock: number;
+  warranty_period_months: number;
   
   // Advanced Features
   smart_display: boolean;
@@ -77,10 +88,21 @@ const initialForm: ScooterModel = {
   charge_time: "",
   image_1_url: "",
   image_2_url: "",
+  image_3_url: "",
   thumbnail_url: "",
   is_active: true,
   is_featured: false,
   display_order: 0,
+  
+  // Serial Numbers
+  serial_number: "",
+  motor_number: "",
+  chassis_number: "",
+  
+  // Inventory & Warranty
+  total_sold: 0,
+  units_in_stock: 0,
+  warranty_period_months: 12,
   
   // Advanced Features
   smart_display: false,
@@ -124,6 +146,15 @@ const AdminDashboard: React.FC = () => {
       const scootersWithDefaults = (data || []).map((scooter: DatabaseScooterRecord) => ({
         ...initialForm,
         ...scooter,
+        // Set default values for serial numbers (will be empty if columns don't exist)
+        serial_number: String(scooter.serial_number ?? ""),
+        motor_number: String(scooter.motor_number ?? ""),
+        chassis_number: String(scooter.chassis_number ?? ""),
+        image_3_url: String(scooter.image_3_url ?? ""),
+        // Set default values for inventory & warranty
+        total_sold: Number(scooter.total_sold ?? 0),
+        units_in_stock: Number(scooter.units_in_stock ?? 0),
+        warranty_period_months: Number(scooter.warranty_period_months ?? 12),
         // Set default values for advanced features (will be false if columns don't exist)
         smart_display: Boolean(scooter.smart_display ?? false),
         gps_navigation: Boolean(scooter.gps_navigation ?? false),
@@ -275,10 +306,19 @@ const AdminDashboard: React.FC = () => {
       charge_time: data.charge_time,
       image_1_url: data.image_1_url,
       image_2_url: data.image_2_url,
+      image_3_url: data.image_3_url,
       thumbnail_url: data.thumbnail_url,
       is_active: data.is_active,
       is_featured: data.is_featured,
       display_order: Number(data.display_order) || 0,
+      // Serial Numbers
+      serial_number: data.serial_number,
+      motor_number: data.motor_number,
+      chassis_number: data.chassis_number,
+      // Inventory & Warranty
+      total_sold: Number(data.total_sold) || 0,
+      units_in_stock: Number(data.units_in_stock) || 0,
+      warranty_period_months: Number(data.warranty_period_months) || 12,
       // Advanced Features
       smart_display: data.smart_display,
       gps_navigation: data.gps_navigation,
@@ -343,10 +383,19 @@ const AdminDashboard: React.FC = () => {
       charge_time: data.charge_time,
       image_1_url: data.image_1_url,
       image_2_url: data.image_2_url,
+      image_3_url: data.image_3_url,
       thumbnail_url: data.thumbnail_url,
       is_active: data.is_active,
       is_featured: data.is_featured,
       display_order: Number(data.display_order) || 0,
+      // Serial Numbers
+      serial_number: data.serial_number,
+      motor_number: data.motor_number,
+      chassis_number: data.chassis_number,
+      // Inventory & Warranty
+      total_sold: Number(data.total_sold) || 0,
+      units_in_stock: Number(data.units_in_stock) || 0,
+      warranty_period_months: Number(data.warranty_period_months) || 12,
       // Advanced Features
       smart_display: data.smart_display,
       gps_navigation: data.gps_navigation,
@@ -587,7 +636,50 @@ const AdminDashboard: React.FC = () => {
                   <img src={formData.thumbnail_url} alt="Preview" className="w-20 h-20 object-cover rounded" />
                 )}
           </div>
+
+          <div className="space-y-2">
+            <label className="text-sm font-medium">Image 3</label>
+            <div className="flex space-x-2">
+              <input 
+                name="image_3_url" 
+                placeholder="Image 3 URL" 
+                value={formData.image_3_url} 
+                onChange={handleChange} 
+                className="p-2 rounded text-black w-full" 
+              />
+              <input 
+                type="file" 
+                accept="image/svg+xml,image/jpeg,image/jpg,image/png"
+                onChange={(e) => {
+                  const file = e.target.files?.[0];
+                  if (file) handleFileUpload(file, 'image_3_url');
+                }}
+                className="p-2 rounded text-black"
+                disabled={uploading}
+              />
+            </div>
+                {formData.image_3_url && (
+                  <img src={formData.image_3_url} alt="Preview" className="w-20 h-20 object-cover rounded" />
+                )}
+          </div>
           <textarea name="description" placeholder="Description" value={formData.description || ""} onChange={handleChange} className="p-2 m-1 rounded text-black w-full" />
+          
+          {/* Serial Numbers */}
+          <div className="col-span-1 md:col-span-2">
+            <h3 className="text-md font-semibold mb-2">Serial Numbers</h3>
+          </div>
+          <input name="serial_number" placeholder="Serial Number" value={formData.serial_number} onChange={handleChange} className="p-2 m-1 rounded text-black w-full" />
+          <input name="motor_number" placeholder="Motor Number" value={formData.motor_number} onChange={handleChange} className="p-2 m-1 rounded text-black w-full" />
+          <input name="chassis_number" placeholder="Chassis Number" value={formData.chassis_number} onChange={handleChange} className="p-2 m-1 rounded text-black w-full" />
+          
+          {/* Inventory & Warranty */}
+          <div className="col-span-1 md:col-span-2">
+            <h3 className="text-md font-semibold mb-2">Inventory & Warranty</h3>
+          </div>
+          <input name="units_in_stock" type="number" placeholder="Units in Stock" value={formData.units_in_stock} onChange={handleChange} className="p-2 m-1 rounded text-black w-full" />
+          <input name="total_sold" type="number" placeholder="Total Sold" value={formData.total_sold} onChange={handleChange} className="p-2 m-1 rounded text-black w-full" />
+          <input name="warranty_period_months" type="number" placeholder="Warranty Period (months)" value={formData.warranty_period_months} onChange={handleChange} className="p-2 m-1 rounded text-black w-full" />
+          
           <input name="display_order" type="number" placeholder="Display Order" value={formData.display_order} onChange={handleChange} className="p-2 m-1 rounded text-black w-full" />
           <label className="flex items-center space-x-2">
             <input type="checkbox" name="is_active" checked={formData.is_active} onChange={handleChange} />
@@ -704,6 +796,14 @@ const AdminDashboard: React.FC = () => {
             </div>
             <p className="text-xs text-gray-400 mb-1">ID: {s.id}</p>
             <p className="text-sm text-gray-300 mb-2">Display Order: {s.display_order}</p>
+            {s.serial_number && <p className="text-xs text-gray-400">Serial: {s.serial_number}</p>}
+            {s.motor_number && <p className="text-xs text-gray-400">Motor: {s.motor_number}</p>}
+            {s.chassis_number && <p className="text-xs text-gray-400">Chassis: {s.chassis_number}</p>}
+            <div className="text-xs text-gray-400 space-y-1 my-2">
+              {s.units_in_stock !== undefined && <p>📦 In Stock: {s.units_in_stock}</p>}
+              {s.total_sold !== undefined && <p>✅ Sold: {s.total_sold}</p>}
+              {s.warranty_period_months && <p>🛡️ Warranty: {s.warranty_period_months} months</p>}
+            </div>
             <p>{s.description}</p>
             <div className="grid grid-cols-2 gap-2 mt-2">
               <div className="text-blue-400 font-semibold">Price: {s.price}</div>
@@ -737,13 +837,32 @@ const AdminDashboard: React.FC = () => {
                 {s.connectivity_bluetooth && <div>🔊 Bluetooth: {s.connectivity_bluetooth}</div>}
               </div>
             </div>
-            <div className="mt-3 flex gap-2">
+            <div className="mt-3 flex gap-2 flex-wrap">
               <button onClick={() => handleEdit(s)} className="bg-yellow-500 px-3 py-1 rounded">
                 Edit
               </button>
               <button onClick={() => handleDelete(s.id)} className="bg-red-500 px-3 py-1 rounded">
                 Delete
               </button>
+              {s.units_in_stock > 0 && (
+                <button 
+                  onClick={async () => {
+                    if (window.confirm(`Mark 1 unit of ${s.name} as sold?`)) {
+                      const newTotalSold = s.total_sold + 1;
+                      const newUnitsInStock = s.units_in_stock - 1;
+                      await supabase
+                        .from('scooters')
+                        .update({ total_sold: newTotalSold, units_in_stock: newUnitsInStock })
+                        .eq('id', s.id);
+                      fetchScooters();
+                      alert('Unit marked as sold! Warranty period started.');
+                    }
+                  }}
+                  className="bg-green-600 px-3 py-1 rounded"
+                >
+                  Mark as Sold
+                </button>
+              )}
             </div>
           </div>
         ))}
