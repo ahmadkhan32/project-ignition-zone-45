@@ -38,7 +38,7 @@ const navItems = [
             <img
               src="https://i.postimg.cc/xCXqFP7P/Gemini-Generated-Image-mzq9i9mzq9i9mzq9.png"
               alt="EV INN Logo"
-              className="w-20 h-20 object-contain"
+              className="w-20 h-26 object-contain"
             />
             <span className="font-display font-bold text-xl text-white">
               EV INN

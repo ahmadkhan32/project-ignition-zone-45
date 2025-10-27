@@ -48,7 +48,7 @@ export const Footer = () => {
               <img
                 src="https://i.postimg.cc/xCXqFP7P/Gemini-Generated-Image-mzq9i9mzq9i9mzq9.png"
                 alt="EV INN Logo"
-                className="w-16 h-16 object-contain"
+                className="w-12 h-16 object-contain"
               />
               <span className="font-display font-bold text-xl text-foreground">EvolutionEV</span>
             </div>
