@@ -36,7 +36,7 @@ const navItems = [
           {/* Logo */}
           <Link to="/" className="flex items-center space-x-3">
             <img
-              src="https://i.postimg.cc/xCXqFP7P/Gemini-Generated-Image-mzq9i9mzq9i9mzq9.png"
+              src="/assets/logo.png"
               alt="EV INN Logo"
               className="w-12 h-12 object-contain"
             />

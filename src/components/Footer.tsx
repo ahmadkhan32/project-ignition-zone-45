@@ -45,7 +45,11 @@ export const Footer = () => {
           {/* Company Info */}
           <div className="lg:col-span-2">
             <div className="flex items-center space-x-2 mb-6">
-              <div className="w-8 h-8 bg-gradient-to-r from-primary to-primary-glow rounded-full"></div>
+              <img
+                src="/assets/logo.png"
+                alt="EvolutionEV Logo"
+                className="w-10 h-10 object-contain"
+              />
               <span className="font-display font-bold text-xl text-foreground">EvolutionEV</span>
             </div>
             
