@@ -190,13 +190,13 @@ export default function ScooterDetail() {
           motor_number: scooterData.motor_number ?? "",
           chassis_number: scooterData.chassis_number ?? "",
           image_3_url: scooterData.image_3_url ?? null,
-          // Set default values for advanced features (will be false if columns don't exist)
-          smart_display: scooterData.smart_display ?? false,
-          gps_navigation: scooterData.gps_navigation ?? false,
-          anti_theft_system: scooterData.anti_theft_system ?? false,
-          mobile_app_connectivity: scooterData.mobile_app_connectivity ?? false,
-          led_lighting_system: scooterData.led_lighting_system ?? false,
-          regenerative_braking: scooterData.regenerative_braking ?? false,
+          // Set default values for advanced features (properly handle boolean values)
+          smart_display: scooterData.smart_display === true || String(scooterData.smart_display) === 'true',
+          gps_navigation: scooterData.gps_navigation === true || String(scooterData.gps_navigation) === 'true',
+          anti_theft_system: scooterData.anti_theft_system === true || String(scooterData.anti_theft_system) === 'true',
+          mobile_app_connectivity: scooterData.mobile_app_connectivity === true || String(scooterData.mobile_app_connectivity) === 'true',
+          led_lighting_system: scooterData.led_lighting_system === true || String(scooterData.led_lighting_system) === 'true',
+          regenerative_braking: scooterData.regenerative_braking === true || String(scooterData.regenerative_braking) === 'true',
           // Set default values for technical specs (will be empty if columns don't exist)
           // Use legacy fields if new fields don't exist yet
           motor_output: getMotorOutput(scooterData.motor_output, scooterData.power_output),

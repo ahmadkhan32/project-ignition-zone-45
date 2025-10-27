@@ -72,15 +72,15 @@ export default function ScootersPage() {
       if (error) throw error;
       
       // Map data to include default values for new fields (they may not exist in DB yet)
-      const scootersWithDefaults = (data || []).map((scooter: any) => ({
+      const scootersWithDefaults = (data || []).map((scooter: ScooterModel & Record<string, unknown>) => ({
         ...scooter,
-        // Set default values for advanced features (will be false if columns don't exist)
-        smart_display: scooter.smart_display ?? false,
-        gps_navigation: scooter.gps_navigation ?? false,
-        anti_theft_system: scooter.anti_theft_system ?? false,
-        mobile_app_connectivity: scooter.mobile_app_connectivity ?? false,
-        led_lighting_system: scooter.led_lighting_system ?? false,
-        regenerative_braking: scooter.regenerative_braking ?? false,
+        // Set default values for advanced features (properly handle boolean values)
+        smart_display: scooter.smart_display === true || String(scooter.smart_display) === 'true',
+        gps_navigation: scooter.gps_navigation === true || String(scooter.gps_navigation) === 'true',
+        anti_theft_system: scooter.anti_theft_system === true || String(scooter.anti_theft_system) === 'true',
+        mobile_app_connectivity: scooter.mobile_app_connectivity === true || String(scooter.mobile_app_connectivity) === 'true',
+        led_lighting_system: scooter.led_lighting_system === true || String(scooter.led_lighting_system) === 'true',
+        regenerative_braking: scooter.regenerative_braking === true || String(scooter.regenerative_braking) === 'true',
         // Set default values for technical specs (will be empty if columns don't exist)
         power_output: scooter.power_output ?? "",
         torque: scooter.torque ?? "",

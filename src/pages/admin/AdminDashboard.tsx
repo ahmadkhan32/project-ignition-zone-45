@@ -155,13 +155,13 @@ const AdminDashboard: React.FC = () => {
         total_sold: Number(scooter.total_sold ?? 0),
         units_in_stock: Number(scooter.units_in_stock ?? 0),
         warranty_period_months: Number(scooter.warranty_period_months ?? 12),
-        // Set default values for advanced features (will be false if columns don't exist)
-        smart_display: Boolean(scooter.smart_display ?? false),
-        gps_navigation: Boolean(scooter.gps_navigation ?? false),
-        anti_theft_system: Boolean(scooter.anti_theft_system ?? false),
-        mobile_app_connectivity: Boolean(scooter.mobile_app_connectivity ?? false),
-        led_lighting_system: Boolean(scooter.led_lighting_system ?? false),
-        regenerative_braking: Boolean(scooter.regenerative_braking ?? false),
+        // Set default values for advanced features (properly handle boolean values)
+        smart_display: scooter.smart_display === true || String(scooter.smart_display) === 'true',
+        gps_navigation: scooter.gps_navigation === true || String(scooter.gps_navigation) === 'true',
+        anti_theft_system: scooter.anti_theft_system === true || String(scooter.anti_theft_system) === 'true',
+        mobile_app_connectivity: scooter.mobile_app_connectivity === true || String(scooter.mobile_app_connectivity) === 'true',
+        led_lighting_system: scooter.led_lighting_system === true || String(scooter.led_lighting_system) === 'true',
+        regenerative_braking: scooter.regenerative_braking === true || String(scooter.regenerative_braking) === 'true',
         // Set default values for technical specs (will be empty if columns don't exist)
         // Use legacy fields if new fields don't exist yet
         motor_output: getMotorOutput(scooter.motor_output as string, scooter.power_output as string),
@@ -694,13 +694,6 @@ const AdminDashboard: React.FC = () => {
         {/* Advanced Features */}
         <div className="mt-4">
           <h3 className="text-lg font-semibold mb-2">Advanced Features</h3>
-          <div className="bg-yellow-100 border border-yellow-400 text-yellow-800 px-4 py-3 rounded mb-4">
-            <p className="text-sm">
-              <strong>Note:</strong> Advanced features are for display purposes only. 
-              The database columns for these features need to be added to store them permanently.
-              Basic scooter information will be saved successfully.
-            </p>
-          </div>
           <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
             <label className="flex items-center space-x-2">
               <input type="checkbox" name="smart_display" checked={formData.smart_display} onChange={handleChange} />
@@ -732,13 +725,6 @@ const AdminDashboard: React.FC = () => {
         {/* Technical Specifications */}
         <div className="mt-4">
           <h3 className="text-lg font-semibold mb-2">Technical Specifications</h3>
-          <div className="bg-blue-100 border border-blue-400 text-blue-800 px-4 py-3 rounded mb-4">
-            <p className="text-sm">
-              <strong>Note:</strong> Technical specifications are for display purposes only. 
-              The database columns for these specs need to be added to store them permanently.
-              Basic scooter information will be saved successfully.
-            </p>
-          </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
               <h4 className="font-semibold mb-2">Performance</h4>
