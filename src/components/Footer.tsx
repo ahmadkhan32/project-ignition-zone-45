@@ -46,9 +46,9 @@ export const Footer = () => {
           <div className="lg:col-span-2">
             <div className="flex items-center space-x-2 mb-6">
               <img
-                src="/assets/logo.png"
-                alt="EvolutionEV Logo"
-                className="w-10 h-10 object-contain"
+                src="https://i.postimg.cc/xCXqFP7P/Gemini-Generated-Image-mzq9i9mzq9i9mzq9.png"
+                alt="EV INN Logo"
+                className="w-8 h-8 object-contain"
               />
               <span className="font-display font-bold text-xl text-foreground">EvolutionEV</span>
             </div>
