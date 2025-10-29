@@ -45,7 +45,7 @@ const ContactSalesPage = () => {
       title: "WhatsApp",
       description: "Instant messaging and quick responses",
       action: "Chat Now",
-      link: "https://wa.me/923100004068?text=Hi! I'm interested in EvolutionEV scooters and would like to speak with your sales team.",
+      link: "https://wa.me/923311115295?text=Hi! I'm interested in EV INN scooters and would like to speak with your sales team.",
       primary: true
     },
     {
@@ -53,7 +53,7 @@ const ContactSalesPage = () => {
       title: "Email",
       description: "Detailed inquiries and documents",
       action: "Send Email",
-      link: "mailto:zroxweb@gmail.com",
+      link: "",
       primary: false
     },
     {
@@ -88,7 +88,7 @@ const ContactSalesPage = () => {
       const validatedData = contactSalesSchema.parse(formData);
       
       // Format WhatsApp message
-      const message = `💼 *EvolutionEV Sales Inquiry*
+      const message = `💼 *EV INN Sales Inquiry*
 
 📝 *Customer Details:*
 • Name: ${validatedData.firstName} ${validatedData.lastName}
@@ -106,7 +106,7 @@ ${validatedData.message ? `💬 *Message:*\n${validatedData.message}\n\n` : ''}�
 Thank you!`;
 
       // Open WhatsApp with formatted message
-      window.open(`https://wa.me/923100004068?text=${encodeURIComponent(message)}`, '_blank');
+      window.open(`https://wa.me/923311115295?text=${encodeURIComponent(message)}`, '_blank');
       
       toast({
         title: "Sales inquiry sent!",
@@ -140,15 +140,15 @@ Thank you!`;
   };
 
   const handleWhatsApp = () => {
-    const message = "Hi! I'm interested in EvolutionEV scooters and would like to speak with your sales team about pricing and options.";
-    window.open(`https://wa.me/923100004068?text=${encodeURIComponent(message)}`, '_blank');
+    const message = "Hi! I'm interested in EV INN scooters and would like to speak with your sales team about pricing and options.";
+    window.open(`https://wa.me/923311115295?text=${encodeURIComponent(message)}`, '_blank');
   };
 
   return (
     <div className="min-h-screen bg-background">
       <NavigationBar />
       
-      <main className="pt-16">
+      <main className="pt-20 md:pt-24">
         {/* Hero Section */}
         <section className="py-16 bg-gradient-to-b from-primary/5 to-background">
           <div className="container mx-auto px-4">
@@ -375,7 +375,7 @@ Thank you!`;
                           className="w-full py-6"
                         >
                           <Phone className="w-5 h-5 mr-2" />
-                          Contact via WhatsApp: +92 310 000 4068
+                          Contact via WhatsApp: +92 3311115295
                         </Button>
                       </div>
                     </div>
@@ -413,20 +413,11 @@ Thank you!`;
                     <div className="border-t border-border pt-3 mt-3">
                       <p className="text-muted-foreground mb-2">WhatsApp Support</p>
                       <a 
-                        href="https://wa.me/923100004068"
+                        href="https://wa.me/923311115295"
                         className="text-xl font-bold text-primary hover:text-primary-glow flex items-center"
                       >
                         <Phone className="w-5 h-5 mr-2" />
-                        +92 310 000 4068
-                      </a>
-                    </div>
-                    <div>
-                      <p className="text-muted-foreground mb-2">Sales Email</p>
-                      <a 
-                        href="mailto:zroxweb@gmail.com"
-                        className="text-lg font-semibold text-primary hover:text-primary-glow"
-                      >
-                        zroxweb@gmail.com
+                        +92 3311115295
                       </a>
                     </div>
                     <div>
@@ -472,6 +463,40 @@ Thank you!`;
                     </div>
                   </CardContent>
                 </Card>
+              </div>
+              
+              {/* Social Media */}
+              <div className="text-center mt-16">
+                <h3 className="text-2xl font-bold mb-4">Connect With Us</h3>
+                <p className="text-muted-foreground mb-8">
+                  Follow EV INN for updates and news
+                </p>
+                <div className="flex justify-center items-center space-x-6">
+                  <a
+                    href="https://www.facebook.com/share/14MUdGKi18L/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="group"
+                  >
+                    <div className="relative w-20 h-20 bg-gradient-to-br from-primary/20 to-primary-glow/20 border-2 border-primary/30 rounded-2xl flex flex-col items-center justify-center text-primary hover:text-primary-foreground hover:border-primary hover:shadow-2xl hover:shadow-primary/50 transition-all duration-300 hover:scale-110 overflow-hidden">
+                      <span className="absolute inset-0 bg-gradient-to-br from-primary to-primary-glow opacity-0 group-hover:opacity-100 transition-opacity duration-300"></span>
+                      <MessageCircle className="w-8 h-8 relative z-10 mb-1" />
+                      <span className="text-xs font-semibold relative z-10">Facebook</span>
+                    </div>
+                  </a>
+                  <a
+                    href="https://www.instagram.com/evinn_pakistan?igsh=cHp5Z2N4MGdoZ3R4"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="group"
+                  >
+                    <div className="relative w-20 h-20 bg-gradient-to-br from-primary/20 to-primary-glow/20 border-2 border-primary/30 rounded-2xl flex flex-col items-center justify-center text-primary hover:text-primary-foreground hover:border-primary hover:shadow-2xl hover:shadow-primary/50 transition-all duration-300 hover:scale-110 overflow-hidden">
+                      <span className="absolute inset-0 bg-gradient-to-br from-primary to-primary-glow opacity-0 group-hover:opacity-100 transition-opacity duration-300"></span>
+                      <Users className="w-8 h-8 relative z-10 mb-1" />
+                      <span className="text-xs font-semibold relative z-10">Instagram</span>
+                    </div>
+                  </a>
+                </div>
               </div>
             </div>
           </div>

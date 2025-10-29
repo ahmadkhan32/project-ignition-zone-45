@@ -105,13 +105,13 @@ export default function ScootersPage() {
 
   const handleTestRide = (scooterId: string, scooterName: string) => {
     const message = `Hi! I'm interested in scheduling a test ride for the ${scooterName}. Could you please help me with the booking?`;
-    const whatsappUrl = `https://wa.me/+923100004068?text=${encodeURIComponent(message)}`;
+    const whatsappUrl = `https://wa.me/+923311115295?text=${encodeURIComponent(message)}`;
     window.open(whatsappUrl, '_blank');
   };
 
   const handlePreOrder = (scooterId: string, scooterName: string) => {
     const message = `Hi! I'd like to pre-order the ${scooterName}. Please provide me with more details about the process and pricing.`;
-    const whatsappUrl = `https://wa.me/+923100004068?text=${encodeURIComponent(message)}`;
+    const whatsappUrl = `https://wa.me/+923311115295?text=${encodeURIComponent(message)}`;
     window.open(whatsappUrl, '_blank');
   };
 
@@ -131,7 +131,7 @@ export default function ScootersPage() {
     <div className="min-h-screen bg-background">
       <NavigationBar />
       
-      <main className="pt-20">
+      <main className="pt-20 md:pt-24">
         {/* Hero Section */}
         <section className="py-16 bg-gradient-to-br from-background via-background to-muted">
           <div className="container mx-auto px-4 text-center">

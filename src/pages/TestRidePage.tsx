@@ -70,7 +70,7 @@ const TestRidePage = () => {
       const validatedData = testRideSchema.parse(formData);
       
       // Format WhatsApp message
-      const message = `🏍️ *EvolutionEV Test Ride Booking*
+      const message = `🏍️ *EV INN Test Ride Booking*
 
 📝 *Customer Details:*
 • Name: ${validatedData.firstName} ${validatedData.lastName}
@@ -88,7 +88,7 @@ ${validatedData.message ? `💬 *Special Requirements:*\n${validatedData.message
 Thank you!`;
 
       // Open WhatsApp with formatted message
-      window.open(`https://wa.me/923100004068?text=${encodeURIComponent(message)}`, '_blank');
+      window.open(`https://wa.me/923311115295?text=${encodeURIComponent(message)}`, '_blank');
       
       toast({
         title: "Test ride request sent!",
@@ -122,15 +122,15 @@ Thank you!`;
   };
 
   const handleWhatsApp = () => {
-    const message = "Hi! I'd like to schedule a test ride for an EvolutionEV scooter. What dates are available?";
-    window.open(`https://wa.me/923100004068?text=${encodeURIComponent(message)}`, '_blank');
+    const message = "Hi! I'd like to schedule a test ride for an EV INN scooter. What dates are available?";
+    window.open(`https://wa.me/923311115295?text=${encodeURIComponent(message)}`, '_blank');
   };
 
   return (
     <div className="min-h-screen bg-background">
       <NavigationBar />
       
-      <main className="pt-16">
+      <main className="pt-20 md:pt-24">
         {/* Hero Section */}
         <section className="py-16 bg-gradient-to-b from-primary/5 to-background">
           <div className="container mx-auto px-4">
@@ -141,7 +141,7 @@ Thank you!`;
               </h1>
               <p className="text-xl text-muted-foreground mb-8 max-w-2xl mx-auto">
                 Experience the future of electric mobility. Book a free test ride and discover 
-                why EvolutionEV is leading the electric revolution.
+                why EV INN is leading the electric revolution.
               </p>
               
               <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
@@ -252,9 +252,9 @@ Thank you!`;
                             <SelectValue placeholder="Select a model to test" />
                           </SelectTrigger>
                           <SelectContent>
-                            <SelectItem value="evolution-x">Evolution X</SelectItem>
-                            <SelectItem value="evolution-pro">Evolution Pro</SelectItem>
-                            <SelectItem value="evolution-max">Evolution Max</SelectItem>
+                            <SelectItem value="ev-inn-x">EV INN X</SelectItem>
+                            <SelectItem value="ev-inn-pro">EV INN Pro</SelectItem>
+                            <SelectItem value="ev-inn-max">EV INN Max</SelectItem>
                             <SelectItem value="any">Any Available Model</SelectItem>
                           </SelectContent>
                         </Select>
@@ -327,7 +327,7 @@ Thank you!`;
                           className="w-full py-6"
                         >
                           <Phone className="w-5 h-5 mr-2" />
-                          Book via WhatsApp: +92 310 000 4068
+                          Book via WhatsApp: +92 3311115295
                         </Button>
                       </div>
                     </div>
@@ -392,11 +392,11 @@ Thank you!`;
                   Ready to experience the future? Contact us now!
                 </p>
                 <a 
-                  href="https://wa.me/923100004068"
+                  href="https://wa.me/923311115295"
                   className="inline-flex items-center text-primary hover:text-primary-glow text-xl font-semibold"
                 >
                   <Phone className="w-6 h-6 mr-2" />
-                  +92 310 000 4068 (WhatsApp)
+                  +92 3311115295 (WhatsApp)
                 </a>
               </div>
             </div>

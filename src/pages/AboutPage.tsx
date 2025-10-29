@@ -40,7 +40,7 @@ const milestones = [
   {
     year: "2018",
     title: "Foundation",
-    description: "EvolutionEV founded with a vision to revolutionize urban mobility."
+    description: "EV INN founded with a vision to revolutionize urban mobility."
   },
   {
     year: "2019",
@@ -118,7 +118,7 @@ export default function AboutPage() {
     <div className="min-h-screen bg-background">
       <NavigationBar />
       
-      <main className="pt-20">
+      <main className="pt-20 md:pt-24">
         {/* Hero Section */}
         <section className="py-20 bg-gradient-to-br from-background via-background to-muted">
           <div className="container mx-auto px-4">
@@ -128,7 +128,7 @@ export default function AboutPage() {
                   About
                 </span>
                 <br />
-                EvolutionEV
+                EV INN
               </h1>
               <p className="text-xl text-muted-foreground mb-8">
                 We're revolutionizing urban mobility with cutting-edge electric scooters that combine 
@@ -289,7 +289,7 @@ export default function AboutPage() {
                 Leadership Team
               </h2>
               <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-                Meet the visionaries and innovators driving EvolutionEV forward.
+                Meet the visionaries and innovators driving EV INN forward.
               </p>
             </div>
 
@@ -323,7 +323,7 @@ export default function AboutPage() {
               Join the Electric Revolution
             </h2>
             <p className="text-xl text-muted-foreground mb-8 max-w-2xl mx-auto">
-              Be part of the future of urban mobility. Experience the EvolutionEV difference today.
+              Be part of the future of urban mobility. Experience the EV INN difference today.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Button size="lg" className="glow-button">

@@ -263,7 +263,7 @@ export default function ScooterDetail() {
     <div className="min-h-screen bg-background">
       <NavigationBar />
       
-      <main className="pt-20">
+      <main className="pt-20 md:pt-24">
         {/* Back Button */}
         <div className="container mx-auto px-4 py-6">
           <Button 
@@ -424,7 +424,7 @@ export default function ScooterDetail() {
                     className="border-primary text-primary hover:bg-primary/10"
                     onClick={() => {
                       const message = `Hi! I'm interested in booking a test ride for the ${scooter.name}. Can you please provide more details?`;
-                      const whatsappUrl = `https://wa.me/+923100004068?text=${encodeURIComponent(message)}`;
+                      const whatsappUrl = `https://wa.me/+923311115295?text=${encodeURIComponent(message)}`;
                       window.open(whatsappUrl, '_blank');
                     }}
                   >
@@ -436,7 +436,7 @@ export default function ScooterDetail() {
                     className="border-primary text-primary hover:bg-primary/10"
                     onClick={() => {
                       const message = `Hi! I need support regarding the ${scooter.name}. Can you please help me?`;
-                      const whatsappUrl = `https://wa.me/+923100004068?text=${encodeURIComponent(message)}`;
+                      const whatsappUrl = `https://wa.me/+923311115295?text=${encodeURIComponent(message)}`;
                       window.open(whatsappUrl, '_blank');
                     }}
                   >

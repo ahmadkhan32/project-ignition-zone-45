@@ -4,8 +4,8 @@ import { Link } from "react-router-dom";
 
 export const ModernCTASection = () => {
   const handleWhatsApp = () => {
-    const message = "Hi! I'm interested in learning more about EvolutionEV scooters.";
-    window.open(`https://wa.me/923100004068?text=${encodeURIComponent(message)}`, '_blank');
+    const message = "Hi! I'm interested in learning more about EV INN scooters.";
+    window.open(`https://wa.me/923311115295?text=${encodeURIComponent(message)}`, '_blank');
   };
 
   return (
@@ -130,7 +130,7 @@ export const ModernCTASection = () => {
           <div className="max-w-4xl mx-auto text-center">
             <h2 className="text-3xl font-bold text-foreground mb-6">Join the Electric Revolution</h2>
             <p className="text-xl text-muted-foreground mb-8">
-              Be part of the future of urban mobility. Experience the EvolutionEV difference today.
+              Be part of the future of urban mobility. Experience the EV INN difference today.
             </p>
             
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
@@ -164,7 +164,7 @@ export const ModernCTASection = () => {
                 onClick={handleWhatsApp}
               >
                 <Phone className="w-5 h-5 mr-2" />
-                Emergency: +92 310 000 4068
+                Emergency: +92 3311115295
               </Button>
               <Link to="/live-chat">
                 <Button variant="outline" className="px-8 py-6 text-lg border-primary text-primary hover:bg-primary/10">

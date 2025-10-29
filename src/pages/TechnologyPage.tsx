@@ -142,7 +142,7 @@ export default function TechnologyPage() {
     <div className="min-h-screen bg-background">
       <NavigationBar />
       
-      <main className="pt-20">
+      <main className="pt-20 md:pt-24">
         {/* Hero Section */}
         <section className="py-20 bg-gradient-to-br from-background via-background to-muted">
           <div className="container mx-auto px-4 text-center">

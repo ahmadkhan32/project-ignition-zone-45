@@ -8,9 +8,9 @@ const ShowroomPage = () => {
   const showrooms = [
     {
       id: 1,
-      name: "EvolutionEV Main Showroom",
+      name: "EV INN Main Showroom",
       address: "123 Electric Avenue, Innovation District, Karachi, Pakistan",
-      phone: "+92 310 000 4068",
+      phone: "+92 3311115295",
       hours: {
         weekdays: "9:00 AM - 7:00 PM",
         saturday: "10:00 AM - 6:00 PM",
@@ -22,9 +22,9 @@ const ShowroomPage = () => {
     },
     {
       id: 2,
-      name: "EvolutionEV Lahore Branch",
+      name: "EV INN Lahore Branch",
       address: "456 Future Street, Tech City, Lahore, Pakistan",
-      phone: "+92 310 000 4068",
+      phone: "+92 3311115295",
       hours: {
         weekdays: "9:00 AM - 6:00 PM",
         saturday: "10:00 AM - 5:00 PM",
@@ -36,9 +36,9 @@ const ShowroomPage = () => {
     },
     {
       id: 3,
-      name: "EvolutionEV Islamabad Outlet",
+      name: "EV INN Islamabad Outlet",
       address: "789 Green Boulevard, Capital Heights, Islamabad, Pakistan",
-      phone: "+92 310 000 4068",
+      phone: "+92 3311115295",
       hours: {
         weekdays: "10:00 AM - 6:00 PM",
         saturday: "10:00 AM - 4:00 PM",
@@ -59,7 +59,7 @@ const ShowroomPage = () => {
 
   const handleWhatsApp = (showroomName: string) => {
     const message = `Hi! I'd like to visit the ${showroomName}. Can you help me schedule a visit and provide directions?`;
-    window.open(`https://wa.me/923100004068?text=${encodeURIComponent(message)}`, '_blank');
+    window.open(`https://wa.me/923311115295?text=${encodeURIComponent(message)}`, '_blank');
   };
 
   const handleDirections = (address: string) => {
@@ -71,7 +71,7 @@ const ShowroomPage = () => {
     <div className="min-h-screen bg-background">
       <NavigationBar />
       
-      <main className="pt-16">
+      <main className="pt-20 md:pt-24">
         {/* Hero Section */}
         <section className="py-16 bg-gradient-to-b from-primary/5 to-background">
           <div className="container mx-auto px-4">
@@ -81,7 +81,7 @@ const ShowroomPage = () => {
                 <span className="text-primary"> Showrooms</span>
               </h1>
               <p className="text-xl text-muted-foreground mb-8 max-w-2xl mx-auto">
-                Experience EvolutionEV scooters in person. Visit our showrooms to see, touch, and test ride 
+                Experience EV INN scooters in person. Visit our showrooms to see, touch, and test ride 
                 our complete range of electric scooters.
               </p>
               
@@ -174,7 +174,7 @@ const ShowroomPage = () => {
                         <div className="space-y-2 text-muted-foreground">
                           <p>{showroom.address}</p>
                           <a 
-                            href={`https://wa.me/923100004068`}
+                            href={`https://wa.me/923311115295`}
                             className="flex items-center text-primary hover:text-primary-glow"
                           >
                             <Phone className="w-4 h-4 mr-2" />
@@ -234,7 +234,7 @@ const ShowroomPage = () => {
             <div className="max-w-4xl mx-auto text-center">
               <h2 className="text-3xl font-bold mb-8">Ready to Visit?</h2>
               <p className="text-xl text-muted-foreground mb-8">
-                Schedule your visit today and discover why EvolutionEV is the future of electric mobility.
+                Schedule your visit today and discover why EV INN is the future of electric mobility.
               </p>
               
               <div className="grid md:grid-cols-2 gap-8 mb-12">
@@ -269,7 +269,7 @@ const ShowroomPage = () => {
                     <Button 
                       variant="outline" 
                       className="w-full"
-                      onClick={() => handleDirections("EvolutionEV Showroom near me")}
+                      onClick={() => handleDirections("EV INN Showroom near me")}
                     >
                       <MapPin className="w-5 h-5 mr-2" />
                       Find Nearest Location
@@ -283,11 +283,11 @@ const ShowroomPage = () => {
                   Have questions or need directions?
                 </p>
                 <a 
-                  href="https://wa.me/923100004068"
+                  href="https://wa.me/923311115295"
                   className="inline-flex items-center text-primary hover:text-primary-glow text-xl font-semibold"
                 >
                   <Phone className="w-6 h-6 mr-2" />
-                  WhatsApp Us: +92 310 000 4068
+                  WhatsApp Us: +92 3311115295
                 </a>
               </div>
             </div>

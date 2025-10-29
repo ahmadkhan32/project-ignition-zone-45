@@ -141,7 +141,7 @@ export default function GalleryPage() {
     <div className="min-h-screen bg-background">
       <NavigationBar />
       
-      <main className="pt-20">
+      <main className="pt-20 md:pt-24">
         {/* Hero Section */}
         <section className="py-16 bg-gradient-to-br from-background via-background to-muted">
           <div className="container mx-auto px-4 text-center">
@@ -265,7 +265,7 @@ export default function GalleryPage() {
                 </div>
                 <div className="absolute bottom-6 left-6 right-6">
                   <h3 className="text-2xl font-bold text-white mb-2">
-                    EvolutionEV: The Future is Electric
+                    EV INN: The Future is Electric
                   </h3>
                   <p className="text-white/80">
                     Experience the revolution in urban mobility

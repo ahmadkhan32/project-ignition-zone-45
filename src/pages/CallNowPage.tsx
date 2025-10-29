@@ -16,7 +16,7 @@ const CallNowPage = () => {
     {
       name: "Sales Department",
       description: "Product information, pricing, and purchase assistance",
-      number: "+92 310 000 4068",
+      number: "+92 3311115295",
       hours: "9:00 AM - 7:00 PM (Mon-Sat)",
       whatsapp: true,
       primary: true
@@ -24,7 +24,7 @@ const CallNowPage = () => {
     {
       name: "Customer Support",
       description: "Order status, delivery, and general inquiries",
-      number: "+92 310 000 4068",
+      number: "+92 3311115295",
       hours: "9:00 AM - 6:00 PM (Mon-Fri)",
       whatsapp: true,
       primary: false
@@ -32,7 +32,7 @@ const CallNowPage = () => {
     {
       name: "Technical Support",
       description: "Product troubleshooting and technical assistance",
-      number: "+92 310 000 4068",
+      number: "+92 3311115295",
       hours: "10:00 AM - 5:00 PM (Mon-Fri)",
       whatsapp: true,
       primary: false
@@ -45,14 +45,14 @@ const CallNowPage = () => {
 
   const handleWhatsApp = (department: string) => {
     const message = `Hi! I'd like to speak with someone from ${department}. When is the best time to call?`;
-    window.open(`https://wa.me/923100004068?text=${encodeURIComponent(message)}`, '_blank');
+    window.open(`https://wa.me/923311115295?text=${encodeURIComponent(message)}`, '_blank');
   };
 
   return (
     <div className="min-h-screen bg-background">
       <NavigationBar />
       
-      <main className="pt-16">
+      <main className="pt-20 md:pt-24">
         {/* Hero Section */}
         <section className="py-16 bg-gradient-to-b from-primary/5 to-background">
           <div className="container mx-auto px-4">
@@ -63,16 +63,16 @@ const CallNowPage = () => {
               </h1>
               <p className="text-xl text-muted-foreground mb-8 max-w-2xl mx-auto">
                 Speak directly with our expert team. Get immediate answers to your questions 
-                about EvolutionEV scooters, pricing, and services.
+                about EV INN scooters, pricing, and services.
               </p>
               
               <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
                 <Button 
-                  onClick={() => handleCall("+923100004068")}
+                  onClick={() => handleCall("+923311115295")}
                   className="glow-button px-8 py-6 text-lg"
                 >
                   <Phone className="w-5 h-5 mr-2" />
-                  Call Now: +92 310 000 4068
+                  Call Now: +92 3311115295
                 </Button>
                 <Button 
                   variant="outline" 
@@ -261,15 +261,15 @@ const CallNowPage = () => {
               <div className="text-center mt-12">
                 <h3 className="text-2xl font-bold mb-4">Ready to Call?</h3>
                 <p className="text-muted-foreground mb-6">
-                  Our friendly team is standing by to help you find the perfect EvolutionEV scooter
+                  Our friendly team is standing by to help you find the perfect EV INN scooter
                 </p>
                 <div className="flex flex-col sm:flex-row gap-4 justify-center">
                   <Button 
                     className="glow-button px-8 py-4 text-lg"
-                    onClick={() => handleCall("+923100004068")}
+                    onClick={() => handleCall("+923311115295")}
                   >
                     <Phone className="w-5 h-5 mr-2" />
-                    Call Now: +92 310 000 4068
+                    Call Now: +92 3311115295
                   </Button>
                   <Button 
                     variant="outline" 
@@ -312,7 +312,7 @@ const CallNowPage = () => {
                   
                   <div className="mt-6 p-4 bg-primary/10 rounded-lg">
                     <p className="text-primary font-semibold">
-                      Outside of phone hours? WhatsApp us anytime at +92 310 000 4068
+                      Outside of phone hours? WhatsApp us anytime at +92 3311115295
                     </p>
                   </div>
                 </CardContent>

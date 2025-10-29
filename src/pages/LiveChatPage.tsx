@@ -15,8 +15,8 @@ const LiveChatPage = () => {
   ];
 
   const handleWhatsApp = () => {
-    const message = "Hi! I'd like to start a live chat about EvolutionEV scooters. I have some questions about your products.";
-    window.open(`https://wa.me/923100004068?text=${encodeURIComponent(message)}`, '_blank');
+    const message = "Hi! I'd like to start a live chat about EV INN scooters. I have some questions about your products.";
+    window.open(`https://wa.me/923311115295?text=${encodeURIComponent(message)}`, '_blank');
   };
 
   const handleStartChat = () => {
@@ -28,7 +28,7 @@ const LiveChatPage = () => {
     <div className="min-h-screen bg-background">
       <NavigationBar />
       
-      <main className="pt-16">
+      <main className="pt-20 md:pt-24">
         {/* Hero Section */}
         <section className="py-16 bg-gradient-to-b from-primary/5 to-background">
           <div className="container mx-auto px-4">
@@ -39,7 +39,7 @@ const LiveChatPage = () => {
               </h1>
               <p className="text-xl text-muted-foreground mb-8 max-w-2xl mx-auto">
                 Get instant help from our support team. Chat with real experts who can answer 
-                your questions about EvolutionEV scooters in real-time.
+                your questions about EV INN scooters in real-time.
               </p>
               
               <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
@@ -112,7 +112,7 @@ const LiveChatPage = () => {
                       </div>
                       <div className="flex items-center text-sm text-muted-foreground">
                         <Phone className="w-4 h-4 mr-2" />
-                        +92 310 000 4068
+                        +92 3311115295
                       </div>
                       <div className="flex items-center text-sm text-muted-foreground">
                         <Zap className="w-4 h-4 mr-2" />
@@ -211,7 +211,7 @@ const LiveChatPage = () => {
                     </div>
                     <div className="flex justify-between items-center">
                       <span className="text-muted-foreground">Direct Number:</span>
-                      <span className="font-semibold">+92 310 000 4068</span>
+                      <span className="font-semibold">+92 3311115295</span>
                     </div>
                     <div className="mt-4 p-3 bg-primary/10 rounded-lg">
                       <p className="text-sm text-primary font-semibold">
@@ -235,11 +235,11 @@ const LiveChatPage = () => {
                     Start WhatsApp Chat
                   </Button>
                   <a 
-                    href="tel:+923100004068"
+                    href="tel:+923311115295"
                     className="inline-flex items-center justify-center px-8 py-4 border border-border rounded-lg hover:bg-accent hover:text-accent-foreground transition-colors"
                   >
                     <Phone className="w-5 h-5 mr-2" />
-                    Call Now: +92 310 000 4068
+                    Call Now: +92 3311115295
                   </a>
                 </div>
               </div>

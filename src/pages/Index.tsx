@@ -179,18 +179,9 @@ const Index = () => {
   return (
     <div className="min-h-screen bg-background">
       <NavigationBar />
-      
-      {/* Admin Access Banner - Only show for authenticated users */}
-      {user && (
-        <div className="bg-gradient-to-r from-blue-600 to-purple-600 text-white py-4">
-          <div className="container mx-auto px-4">
-       
-        </div>
-        </div>
-      )}
 
       {/* Quick Access Cards */}
-      <div className="container mx-auto px-4 py-8">
+      <div className="container mx-auto px-4 py-8 mt-20 md:mt-24">
         <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
           <Card className="hover:shadow-lg transition-shadow cursor-pointer" onClick={() => navigate("/scooters")}>
             <CardHeader className="text-center">

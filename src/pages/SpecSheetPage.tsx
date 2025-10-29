@@ -8,8 +8,8 @@ import { Download, FileText, Zap, Battery, Gauge, Weight, Shield, Settings, Phon
 const SpecSheetPage = () => {
   const scooterModels = [
     {
-      id: "evolution-x",
-      name: "Evolution X",
+      id: "ev-inn-x",
+      name: "EV INN X",
       price: "$2,999",
       image: "/api/placeholder/400/300",
       specs: {
@@ -24,8 +24,8 @@ const SpecSheetPage = () => {
       }
     },
     {
-      id: "evolution-pro",
-      name: "Evolution Pro",
+      id: "ev-inn-pro",
+      name: "EV INN Pro",
       price: "$3,999",
       image: "/api/placeholder/400/300",
       specs: {
@@ -40,8 +40,8 @@ const SpecSheetPage = () => {
       }
     },
     {
-      id: "evolution-max",
-      name: "Evolution Max",
+      id: "ev-inn-max",
+      name: "EV INN Max",
       price: "$5,999",
       image: "/api/placeholder/400/300",
       specs: {
@@ -74,15 +74,15 @@ const SpecSheetPage = () => {
   };
 
   const handleWhatsApp = () => {
-    const message = "Hi! I'd like to get detailed specifications and pricing information for EvolutionEV scooters.";
-    window.open(`https://wa.me/923100004068?text=${encodeURIComponent(message)}`, '_blank');
+    const message = "Hi! I'd like to get detailed specifications and pricing information for EV INN scooters.";
+    window.open(`https://wa.me/923311115295?text=${encodeURIComponent(message)}`, '_blank');
   };
 
   return (
     <div className="min-h-screen bg-background">
       <NavigationBar />
       
-      <main className="pt-16">
+      <main className="pt-20 md:pt-24">
         {/* Hero Section */}
         <section className="py-16 bg-gradient-to-b from-primary/5 to-background">
           <div className="container mx-auto px-4">
@@ -93,7 +93,7 @@ const SpecSheetPage = () => {
               </h1>
               <p className="text-xl text-muted-foreground mb-8 max-w-2xl mx-auto">
                 Get detailed technical specifications, performance data, and feature comparisons 
-                for all EvolutionEV scooter models.
+                for all EV INN scooter models.
               </p>
               
               <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
@@ -119,7 +119,7 @@ const SpecSheetPage = () => {
           <div className="container mx-auto px-4">
             <h2 className="text-3xl font-bold text-center mb-12">Model Specifications</h2>
             
-            <Tabs defaultValue="evolution-x" className="max-w-6xl mx-auto">
+            <Tabs defaultValue="ev-inn-x" className="max-w-6xl mx-auto">
               <TabsList className="grid w-full grid-cols-3 mb-8">
                 {scooterModels.map((model) => (
                   <TabsTrigger key={model.id} value={model.id}>
@@ -157,7 +157,7 @@ const SpecSheetPage = () => {
                             onClick={handleWhatsApp}
                           >
                             <Phone className="w-5 h-5 mr-2" />
-                            Get Pricing: +92 310 000 4068
+                            Get Pricing: +92 3311115295
                           </Button>
                         </div>
                       </CardContent>
@@ -291,11 +291,11 @@ const SpecSheetPage = () => {
                   Need custom specifications or have questions?
                 </p>
                 <a 
-                  href="https://wa.me/923100004068"
+                  href="https://wa.me/923311115295"
                   className="inline-flex items-center text-primary hover:text-primary-glow text-xl font-semibold"
                 >
                   <Phone className="w-6 h-6 mr-2" />
-                  Contact Sales: +92 310 000 4068
+                  Contact Sales: +92 3311115295
                 </a>
               </div>
             </div>

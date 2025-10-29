@@ -55,7 +55,7 @@ const PreOrderPage = () => {
       const validatedData = preOrderSchema.parse(formData);
       
       // Format WhatsApp message
-      const message = `🚀 *EvolutionEV Pre-Order Request*
+      const message = `🚀 *EV INN Pre-Order Request*
 
 📝 *Customer Details:*
 • Name: ${validatedData.firstName} ${validatedData.lastName}
@@ -70,7 +70,7 @@ ${validatedData.message ? `💬 *Additional Requirements:*\n${validatedData.mess
 Thank you!`;
 
       // Open WhatsApp with formatted message
-      window.open(`https://wa.me/923100004068?text=${encodeURIComponent(message)}`, '_blank');
+      window.open(`https://wa.me/923311115295?text=${encodeURIComponent(message)}`, '_blank');
       
       toast({
         title: "Pre-order request sent!",
@@ -101,22 +101,22 @@ Thank you!`;
   };
 
   const handleWhatsApp = () => {
-    const message = "Hi! I'm interested in pre-ordering an EvolutionEV scooter. Can you provide me with more details about available models and pricing?";
-    window.open(`https://wa.me/923100004068?text=${encodeURIComponent(message)}`, '_blank');
+    const message = "Hi! I'm interested in pre-ordering an EV INN scooter. Can you provide me with more details about available models and pricing?";
+    window.open(`https://wa.me/923311115295?text=${encodeURIComponent(message)}`, '_blank');
   };
 
   return (
     <div className="min-h-screen bg-background">
       <NavigationBar />
       
-      <main className="pt-16">
+      <main className="pt-20 md:pt-24">
         {/* Hero Section */}
         <section className="py-16 bg-gradient-to-b from-primary/5 to-background">
           <div className="container mx-auto px-4">
             <div className="max-w-4xl mx-auto text-center">
               <h1 className="text-4xl md:text-6xl font-bold text-foreground mb-6">
                 Pre-Order Your
-                <span className="text-primary"> EvolutionEV</span>
+                <span className="text-primary"> EV INN</span>
               </h1>
               <p className="text-xl text-muted-foreground mb-8 max-w-2xl mx-auto">
                 Be among the first to experience the future of electric mobility. 
@@ -231,9 +231,9 @@ Thank you!`;
                             <SelectValue placeholder="Select a model" />
                           </SelectTrigger>
                           <SelectContent>
-                            <SelectItem value="evolution-x">Evolution X - $2,999</SelectItem>
-                            <SelectItem value="evolution-pro">Evolution Pro - $3,999</SelectItem>
-                            <SelectItem value="evolution-max">Evolution Max - $5,999</SelectItem>
+                            <SelectItem value="ev-inn-x">EV INN X - $2,999</SelectItem>
+                            <SelectItem value="ev-inn-pro">EV INN Pro - $3,999</SelectItem>
+                            <SelectItem value="ev-inn-max">EV INN Max - $5,999</SelectItem>
                           </SelectContent>
                         </Select>
                         {errors.model && <p className="text-sm text-destructive mt-1">{errors.model}</p>}
@@ -263,7 +263,7 @@ Thank you!`;
                           className="w-full py-6"
                         >
                           <Phone className="w-5 h-5 mr-2" />
-                          Contact via WhatsApp: +92 310 000 4068
+                          Contact via WhatsApp: +92 3311115295
                         </Button>
                       </div>
                     </div>
@@ -279,25 +279,7 @@ Thank you!`;
           <div className="container mx-auto px-4">
             <div className="max-w-4xl mx-auto">
               <h2 className="text-3xl font-bold text-center mb-12">Need Help?</h2>
-              <div className="grid md:grid-cols-2 gap-8">
-                <Card className="text-center">
-                  <CardHeader>
-                    <Mail className="w-8 h-8 text-primary mx-auto mb-4" />
-                    <CardTitle>Email Us</CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <p className="text-muted-foreground mb-4">
-                      Send us your requirements
-                    </p>
-                    <a 
-                      href="mailto:zroxweb@gmail.com"
-                      className="text-primary hover:text-primary-glow font-semibold"
-                    >
-                      zroxweb@gmail.com
-                    </a>
-                  </CardContent>
-                </Card>
-                
+              <div className="grid md:grid-cols-1 gap-8">
                 <Card className="text-center">
                   <CardHeader>
                     <MapPin className="w-8 h-8 text-primary mx-auto mb-4" />
@@ -322,12 +304,46 @@ Thank you!`;
                   Questions about pre-ordering? We're here to help!
                 </p>
                 <a 
-                  href="https://wa.me/923100004068"
+                  href="https://wa.me/923311115295"
                   className="inline-flex items-center text-primary hover:text-primary-glow text-xl font-semibold"
                 >
                   <Phone className="w-6 h-6 mr-2" />
-                  +92 310 000 4068 (WhatsApp)
+                  +92 3311115295 (WhatsApp)
                 </a>
+              </div>
+
+              {/* Social Media */}
+              <div className="text-center mt-16">
+                <h3 className="text-2xl font-bold mb-4">Follow Us</h3>
+                <p className="text-muted-foreground mb-8">
+                  Stay updated with EV INN on social media
+                </p>
+                <div className="flex justify-center items-center space-x-6">
+                  <a
+                    href="https://www.facebook.com/share/14MUdGKi18L/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="group"
+                  >
+                    <div className="relative w-20 h-20 bg-gradient-to-br from-primary/20 to-primary-glow/20 border-2 border-primary/30 rounded-2xl flex flex-col items-center justify-center text-primary hover:text-primary-foreground hover:border-primary hover:shadow-2xl hover:shadow-primary/50 transition-all duration-300 hover:scale-110 overflow-hidden">
+                      <span className="absolute inset-0 bg-gradient-to-br from-primary to-primary-glow opacity-0 group-hover:opacity-100 transition-opacity duration-300"></span>
+                      <MessageCircle className="w-8 h-8 relative z-10 mb-1" />
+                      <span className="text-xs font-semibold relative z-10">Facebook</span>
+                    </div>
+                  </a>
+                  <a
+                    href="https://www.instagram.com/evinn_pakistan?igsh=cHp5Z2N4MGdoZ3R4"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="group"
+                  >
+                    <div className="relative w-20 h-20 bg-gradient-to-br from-primary/20 to-primary-glow/20 border-2 border-primary/30 rounded-2xl flex flex-col items-center justify-center text-primary hover:text-primary-foreground hover:border-primary hover:shadow-2xl hover:shadow-primary/50 transition-all duration-300 hover:scale-110 overflow-hidden">
+                      <span className="absolute inset-0 bg-gradient-to-br from-primary to-primary-glow opacity-0 group-hover:opacity-100 transition-opacity duration-300"></span>
+                      <Mail className="w-8 h-8 relative z-10 mb-1" />
+                      <span className="text-xs font-semibold relative z-10">Instagram</span>
+                    </div>
+                  </a>
+                </div>
               </div>
             </div>
           </div>

@@ -1,4 +1,4 @@
-import { Facebook, Twitter, Instagram, Youtube, Mail, MapPin, Phone } from "lucide-react";
+import { Facebook, Instagram, Mail, MapPin, Phone } from "lucide-react";
 
 export const Footer = () => {
   const currentYear = new Date().getFullYear();
@@ -31,10 +31,8 @@ export const Footer = () => {
   };
 
   const socialLinks = [
-    { icon: Facebook, href: "#", label: "Facebook" },
-    { icon: Twitter, href: "#", label: "Twitter" },
-    { icon: Instagram, href: "#", label: "Instagram" },
-    { icon: Youtube, href: "#", label: "YouTube" },
+    { icon: Facebook, href: "https://www.facebook.com/share/14MUdGKi18L/", label: "Facebook" },
+    { icon: Instagram, href: "https://www.instagram.com/evinn_pakistan?igsh=cHp5Z2N4MGdoZ3R4", label: "Instagram" },
   ];
 
   return (
@@ -44,13 +42,13 @@ export const Footer = () => {
         <div className="grid lg:grid-cols-5 gap-8 mb-12">
           {/* Company Info */}
           <div className="lg:col-span-2">
-            <div className="flex items-center space-x-2 mb-6">
+            <div className="flex items-center mb-6">
               <img
-                src="https://i.postimg.cc/xCXqFP7P/Gemini-Generated-Image-mzq9i9mzq9i9mzq9.png"
+                src="https://i.postimg.cc/q7ggYBPn/Chat-GPT-Image-Oct-29-2025-08-07-29-PM.png"
                 alt="EV INN Logo"
-                className="w-12 h-16 object-contain"
+                className="h-20 md:h-24 w-auto object-contain"
+                style={{ imageRendering: 'crisp-edges' }}
               />
-              <span className="font-display font-bold text-xl text-foreground">EvolutionEV</span>
             </div>
             
             <p className="text-muted-foreground mb-6 max-w-md">
@@ -65,16 +63,12 @@ export const Footer = () => {
                 <span>123 Electric Avenue, Future City, FC 12345</span>
               </div>
               <a 
-                href="https://wa.me/923100004068"
+                href="https://wa.me/923311115295"
                 className="flex items-center space-x-3 text-muted-foreground hover:text-primary transition-colors duration-300"
               >
                 <Phone className="w-4 h-4 text-primary" />
-                <span>+92 310 000 4068 (WhatsApp)</span>
+                <span>+92 3311115295 (WhatsApp)</span>
               </a>
-              <div className="flex items-center space-x-3 text-muted-foreground">
-                <Mail className="w-4 h-4 text-primary" />
-                <span>zroxweb@gmail.com</span>
-              </div>
             </div>
           </div>
 
@@ -134,7 +128,7 @@ export const Footer = () => {
         <div className="bg-card/50 backdrop-blur-sm border border-border rounded-2xl p-8 mb-12">
           <div className="max-w-2xl mx-auto text-center">
             <h3 className="text-2xl font-bold text-foreground mb-4">
-              Stay Updated with EvolutionEV
+              Stay Updated with EV INN
             </h3>
             <p className="text-muted-foreground mb-6">
               Get the latest news about new models, features, and exclusive offers.
@@ -157,7 +151,7 @@ export const Footer = () => {
           <div className="flex flex-col md:flex-row justify-between items-center gap-6">
             {/* Copyright */}
             <div className="text-muted-foreground text-center md:text-left">
-              <p>&copy; {currentYear} EvolutionEV. All rights reserved.</p>
+              <p>&copy; {currentYear} EV INN. All rights reserved.</p>
             </div>
 
             {/* Social Links */}
@@ -166,10 +160,13 @@ export const Footer = () => {
                 <a
                   key={label}
                   href={href}
+                  target="_blank"
+                  rel="noopener noreferrer"
                   aria-label={label}
-                  className="w-10 h-10 bg-card border border-border rounded-full flex items-center justify-center text-muted-foreground hover:text-primary hover:border-primary/50 hover:shadow-glow transition-all duration-300 hover:scale-110"
+                  className="relative group w-12 h-12 bg-gradient-to-br from-primary/20 to-primary-glow/20 border-2 border-primary/30 rounded-full flex items-center justify-center text-primary hover:text-primary-foreground hover:border-primary hover:shadow-lg hover:shadow-primary/50 transition-all duration-300 hover:scale-110 overflow-hidden"
                 >
-                  <Icon className="w-4 h-4" />
+                  <span className="absolute inset-0 bg-gradient-to-br from-primary to-primary-glow opacity-0 group-hover:opacity-100 transition-opacity duration-300"></span>
+                  <Icon className="w-5 h-5 relative z-10" />
                 </a>
               ))}
             </div>

@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { ArrowRight, Mail, Phone } from "lucide-react";
+import { ArrowRight, Phone } from "lucide-react";
 
 export const CTASection = () => {
   return (
@@ -62,23 +62,7 @@ export const CTASection = () => {
           </div>
 
           {/* Contact Information */}
-          <div className="grid md:grid-cols-2 gap-8 mb-16">
-            <div className="bg-card/50 backdrop-blur-sm border border-border rounded-xl p-6 hover:border-primary/30 transition-all duration-300 hover:shadow-glow">
-              <div className="w-12 h-12 bg-gradient-to-br from-primary to-primary-glow rounded-xl flex items-center justify-center mb-4 mx-auto">
-                <Mail className="w-6 h-6 text-primary-foreground" />
-              </div>
-              <h3 className="text-lg font-semibold mb-2 text-foreground">Email Us</h3>
-              <p className="text-muted-foreground mb-4">
-                Get personalized recommendations from our experts
-              </p>
-              <a 
-                href="mailto:zroxweb@gmail.com" 
-                className="text-primary hover:text-primary-glow transition-colors duration-300 font-medium"
-              >
-                zroxweb@gmail.com
-              </a>
-            </div>
-
+          <div className="grid md:grid-cols-1 gap-8 mb-16 max-w-md mx-auto">
             <div className="bg-card/50 backdrop-blur-sm border border-border rounded-xl p-6 hover:border-primary/30 transition-all duration-300 hover:shadow-glow">
               <div className="w-12 h-12 bg-gradient-to-br from-primary to-primary-glow rounded-xl flex items-center justify-center mb-4 mx-auto">
                 <Phone className="w-6 h-6 text-primary-foreground" />
@@ -88,12 +72,12 @@ export const CTASection = () => {
                 Get instant support and quick responses
               </p>
               <a 
-                href="https://wa.me/923100004068" 
+                href="https://wa.me/923311115295" 
                 className="text-primary hover:text-primary-glow transition-colors duration-300 font-medium"
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                +92 310 000 4068
+                +92 3311115295
               </a>
             </div>
           </div>
