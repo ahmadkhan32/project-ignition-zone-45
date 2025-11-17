@@ -158,7 +158,7 @@ export const ModernCTASection = () => {
               For urgent support or roadside assistance, contact our 24/7 emergency hotline.
             </p>
             
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <div className="flex flex-col sm:flex-row gap-4 justify-center mb-8">
               <Button 
                 className="glow-button px-8 py-6 text-lg"
                 onClick={handleWhatsApp}
@@ -172,6 +172,17 @@ export const ModernCTASection = () => {
                   Live Chat Support
                 </Button>
               </Link>
+            </div>
+
+            <div className="mt-6">
+              <Button 
+                variant="outline" 
+                className="px-8 py-6 text-lg border-primary text-primary hover:bg-primary/10"
+                onClick={() => window.open('https://www.google.com/maps/place/29%C2%B022\'03.4%22N+71%C2%B041\'39.8%22E/@29.3677971,71.6941323,17z/data=!4m4!3m3!8m2!3d29.3676131!4d71.6943746?entry=ttu&g_ep=EgoyMDI1MTExMi4wIKXMDSoASAFQAw%3D%3D', '_blank')}
+              >
+                <MapPin className="w-5 h-5 mr-2" />
+                View Our Location
+              </Button>
             </div>
           </div>
         </div>

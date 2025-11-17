@@ -405,6 +405,13 @@ ${validatedData.message}
                           123 Electric Avenue<br />
                           Future City, FC 12345
                         </p>
+                        <Button 
+                          variant="link" 
+                          className="px-0 mt-2 text-primary hover:text-primary-glow"
+                          onClick={() => window.open('https://www.google.com/maps/place/29%C2%B022\'03.4%22N+71%C2%B041\'39.8%22E/@29.3677971,71.6941323,17z/data=!4m4!3m3!8m2!3d29.3676131!4d71.6943746?entry=ttu&g_ep=EgoyMDI1MTExMi4wIKXMDSoASAFQAw%3D%3D', '_blank')}
+                        >
+                          View on Google Maps →
+                        </Button>
                       </div>
                     </div>
                     
