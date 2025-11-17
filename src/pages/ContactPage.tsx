@@ -397,22 +397,32 @@ ${validatedData.message}
                       </div>
                     </div>
                     
-                    <div className="flex items-start space-x-3">
-                      <MapPin className="w-5 h-5 text-primary mt-0.5" />
-                      <div>
-                        <p className="font-medium">Address</p>
-                        <p className="text-muted-foreground">
-                          123 Electric Avenue<br />
-                          Future City, FC 12345
-                        </p>
-                        <Button 
-                          variant="link" 
-                          className="px-0 mt-2 text-primary hover:text-primary-glow"
-                          onClick={() => window.open('https://www.google.com/maps/place/29%C2%B022\'03.4%22N+71%C2%B041\'39.8%22E/@29.3677971,71.6941323,17z/data=!4m4!3m3!8m2!3d29.3676131!4d71.6943746?entry=ttu&g_ep=EgoyMDI1MTExMi4wIKXMDSoASAFQAw%3D%3D', '_blank')}
-                        >
-                          View on Google Maps →
-                        </Button>
+                    <div className="space-y-2">
+                      <div className="flex items-center space-x-2 mb-2">
+                        <MapPin className="w-5 h-5 text-primary" />
+                        <p className="font-medium">Our Location</p>
                       </div>
+                      <div className="w-full h-[200px] rounded-lg overflow-hidden border border-border">
+                        <iframe
+                          src="https://www.google.com/maps/embed?pb=!1m17!1m12!1m3!1d3418.5823895825877!2d71.69413231512475!3d29.367797099999997!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m2!1m1!2s!5e0!3m2!1sen!2s!4v1699999999999!5m2!1sen!2s"
+                          width="100%"
+                          height="100%"
+                          style={{ border: 0 }}
+                          allowFullScreen
+                          loading="lazy"
+                          referrerPolicy="no-referrer-when-downgrade"
+                          title="EV INN Location"
+                        ></iframe>
+                      </div>
+                      <Button 
+                        variant="outline" 
+                        size="sm"
+                        className="w-full mt-2"
+                        onClick={() => window.open('https://www.google.com/maps/place/29%C2%B022\'03.4%22N+71%C2%B041\'39.8%22E/@29.3677971,71.6941323,17z/data=!4m4!3m3!8m2!3d29.3676131!4d71.6943746?entry=ttu&g_ep=EgoyMDI1MTExMi4wIKXMDSoASAFQAw%3D%3D', '_blank')}
+                      >
+                        <MapPin className="w-4 h-4 mr-2" />
+                        Open in Google Maps
+                      </Button>
                     </div>
                     
                     <div className="flex items-start space-x-3">
@@ -445,6 +455,46 @@ ${validatedData.message}
                     </div>
                   </CardContent>
                 </Card>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Interactive Map Section */}
+        <section className="py-16 bg-muted/30">
+          <div className="container mx-auto px-4">
+            <div className="max-w-6xl mx-auto">
+              <div className="text-center mb-8">
+                <h2 className="text-3xl font-bold mb-4">Find Us Here</h2>
+                <p className="text-muted-foreground mb-2">
+                  Visit our showroom and experience our electric scooters in person
+                </p>
+                <p className="text-sm text-muted-foreground">
+                  Scroll, zoom, and explore the map to find us easily
+                </p>
+              </div>
+              
+              <div className="w-full h-[400px] md:h-[500px] lg:h-[600px] rounded-2xl overflow-hidden border-2 border-border shadow-2xl">
+                <iframe
+                  src="https://www.google.com/maps/embed?pb=!1m17!1m12!1m3!1d3418.5823895825877!2d71.69413231512475!3d29.367797099999997!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m2!1m1!2s!5e0!3m2!1sen!2s!4v1699999999999!5m2!1sen!2s"
+                  width="100%"
+                  height="100%"
+                  style={{ border: 0 }}
+                  allowFullScreen
+                  loading="lazy"
+                  referrerPolicy="no-referrer-when-downgrade"
+                  title="EV INN Showroom Location"
+                ></iframe>
+              </div>
+              
+              <div className="mt-6 text-center">
+                <Button 
+                  className="glow-button px-8 py-6 text-lg"
+                  onClick={() => window.open('https://www.google.com/maps/place/29%C2%B022\'03.4%22N+71%C2%B041\'39.8%22E/@29.3677971,71.6941323,17z/data=!4m4!3m3!8m2!3d29.3676131!4d71.6943746?entry=ttu&g_ep=EgoyMDI1MTExMi4wIKXMDSoASAFQAw%3D%3D', '_blank')}
+                >
+                  <MapPin className="w-5 h-5 mr-2" />
+                  Get Directions in Google Maps
+                </Button>
               </div>
             </div>
           </div>

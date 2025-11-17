@@ -102,6 +102,46 @@ const ShowroomPage = () => {
           </div>
         </section>
 
+        {/* Interactive Map Section */}
+        <section className="py-16 bg-muted/30">
+          <div className="container mx-auto px-4">
+            <div className="max-w-6xl mx-auto">
+              <div className="text-center mb-8">
+                <h2 className="text-3xl font-bold mb-4">Find Our Showroom</h2>
+                <p className="text-muted-foreground mb-2">
+                  Locate us easily and plan your visit
+                </p>
+                <p className="text-sm text-muted-foreground">
+                  Interactive map - scroll and zoom to explore
+                </p>
+              </div>
+              
+              <div className="w-full h-[400px] md:h-[500px] rounded-2xl overflow-hidden border-2 border-border shadow-2xl">
+                <iframe
+                  src="https://www.google.com/maps/embed?pb=!1m17!1m12!1m3!1d3418.5823895825877!2d71.69413231512475!3d29.367797099999997!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m2!1m1!2s!5e0!3m2!1sen!2s!4v1699999999999!5m2!1sen!2s"
+                  width="100%"
+                  height="100%"
+                  style={{ border: 0 }}
+                  allowFullScreen
+                  loading="lazy"
+                  referrerPolicy="no-referrer-when-downgrade"
+                  title="EV INN Showrooms Map"
+                ></iframe>
+              </div>
+              
+              <div className="mt-6 text-center">
+                <Button 
+                  className="glow-button"
+                  onClick={() => window.open('https://www.google.com/maps/place/29%C2%B022\'03.4%22N+71%C2%B041\'39.8%22E/@29.3677971,71.6941323,17z/data=!4m4!3m3!8m2!3d29.3676131!4d71.6943746?entry=ttu&g_ep=EgoyMDI1MTExMi4wIKXMDSoASAFQAw%3D%3D', '_blank')}
+                >
+                  <MapPin className="w-5 h-5 mr-2" />
+                  Open in Google Maps
+                </Button>
+              </div>
+            </div>
+          </div>
+        </section>
+
         {/* Showroom Features */}
         <section className="py-16">
           <div className="container mx-auto px-4">
@@ -165,17 +205,40 @@ const ShowroomPage = () => {
                   </CardHeader>
                   <CardContent>
                     <div className="grid md:grid-cols-3 gap-6">
-                      {/* Address & Contact */}
+                      {/* Location Map */}
                       <div>
                         <h4 className="font-semibold mb-3 flex items-center">
                           <MapPin className="w-4 h-4 mr-2 text-primary" />
-                          Address & Contact
+                          Location
                         </h4>
-                        <div className="space-y-2 text-muted-foreground">
-                          <p>{showroom.address}</p>
+                        <div className="space-y-2">
+                          <div className="w-full h-[150px] rounded-lg overflow-hidden border border-border">
+                            <iframe
+                              src={showroom.id === 1 
+                                ? "https://www.google.com/maps/embed?pb=!1m17!1m12!1m3!1d3418.5823895825877!2d71.69413231512475!3d29.367797099999997!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m2!1m1!2s!5e0!3m2!1sen!2s!4v1699999999999!5m2!1sen!2s"
+                                : "https://www.google.com/maps/embed?pb=!1m17!1m12!1m3!1d3418.5823895825877!2d71.69413231512475!3d29.367797099999997!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m2!1m1!2s!5e0!3m2!1sen!2s!4v1699999999999!5m2!1sen!2s"
+                              }
+                              width="100%"
+                              height="100%"
+                              style={{ border: 0 }}
+                              allowFullScreen
+                              loading="lazy"
+                              referrerPolicy="no-referrer-when-downgrade"
+                              title={`${showroom.name} Location`}
+                            ></iframe>
+                          </div>
+                          <Button 
+                            variant="link" 
+                            size="sm"
+                            className="px-0 w-full text-primary hover:text-primary-glow"
+                            onClick={() => window.open('https://www.google.com/maps/place/29%C2%B022\'03.4%22N+71%C2%B041\'39.8%22E/@29.3677971,71.6941323,17z/data=!4m4!3m3!8m2!3d29.3676131!4d71.6943746?entry=ttu&g_ep=EgoyMDI1MTExMi4wIKXMDSoASAFQAw%3D%3D', '_blank')}
+                          >
+                            <MapPin className="w-3 h-3 mr-1" />
+                            Get Directions
+                          </Button>
                           <a 
                             href={`https://wa.me/923311115295`}
-                            className="flex items-center text-primary hover:text-primary-glow"
+                            className="flex items-center justify-center text-primary hover:text-primary-glow text-sm"
                           >
                             <Phone className="w-4 h-4 mr-2" />
                             {showroom.phone}
