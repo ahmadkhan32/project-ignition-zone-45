@@ -18,21 +18,21 @@ export const NavigationBar = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-const navItems = [
-  { name: "Home", href: "/" },
-  { name: "Scooters", href: "/scooters" },
-  { name: "Technology", href: "/technology" },
-  { name: "Gallery", href: "/gallery" },
-  { name: "About", href: "/about" },
-  { name: "Contact", href: "/contact" },
-];
+  const navItems = [
+    { name: "Home", href: "/" },
+    { name: "Scooters", href: "/scooters" },
+    { name: "Technology", href: "/technology" },
+    { name: "Gallery", href: "/gallery" },
+    { name: "About", href: "/about" },
+    { name: "Contact", href: "/contact" },
+    { name: "Warranty Check", href: "/warranty-check" },
+  ];
 
   return (
-    <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
-      isScrolled 
-        ? 'bg-background/80 backdrop-blur-xl border-b border-border/50 shadow-lg' 
+    <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${isScrolled
+        ? 'bg-background/80 backdrop-blur-xl border-b border-border/50 shadow-lg'
         : 'bg-gradient-to-b from-background/60 to-transparent backdrop-blur-md'
-    }`}>
+      }`}>
       <div className="container mx-auto px-4 md:px-6">
         <div className="flex items-center justify-between h-20 md:h-24">
           {/* Logo */}

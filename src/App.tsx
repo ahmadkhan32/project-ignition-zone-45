@@ -33,6 +33,9 @@ import AdminRegistration from "./pages/admin/AdminRegistration";
 import AdminDashboard from "./pages/admin/AdminDashboard";
 import AddScooterForm from "./pages/admin/AddScooterForm";
 import WarrantyStartPage from "./pages/admin/WarrantyStartPage";
+import SellVehiclePage from "./pages/admin/SellVehiclePage";
+import VehiclesSoldPage from "./pages/admin/VehiclesSoldPage";
+import WarrantyCheckPage from "./pages/WarrantyCheckPage";
 import NotFound from "./pages/NotFound";
 
 
@@ -63,18 +66,21 @@ const App = () => (
             <Route path="/live-chat" element={<LiveChatPage />} />
             <Route path="/call-now" element={<CallNowPage />} />
             <Route path="/registerss" element={<Register />} />
+            <Route path="/warranty-check" element={<WarrantyCheckPage />} />
             {/* Admin Routes - Only for admins */}
             <Route path="/admin-login" element={<AdminLogin />} />
             <Route path="/admin/register" element={<AdminRegistration />} />
             <Route path="/admin-dashboard" element={<AdminDashboard />} />
             <Route path="/admin/add-scooter" element={<AddScooterForm />} />
+            <Route path="/admin/sell-vehicle" element={<SellVehiclePage />} />
+            <Route path="/admin/vehicles-sold" element={<VehiclesSoldPage />} />
             <Route path="/warranty-start" element={<WarrantyStartPage />} />
-            
+
             {/* Test Routes - Development only */}
             <Route path="/test-auth" element={<TestAuth />} />
             <Route path="/test-otp" element={<TestOTP />} />
             <Route path="/create-test-user" element={<CreateTestUser />} />
-            
+
             {/* Legacy Auth Routes - Redirect to admin login */}
             <Route path="/login" element={<Navigate to="/admin-login" replace />} />
             <Route path="/register" element={<Navigate to="/admin-login" replace />} />
@@ -82,9 +88,9 @@ const App = () => (
             <Route path="/verify-otp" element={<Navigate to="/admin-login" replace />} />
             <Route path="/auth/callback" element={<Navigate to="/admin-login" replace />} />
             <Route path="/dashboard" element={<Navigate to="/admin-dashboard" replace />} />
-            
+
             <Route path="*" element={<NotFound />} />
-          
+
           </Routes>
         </AuthProvider>
       </BrowserRouter>

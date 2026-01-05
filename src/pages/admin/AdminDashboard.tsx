@@ -17,17 +17,17 @@ interface ScooterModel {
   is_active: boolean;
   is_featured: boolean;
   display_order: number;
-  
+
   // Serial Numbers
   serial_number: string;
   motor_number: string;
   chassis_number: string;
-  
+
   // Inventory & Warranty
   total_sold: number;
   units_in_stock: number;
   warranty_period_months: number;
-  
+
   // Advanced Features
   smart_display: boolean;
   gps_navigation: boolean;
@@ -35,7 +35,7 @@ interface ScooterModel {
   mobile_app_connectivity: boolean;
   led_lighting_system: boolean;
   regenerative_braking: boolean;
-  
+
   // Technical Specifications
   motor_output: string;
   battery: string;
@@ -93,17 +93,17 @@ const initialForm: ScooterModel = {
   is_active: true,
   is_featured: false,
   display_order: 0,
-  
+
   // Serial Numbers
   serial_number: "",
   motor_number: "",
   chassis_number: "",
-  
+
   // Inventory & Warranty
   total_sold: 0,
   units_in_stock: 0,
   warranty_period_months: 12,
-  
+
   // Advanced Features
   smart_display: false,
   gps_navigation: false,
@@ -111,7 +111,7 @@ const initialForm: ScooterModel = {
   mobile_app_connectivity: false,
   led_lighting_system: false,
   regenerative_braking: false,
-  
+
   // Technical Specifications
   motor_output: "",
   battery: "",
@@ -140,7 +140,7 @@ const AdminDashboard: React.FC = () => {
       .select('*', { count: 'exact' })
       .order('display_order', { ascending: true })
       .range((currentPage - 1) * scootersPerPage, currentPage * scootersPerPage - 1);
-    
+
     if (!error) {
       // Map data to include default values for new fields (they may not exist in DB yet)
       const scootersWithDefaults = (data || []).map((scooter: DatabaseScooterRecord) => ({
@@ -172,7 +172,7 @@ const AdminDashboard: React.FC = () => {
         connectivity_bluetooth: String(scooter.connectivity_bluetooth ?? ""),
       })) as ScooterModel[];
       setScooters(scootersWithDefaults);
-      
+
       // Calculate total pages
       const totalScooters = count || 0;
       const pages = Math.ceil(totalScooters / scootersPerPage);
@@ -185,7 +185,7 @@ const AdminDashboard: React.FC = () => {
 
   useEffect(() => {
     fetchScooters();
-    
+
     // Set up real-time subscription for automatic updates
     const channel = supabase
       .channel('admin_dashboard_changes')
@@ -234,28 +234,28 @@ const AdminDashboard: React.FC = () => {
 
   const handleFileUpload = async (file: File, fieldName: string) => {
     if (!file) return;
-    
+
     // Validate file type
     const allowedTypes = ['image/svg+xml', 'image/jpeg', 'image/jpg', 'image/png'];
     if (!allowedTypes.includes(file.type)) {
       alert('Please select a valid image file (SVG, JPEG, JPG, or PNG)');
       return;
     }
-    
+
     // Validate file size (max 5MB)
     if (file.size > 5 * 1024 * 1024) {
       alert('File size must be less than 5MB');
       return;
     }
-    
+
     setUploading(true);
-    
+
     try {
       // Generate unique filename
       const fileExt = file.name.split('.').pop();
       const fileName = `${Date.now()}-${Math.random().toString(36).substring(2)}.${fileExt}`;
       const filePath = `admin-uploads/${fileName}`;
-      
+
       // Upload to Supabase Storage - Admin Images Bucket
       const { data, error } = await supabase.storage
         .from('admin-images')
@@ -281,7 +281,7 @@ const AdminDashboard: React.FC = () => {
         ...formData,
         [fieldName]: publicUrl,
       });
-      
+
       setUploading(false);
       alert('Image uploaded successfully to storage!');
     } catch (error) {
@@ -295,7 +295,7 @@ const AdminDashboard: React.FC = () => {
   // Helper functions for CRUD
   const addScooter = async (data: ScooterModel) => {
     if (!data.name || !data.price) return alert("Fill all required fields");
-    
+
     // Try with all fields first, fallback to basic fields if columns don't exist
     const fullData = {
       name: data.name,
@@ -336,7 +336,7 @@ const AdminDashboard: React.FC = () => {
     };
 
     const { error } = await supabase.from('scooters').insert([fullData]);
-    
+
     // If error due to missing columns, try with basic fields only
     if (error && (error.message.includes('column') || error.message.includes('anti_theft_system') || error.message.includes('does not exist'))) {
       console.log('Advanced columns not found, inserting with basic fields only');
@@ -366,7 +366,7 @@ const AdminDashboard: React.FC = () => {
     } else {
       alert("Scooter added successfully!");
     }
-    
+
     setCurrentPage(1); // Reset to first page
     fetchScooters();
     resetForm();
@@ -416,7 +416,7 @@ const AdminDashboard: React.FC = () => {
       .from('scooters')
       .update(fullData)
       .eq('id', id);
-    
+
     // If error due to missing columns, try with basic fields only
     if (error && (error.message.includes('column') || error.message.includes('anti_theft_system') || error.message.includes('does not exist'))) {
       console.log('Advanced columns not found, updating with basic fields only');
@@ -449,7 +449,7 @@ const AdminDashboard: React.FC = () => {
     } else {
       alert("Scooter updated successfully!");
     }
-    
+
     fetchScooters();
     resetForm();
     setIsEditing(false);
@@ -460,7 +460,7 @@ const AdminDashboard: React.FC = () => {
     if (!window.confirm("Are you sure you want to delete this scooter?")) return;
     const { error } = await supabase.from('scooters').delete().eq('id', id);
     if (error) return alert("Error deleting scooter: " + error.message);
-    
+
     // If we're on a page that might be empty after deletion, go to previous page
     if (scooters.length === 1 && currentPage > 1) {
       setCurrentPage(currentPage - 1);
@@ -509,13 +509,25 @@ const AdminDashboard: React.FC = () => {
       <div className="flex justify-between items-center mb-4">
         <h1 className="text-2xl font-bold">Admin Dashboard</h1>
         <div className="flex space-x-2">
-          <button 
+          <button
+            onClick={() => navigate("/admin/sell-vehicle")}
+            className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg font-medium transition-colors"
+          >
+            🚗 Sell Vehicle
+          </button>
+          <button
+            onClick={() => navigate("/admin/vehicles-sold")}
+            className="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-lg font-medium transition-colors"
+          >
+            📊 Vehicles Sold
+          </button>
+          <button
             onClick={() => navigate("/admin-login")}
             className="bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded-lg font-medium transition-colors"
           >
             ← Back to Login
           </button>
-          <button 
+          <button
             onClick={() => navigate("/")}
             className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-medium transition-colors"
           >
@@ -562,15 +574,15 @@ const AdminDashboard: React.FC = () => {
           <div className="space-y-2">
             <label className="text-sm font-medium">Image 1</label>
             <div className="flex space-x-2">
-              <input 
-                name="image_1_url" 
-                placeholder="Image 1 URL" 
-                value={formData.image_1_url} 
-                onChange={handleChange} 
-                className="p-2 rounded text-black w-full" 
+              <input
+                name="image_1_url"
+                placeholder="Image 1 URL"
+                value={formData.image_1_url}
+                onChange={handleChange}
+                className="p-2 rounded text-black w-full"
               />
-              <input 
-                type="file" 
+              <input
+                type="file"
                 accept="image/svg+xml,image/jpeg,image/jpg,image/png"
                 onChange={(e) => {
                   const file = e.target.files?.[0];
@@ -580,23 +592,23 @@ const AdminDashboard: React.FC = () => {
                 disabled={uploading}
               />
             </div>
-                {formData.image_1_url && (
-                  <img src={formData.image_1_url} alt="Preview" className="w-20 h-20 object-cover rounded" />
-                )}
+            {formData.image_1_url && (
+              <img src={formData.image_1_url} alt="Preview" className="w-20 h-20 object-cover rounded" />
+            )}
           </div>
 
           <div className="space-y-2">
             <label className="text-sm font-medium">Image 2</label>
             <div className="flex space-x-2">
-              <input 
-                name="image_2_url" 
-                placeholder="Image 2 URL" 
-                value={formData.image_2_url} 
-                onChange={handleChange} 
-                className="p-2 rounded text-black w-full" 
+              <input
+                name="image_2_url"
+                placeholder="Image 2 URL"
+                value={formData.image_2_url}
+                onChange={handleChange}
+                className="p-2 rounded text-black w-full"
               />
-              <input 
-                type="file" 
+              <input
+                type="file"
                 accept="image/svg+xml,image/jpeg,image/jpg,image/png"
                 onChange={(e) => {
                   const file = e.target.files?.[0];
@@ -606,23 +618,23 @@ const AdminDashboard: React.FC = () => {
                 disabled={uploading}
               />
             </div>
-                {formData.image_2_url && (
-                  <img src={formData.image_2_url} alt="Preview" className="w-20 h-20 object-cover rounded" />
-                )}
+            {formData.image_2_url && (
+              <img src={formData.image_2_url} alt="Preview" className="w-20 h-20 object-cover rounded" />
+            )}
           </div>
 
           <div className="space-y-2">
             <label className="text-sm font-medium">Thumbnail</label>
             <div className="flex space-x-2">
-              <input 
-                name="thumbnail_url" 
-                placeholder="Thumbnail URL" 
-                value={formData.thumbnail_url} 
-                onChange={handleChange} 
-                className="p-2 rounded text-black w-full" 
+              <input
+                name="thumbnail_url"
+                placeholder="Thumbnail URL"
+                value={formData.thumbnail_url}
+                onChange={handleChange}
+                className="p-2 rounded text-black w-full"
               />
-              <input 
-                type="file" 
+              <input
+                type="file"
                 accept="image/svg+xml,image/jpeg,image/jpg,image/png"
                 onChange={(e) => {
                   const file = e.target.files?.[0];
@@ -632,23 +644,23 @@ const AdminDashboard: React.FC = () => {
                 disabled={uploading}
               />
             </div>
-                {formData.thumbnail_url && (
-                  <img src={formData.thumbnail_url} alt="Preview" className="w-20 h-20 object-cover rounded" />
-                )}
+            {formData.thumbnail_url && (
+              <img src={formData.thumbnail_url} alt="Preview" className="w-20 h-20 object-cover rounded" />
+            )}
           </div>
 
           <div className="space-y-2">
             <label className="text-sm font-medium">Image 3</label>
             <div className="flex space-x-2">
-              <input 
-                name="image_3_url" 
-                placeholder="Image 3 URL" 
-                value={formData.image_3_url} 
-                onChange={handleChange} 
-                className="p-2 rounded text-black w-full" 
+              <input
+                name="image_3_url"
+                placeholder="Image 3 URL"
+                value={formData.image_3_url}
+                onChange={handleChange}
+                className="p-2 rounded text-black w-full"
               />
-              <input 
-                type="file" 
+              <input
+                type="file"
                 accept="image/svg+xml,image/jpeg,image/jpg,image/png"
                 onChange={(e) => {
                   const file = e.target.files?.[0];
@@ -658,12 +670,12 @@ const AdminDashboard: React.FC = () => {
                 disabled={uploading}
               />
             </div>
-                {formData.image_3_url && (
-                  <img src={formData.image_3_url} alt="Preview" className="w-20 h-20 object-cover rounded" />
-                )}
+            {formData.image_3_url && (
+              <img src={formData.image_3_url} alt="Preview" className="w-20 h-20 object-cover rounded" />
+            )}
           </div>
           <textarea name="description" placeholder="Description" value={formData.description || ""} onChange={handleChange} className="p-2 m-1 rounded text-black w-full" />
-          
+
           {/* Serial Numbers */}
           <div className="col-span-1 md:col-span-2">
             <h3 className="text-md font-semibold mb-2">Serial Numbers</h3>
@@ -671,7 +683,7 @@ const AdminDashboard: React.FC = () => {
           <input name="serial_number" placeholder="Serial Number" value={formData.serial_number} onChange={handleChange} className="p-2 m-1 rounded text-black w-full" />
           <input name="motor_number" placeholder="Motor Number" value={formData.motor_number} onChange={handleChange} className="p-2 m-1 rounded text-black w-full" />
           <input name="chassis_number" placeholder="Chassis Number" value={formData.chassis_number} onChange={handleChange} className="p-2 m-1 rounded text-black w-full" />
-          
+
           {/* Inventory & Warranty */}
           <div className="col-span-1 md:col-span-2">
             <h3 className="text-md font-semibold mb-2">Inventory & Warranty</h3>
@@ -679,7 +691,7 @@ const AdminDashboard: React.FC = () => {
           <input name="units_in_stock" type="number" placeholder="Units in Stock" value={formData.units_in_stock} onChange={handleChange} className="p-2 m-1 rounded text-black w-full" />
           <input name="total_sold" type="number" placeholder="Total Sold" value={formData.total_sold} onChange={handleChange} className="p-2 m-1 rounded text-black w-full" />
           <input name="warranty_period_months" type="number" placeholder="Warranty Period (months)" value={formData.warranty_period_months} onChange={handleChange} className="p-2 m-1 rounded text-black w-full" />
-          
+
           <input name="display_order" type="number" placeholder="Display Order" value={formData.display_order} onChange={handleChange} className="p-2 m-1 rounded text-black w-full" />
           <label className="flex items-center space-x-2">
             <input type="checkbox" name="is_active" checked={formData.is_active} onChange={handleChange} />
@@ -741,16 +753,16 @@ const AdminDashboard: React.FC = () => {
           </div>
         </div>
         {isEditing ? (
-          <button 
-            onClick={handleSave} 
+          <button
+            onClick={handleSave}
             className="bg-yellow-500 px-4 py-2 rounded mt-2 disabled:opacity-50"
             disabled={uploading}
           >
             {uploading ? 'Uploading...' : 'Save'}
           </button>
         ) : (
-          <button 
-            onClick={handleAdd} 
+          <button
+            onClick={handleAdd}
             className="bg-green-500 px-4 py-2 rounded mt-2 disabled:opacity-50"
             disabled={uploading}
           >
@@ -773,85 +785,85 @@ const AdminDashboard: React.FC = () => {
       ) : (
         <div className="grid md:grid-cols-2 gap-6">
           {(searchTerm ? filteredScooters : scooters).map((s) => (
-          <div key={s.id} className="bg-gray-900 text-white rounded-lg shadow-lg p-4">
-            <img src={s.image_1_url || s.thumbnail_url || '/placeholder.svg'} alt={s.name} className="rounded-lg mb-3" />
-            <div className="flex flex-wrap items-center justify-between mb-2">
-              <h3 className="text-xl font-bold">{s.name}</h3>
-              <span className={`px-2 py-1 rounded text-xs font-semibold ml-2 ${s.is_active ? 'bg-green-600' : 'bg-gray-600'}`}>{s.is_active ? 'Active' : 'Inactive'}</span>
-              {s.is_featured && <span className="ml-2 px-2 py-1 rounded text-xs font-semibold bg-yellow-500 text-black">Featured</span>}
-            </div>
-            <p className="text-xs text-gray-400 mb-1">ID: {s.id}</p>
-            <p className="text-sm text-gray-300 mb-2">Display Order: {s.display_order}</p>
-            {s.serial_number && <p className="text-xs text-gray-400">Serial: {s.serial_number}</p>}
-            {s.motor_number && <p className="text-xs text-gray-400">Motor: {s.motor_number}</p>}
-            {s.chassis_number && <p className="text-xs text-gray-400">Chassis: {s.chassis_number}</p>}
-            <div className="text-xs text-gray-400 space-y-1 my-2">
-              {s.units_in_stock !== undefined && <p>📦 In Stock: {s.units_in_stock}</p>}
-              {s.total_sold !== undefined && <p>✅ Sold: {s.total_sold}</p>}
-              {s.warranty_period_months && <p>🛡️ Warranty: {s.warranty_period_months} months</p>}
-            </div>
-            <p>{s.description}</p>
-            <div className="grid grid-cols-2 gap-2 mt-2">
-              <div className="text-blue-400 font-semibold">Price: {s.price}</div>
-              <div>⚡ {s.max_speed}</div>
-              <div>🔋 {s.max_range}</div>
-              <div>⏳ {s.charge_time}</div>
-            </div>
-
-            {/* Advanced Features */}
-            <div className="mt-3">
-              <h4 className="font-semibold text-sm mb-1">Advanced Features:</h4>
-              <div className="flex flex-wrap gap-1 text-xs">
-                {s.smart_display && <span className="bg-blue-600 px-2 py-1 rounded">Smart Display</span>}
-                {s.gps_navigation && <span className="bg-green-600 px-2 py-1 rounded">GPS Navigation</span>}
-                {s.anti_theft_system && <span className="bg-red-600 px-2 py-1 rounded">Anti-theft</span>}
-                {s.mobile_app_connectivity && <span className="bg-purple-600 px-2 py-1 rounded">Mobile App</span>}
-                {s.led_lighting_system && <span className="bg-yellow-600 px-2 py-1 rounded">LED Lighting</span>}
-                {s.regenerative_braking && <span className="bg-orange-600 px-2 py-1 rounded">Regen Braking</span>}
+            <div key={s.id} className="bg-gray-900 text-white rounded-lg shadow-lg p-4">
+              <img src={s.image_1_url || s.thumbnail_url || '/placeholder.svg'} alt={s.name} className="rounded-lg mb-3" />
+              <div className="flex flex-wrap items-center justify-between mb-2">
+                <h3 className="text-xl font-bold">{s.name}</h3>
+                <span className={`px-2 py-1 rounded text-xs font-semibold ml-2 ${s.is_active ? 'bg-green-600' : 'bg-gray-600'}`}>{s.is_active ? 'Active' : 'Inactive'}</span>
+                {s.is_featured && <span className="ml-2 px-2 py-1 rounded text-xs font-semibold bg-yellow-500 text-black">Featured</span>}
               </div>
-        </div>
-
-            {/* Technical Specifications */}
-            <div className="mt-3">
-              <h4 className="font-semibold text-sm mb-1">Technical Specs:</h4>
-              <div className="text-xs space-y-1">
-                {s.motor_output && <div>⚡ Motor Output (W): {s.motor_output}</div>}
-                {s.battery && <div>🔋 Battery (Ah): {s.battery}</div>}
-                {s.weight && <div>⚖️ Weight: {s.weight}</div>}
-                {s.connectivity_mobile_app && <div>📱 Mobile App: {s.connectivity_mobile_app}</div>}
-                {s.connectivity_gps_tracking && <div>📡 GPS: {s.connectivity_gps_tracking}</div>}
-                {s.connectivity_bluetooth && <div>🔊 Bluetooth: {s.connectivity_bluetooth}</div>}
+              <p className="text-xs text-gray-400 mb-1">ID: {s.id}</p>
+              <p className="text-sm text-gray-300 mb-2">Display Order: {s.display_order}</p>
+              {s.serial_number && <p className="text-xs text-gray-400">Serial: {s.serial_number}</p>}
+              {s.motor_number && <p className="text-xs text-gray-400">Motor: {s.motor_number}</p>}
+              {s.chassis_number && <p className="text-xs text-gray-400">Chassis: {s.chassis_number}</p>}
+              <div className="text-xs text-gray-400 space-y-1 my-2">
+                {s.units_in_stock !== undefined && <p>📦 In Stock: {s.units_in_stock}</p>}
+                {s.total_sold !== undefined && <p>✅ Sold: {s.total_sold}</p>}
+                {s.warranty_period_months && <p>🛡️ Warranty: {s.warranty_period_months} months</p>}
               </div>
-            </div>
-            <div className="mt-3 flex gap-2 flex-wrap">
-              <button onClick={() => handleEdit(s)} className="bg-yellow-500 px-3 py-1 rounded">
-                Edit
-              </button>
-              <button onClick={() => handleDelete(s.id)} className="bg-red-500 px-3 py-1 rounded">
-                Delete
-              </button>
-              {s.units_in_stock > 0 && (
-                <button 
-                  onClick={() => {
-                    // Navigate to warranty start page with scooter details
-                    const params = new URLSearchParams({
-                      scooterId: s.id,
-                      name: s.name,
-                      serialNumber: s.serial_number || '',
-                      motorNumber: s.motor_number || '',
-                      chassisNumber: s.chassis_number || '',
-                      warrantyPeriod: s.warranty_period_months.toString(),
-                    });
-                    navigate(`/warranty-start?${params.toString()}`);
-                  }}
-                  className="bg-green-600 px-3 py-1 rounded hover:bg-green-700 transition-colors"
-                >
-                  Mark as Sold
+              <p>{s.description}</p>
+              <div className="grid grid-cols-2 gap-2 mt-2">
+                <div className="text-blue-400 font-semibold">Price: {s.price}</div>
+                <div>⚡ {s.max_speed}</div>
+                <div>🔋 {s.max_range}</div>
+                <div>⏳ {s.charge_time}</div>
+              </div>
+
+              {/* Advanced Features */}
+              <div className="mt-3">
+                <h4 className="font-semibold text-sm mb-1">Advanced Features:</h4>
+                <div className="flex flex-wrap gap-1 text-xs">
+                  {s.smart_display && <span className="bg-blue-600 px-2 py-1 rounded">Smart Display</span>}
+                  {s.gps_navigation && <span className="bg-green-600 px-2 py-1 rounded">GPS Navigation</span>}
+                  {s.anti_theft_system && <span className="bg-red-600 px-2 py-1 rounded">Anti-theft</span>}
+                  {s.mobile_app_connectivity && <span className="bg-purple-600 px-2 py-1 rounded">Mobile App</span>}
+                  {s.led_lighting_system && <span className="bg-yellow-600 px-2 py-1 rounded">LED Lighting</span>}
+                  {s.regenerative_braking && <span className="bg-orange-600 px-2 py-1 rounded">Regen Braking</span>}
+                </div>
+              </div>
+
+              {/* Technical Specifications */}
+              <div className="mt-3">
+                <h4 className="font-semibold text-sm mb-1">Technical Specs:</h4>
+                <div className="text-xs space-y-1">
+                  {s.motor_output && <div>⚡ Motor Output (W): {s.motor_output}</div>}
+                  {s.battery && <div>🔋 Battery (Ah): {s.battery}</div>}
+                  {s.weight && <div>⚖️ Weight: {s.weight}</div>}
+                  {s.connectivity_mobile_app && <div>📱 Mobile App: {s.connectivity_mobile_app}</div>}
+                  {s.connectivity_gps_tracking && <div>📡 GPS: {s.connectivity_gps_tracking}</div>}
+                  {s.connectivity_bluetooth && <div>🔊 Bluetooth: {s.connectivity_bluetooth}</div>}
+                </div>
+              </div>
+              <div className="mt-3 flex gap-2 flex-wrap">
+                <button onClick={() => handleEdit(s)} className="bg-yellow-500 px-3 py-1 rounded">
+                  Edit
                 </button>
-              )}
+                <button onClick={() => handleDelete(s.id)} className="bg-red-500 px-3 py-1 rounded">
+                  Delete
+                </button>
+                {s.units_in_stock > 0 && (
+                  <button
+                    onClick={() => {
+                      // Navigate to warranty start page with scooter details
+                      const params = new URLSearchParams({
+                        scooterId: s.id,
+                        name: s.name,
+                        serialNumber: s.serial_number || '',
+                        motorNumber: s.motor_number || '',
+                        chassisNumber: s.chassis_number || '',
+                        warrantyPeriod: s.warranty_period_months.toString(),
+                      });
+                      navigate(`/warranty-start?${params.toString()}`);
+                    }}
+                    className="bg-green-600 px-3 py-1 rounded hover:bg-green-700 transition-colors"
+                  >
+                    Mark as Sold
+                  </button>
+                )}
+              </div>
             </div>
-          </div>
-        ))}
+          ))}
         </div>
       )}
 
@@ -861,38 +873,35 @@ const AdminDashboard: React.FC = () => {
           <button
             onClick={goToPrevPage}
             disabled={currentPage === 1}
-            className={`px-3 py-2 rounded ${
-              currentPage === 1
-                ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
-                : 'bg-blue-500 text-white hover:bg-blue-600'
-            }`}
+            className={`px-3 py-2 rounded ${currentPage === 1
+              ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
+              : 'bg-blue-500 text-white hover:bg-blue-600'
+              }`}
           >
             Previous
           </button>
-          
+
           {/* Page numbers */}
           {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
             <button
               key={page}
               onClick={() => goToPage(page)}
-              className={`px-3 py-2 rounded ${
-                currentPage === page
-                  ? 'bg-blue-600 text-white'
-                  : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
-              }`}
+              className={`px-3 py-2 rounded ${currentPage === page
+                ? 'bg-blue-600 text-white'
+                : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                }`}
             >
               {page}
             </button>
           ))}
-          
+
           <button
             onClick={goToNextPage}
             disabled={currentPage === totalPages}
-            className={`px-3 py-2 rounded ${
-              currentPage === totalPages
-                ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
-                : 'bg-blue-500 text-white hover:bg-blue-600'
-            }`}
+            className={`px-3 py-2 rounded ${currentPage === totalPages
+              ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
+              : 'bg-blue-500 text-white hover:bg-blue-600'
+              }`}
           >
             Next
           </button>
