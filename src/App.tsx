@@ -5,6 +5,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { AuthProvider, useAuth } from "@/contexts/AuthContext";
 import ProtectedRoute from "@/components/ProtectedRoute";
+import SystemErrorPopup from "@/components/SystemErrorPopup";
 import Index from "./pages/Index";
 import ScootersPage from "./pages/ScootersPage";
 import ScooterDetail from "./pages/ScooterDetail";
@@ -46,6 +47,7 @@ const App = () => (
     <TooltipProvider>
       <Toaster />
       <Sonner />
+      <SystemErrorPopup />
       <BrowserRouter>
         <AuthProvider>
           <Routes>
