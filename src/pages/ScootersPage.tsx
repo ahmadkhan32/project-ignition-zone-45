@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { NavigationBar } from "@/components/NavigationBar";
 import { Footer } from "@/components/Footer";
 import { Button } from "@/components/ui/button";
@@ -44,6 +44,7 @@ export default function ScootersPage() {
   const [scooters, setScooters] = useState<ScooterModel[]>([]);
   const [loading, setLoading] = useState(true);
   const { toast } = useToast();
+  const navigate = useNavigate();
 
   useEffect(() => {
     fetchScooters();
@@ -166,7 +167,10 @@ export default function ScootersPage() {
                     style={{ animationDelay: `${index * 150}ms` }}
                   >
                     {/* Image */}
-                    <div className="relative aspect-video overflow-hidden">
+                    <div 
+                      className="relative aspect-video overflow-hidden cursor-pointer"
+                      onClick={() => navigate(`/scooter/${scooter.id}`)}
+                    >
                       <img
                         src={scooter.image_1_url || scooter.thumbnail_url || '/placeholder.svg'}
                         alt={scooter.name}

@@ -233,7 +233,10 @@ const Index = () => {
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
             {scooters.map((scooter) => (
               <Card key={scooter.id} className="hover:shadow-xl transition-all duration-300 group">
-                <div className="relative overflow-hidden rounded-t-lg">
+                <div 
+                  className="relative overflow-hidden rounded-t-lg cursor-pointer"
+                  onClick={() => navigate(`/scooter/${scooter.id}`)}
+                >
                   <img
                     src={scooter.image_1_url || scooter.thumbnail_url || "/placeholder.svg"}
                     alt={scooter.name}

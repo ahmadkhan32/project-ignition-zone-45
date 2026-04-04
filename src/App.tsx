@@ -5,8 +5,6 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { AuthProvider, useAuth } from "@/contexts/AuthContext";
 import ProtectedRoute from "@/components/ProtectedRoute";
-import SystemErrorPopup from "@/components/SystemErrorPopup";
-import MaintenancePage from "@/components/MaintenancePage";
 import Index from "./pages/Index";
 import ScootersPage from "./pages/ScootersPage";
 import ScooterDetail from "./pages/ScooterDetail";
@@ -44,22 +42,10 @@ import NotFound from "./pages/NotFound";
 const queryClient = new QueryClient();
 
 const App = () => (
-  <>
-    <MaintenancePage />
-  </>
-);
-
-// ============================================================
-// MAINTENANCE MODE: All routes below are preserved.
-// To re-enable the site, remove the <MaintenancePage /> block
-// above and restore the original App body below.
-// ============================================================
-const _InactiveApp = () => (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
       <Toaster />
       <Sonner />
-      <SystemErrorPopup />
       <BrowserRouter>
         <AuthProvider>
           <Routes>
